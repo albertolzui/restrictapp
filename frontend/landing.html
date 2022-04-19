@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>restrictapp</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- Favicons -->
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Bootstrap CSS Sheets -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="assets/css/style.css" rel="stylesheet"> 
+
+  </head>
+<body class="w3-light-grey">
+
+<!-- Navigation Bar -->
+<div class="w3-bar w3-display-container w3-white w3-border-bottom w3-xlarge">
+  <a href="#" class="w3-bar-item w3-button w3-text-red w3-hover-red"><b><i class="fa fa-map-marker w3-margin-right"></i>restrictapp</b></a>
+  <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge"> login</a>
+  <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge">enquiries</a>
+  
+</div>
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-hide-small" style="max-width:1500px">
+  <img class="w3-image" src="https://www.w3schools.com/w3images/london2.jpg" alt="London" width="1500" height="300" style ="opacity: 0;">
+  <div class="w3-display-middle" style="width:65%">
+    <div class="w3-bar w3-black">
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Entry Requirements');"><i class="fa fa-plane w3-margin-right"></i>Entry Requirements</button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'In-country Destinations');"><i class="fa fa-bed w3-margin-right"></i>In-Country Destinations</button>
+      <button class="w3-bar-item w3-button tablink" onclick="openLink(event, 'Restrictions');"><i class="fa fa-car w3-margin-right"></i>Restrictions</button>
+    </div>
+
+    <!-- Tabs -->
+    <div id="Entry Requirements" class="w3-container w3-white w3-padding-16 myLink">
+      <h3>Let's provide you with the travel information you need and more</h3>
+      <div class="w3-row-padding" style="margin:0 -16px;">
+        <div class="w3-half">
+          <label>From</label>
+          <input class="w3-input w3-border" type="text" placeholder="Origin">
+        </div>
+        <div class="w3-half">
+          <label>To</label>
+          <input class="w3-input w3-border" type="text" placeholder="Destination">
+        </div>
+      </div>
+      <p><button class="w3-button w3-dark-grey">Get country specific information</button></p>
+    </div>
+
+    <div id="In-country Destinations" class="w3-container w3-white w3-padding-16 myLink">
+      <h3>Find hotels, read reviews and compare prices</h3>
+      <div class="w3-row-padding" style="margin:0 -16px;">
+        <div class="w3-half">
+          <label>From</label>
+          <input class="w3-input w3-border" type="text" placeholder="Origin">
+        </div>
+        <div class="w3-half">
+          <label>To</label>
+          <input class="w3-input w3-border" type="text" placeholder="Destination">
+        </div>
+      </div>
+      <p><button class="w3-button w3-dark-grey">Search Hotels within destination country</button></p>
+    </div>
+
+    <div id="Restrictions" class="w3-container w3-white w3-padding-16 myLink">
+      <h3>Get Country specific restriction information</h3>
+      <div class="w3-row-padding" style="margin:0 -16px;">
+        <div class="w3-half">
+          <label>From</label>
+          <input class="w3-input w3-border" type="text" placeholder="Origin">
+        </div>
+        <div class="w3-half">
+          <label>To</label>
+          <input class="w3-input w3-border" type="text" placeholder="Destination">
+        </div>
+      </div>
+      <p><button class="w3-button w3-dark-grey">Get current restriction information</button></p>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<!--All round access-->
+<section id="about" class="about">
+  <div class="container">
+
+    <div class="section-title" style="color: white;">
+      <h2>All round access</h2>
+      <p>Access country specific travel information, including restrictions and entry requirements.</p>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-lg-4 col-md-6 icon-box">
+        <div class="icon"><i class="bi bi-briefcase"></i></div>
+        <h4 class="title"><a href="">Entry Requirements</a></h4>
+        
+      </div>
+      <div class="col-lg-4 col-md-6 icon-box">
+        <div class="icon"><i class="bi bi-bar-chart"></i></div>
+        <h4 class="title"><a href="">Restriction grade</a></h4>
+        
+      </div>
+      <div class="col-lg-4 col-md-6 icon-box">
+        <div class="icon"><i class="bi bi-brightness-high"></i></div>
+        <h4 class="title"><a href="">In Country Destinations</a></h4>
+        
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+</main>
+
+<div id="header" class="d-flex align-items-center">
+  <div class="container d-flex flex-column align-items-center">
+    <div class="social-links text-center">
+      <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+      <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+      <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+      <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Footer. -->
+<footer id="footer">
+  <div class="container">
+    <div class="copyright">
+      &copy; Copyright <strong><span>restrictapp</span></strong>. All Rights Reserved (c) 2022
+    </div>
+    <div class="credits">
+    </div>
+  </div>
+</footer>
+
+<script>
+// Tabs
+function openLink(evt, linkName) {
+  var i, x, tablinks;
+  x = document.getElementsByClassName("myLink");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+  }
+  document.getElementById(linkName).style.display = "block";
+  evt.currentTarget.className += " w3-red";
+}
+
+// Click on the first tablink on load
+document.getElementsByClassName("tablink")[0].click();
+</script>
+
+</body>
+</html>
