@@ -30,15 +30,23 @@ class Trip_Advisor:
 
         divs = soup.find_all("div")
 
+        h5s = soup.find_all("h5")
+
+        h5str = str(h5s)
+
         divsy = str(divs)
 
         paragraphs = soup.find_all("p")
 
         paragraph_to_str = str(paragraphs)
 
+
+
         p_tag = BeautifulSoup(paragraph_to_str, "html.parser")
 
         div_tag = BeautifulSoup(divsy, "html.parser")
+
+        h5_tag = BeautifulSoup(h5str, "html.parser")
 
         # Get page title
         result_title_fetch = div_tag.find_all('h1')[1]
@@ -168,9 +176,28 @@ class Trip_Advisor:
             result_note_from_d_and_e2 = div_tag.find_all('div')[35]
             for child in result_note_from_d_and_e2.children:
                 note_from_d_and_e.append(child)
-            
+
+
+        # Get Note from Quarantine Requirements
+        result_quar_req = p_tag.find_all('p')[5]
+        quar_req1 = []
+        for child in result_quar_req.children:
+            quar_req1.append(child)
+
+        result_quar_req2 = p_tag.find_all('p')[6]
+        quar_req2 = []
+        for child in result_quar_req2.children:
+            quar_req2.append(child)
+
+
+
+
+
+#        quar_req = quar_req1 + quar_req2
+
+                
 #        print("Note from Test Type Details and Exceptions: ", *note_from_d_and_e, end=" ")
-            return title + border_status + vac_rate + vac_req_sum + note_to_vac_req_summary + sh_ede + note_from_ede + sh_ctreq + sh_test_type + note_from_test_type + sh_test_type_d_and_e + note_from_d_and_e
+        return title + border_status + vac_rate + vac_req_sum + note_to_vac_req_summary + sh_ede + note_from_ede + sh_ctreq + sh_test_type + note_from_test_type + sh_test_type_d_and_e + note_from_d_and_e + quar_req1 + quar_req2
 
 
     def crawl_into_db(self):
@@ -183,15 +210,16 @@ class Trip_Advisor:
         covid_test_details_and_exceptions = row_input[11]
         entry_details_And_exceptions = row_input[6] + row_input[9] +row_input[11]
 
+
         destination_log = {"name": self.destination, "border_status": border_status, "vaccination_requirements": vac_req, "covid_test_details_and_exceptions": covid_test_details_and_exceptions, "entry_details_And_exceptions": entry_details_And_exceptions, "date": datetime.datetime.utcnow()}        
         update = db.country_restrictions.insert_one(destination_log)
         return update
 
 
-    def get_from_database(self):
-        name = self.destination
-        query = db.country_resrtictions.find_one({"name": name})
-        if name in query:
-            return query
-        else:
-            Trip_Advisor(destination, origin).crawl_into_db()
+#   def get_from_database(self):
+#        name = self.destination
+#        query = db.country_resrtictions.find_one({"name": name})
+#        if name in query:
+#            return query
+#        else:
+#            Trip_Advisor(destination, origin).crawl_into_db()
