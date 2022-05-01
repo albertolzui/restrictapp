@@ -13,7 +13,5 @@ from web_scrapper import Trip_Advisor
 destination = input("destination? ")
 origin = input("origin ?")
 
-#Trip_Advisor(destination, origin).crawl_into_db()
-current_trip = Trip_Advisor(destination, origin)
-row_input = current_trip.trip_info()
-print(row_input[14])
+Trip_Advisor(destination, origin).crawl_into_db()
+
