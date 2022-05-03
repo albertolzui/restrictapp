@@ -9,7 +9,8 @@ class Web_Crawler:
         self.destination = destination
         self.origin = origin
         self.country = destination.capitalize()
-        self.headings = [f"{self.country} Travel Restrictions", f"{self.country} entry details and exceptions", f"Outgoing travel to {self.country}", "Return travel"]
+        self.headings = [f"{self.country} Travel Restrictions", f"{self.country} entry details and exceptions", f"Outgoing travel to {self.country}", "Return travel",
+         f"Other COVID-19 restrictions for {self.country}", "Additional resources"]
         
 
     def page_lister(self):

@@ -1,5 +1,12 @@
 from crawler import Web_Crawler
 
-print(Web_Crawler("NIGERIA", "DE").clean_up_sections()[2])
+bass = Web_Crawler("NIGERIA", "DE").clean_up_sections()
+
+for i in range(len(bass)):
+    print (i, end = " ")
+    print (bass[i],"\n")
+    
+
+
 
 
