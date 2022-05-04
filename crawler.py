@@ -1,5 +1,11 @@
 import requests
 from bs4 import BeautifulSoup 
+import datetime
+from pymongo import MongoClient
+from cred_albert import *
+
+client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
+db = client.Restrictapp
 
 destination = input("destination?").lower()
 origin = "DE"
@@ -78,8 +84,18 @@ class Web_Crawler:
             cleaned_list.append(first_clean)
         return cleaned_list
 
+      
+    def crawl_into_db(self):
+        payload = self.clean_up_sections()
 
+        overview = payload[0]
+        entry_details = payload[1]
+        outgoing_travel = payload[2]
+        return_travel = payload[3]
+        other_covid_restrictions = payload[4]
+        additional_resources = payload[5]
 
+        destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "date": datetime.datetime.utcnow()}        
+        update = db.country_restrictions.insert_one(destination_log)
+        return update
 
-        
-        
