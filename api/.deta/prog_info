@@ -1,0 +1,1 @@
+{"id":"3e4b624e-5b26-4fc4-b55a-641ef1f4a4ee","space":22302,"runtime":"python3.9","name":"api","path":"p9nv7g","project":"a0hvh7kc","account":"144798365827","region":"eu-central-1","deps":["fastapi","requests","bs4","datetime","pymongo","dnspython"],"envs":null,"public":true,"log_level":"debug","cron":""}

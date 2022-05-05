@@ -1,0 +1,6 @@
+fastapi
+requests
+bs4
+datetime
+pymongo
+dnspython
