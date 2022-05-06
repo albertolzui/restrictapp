@@ -4,4 +4,9 @@ bs4
 datetime
 pymongo
 dnspython
+
+#for template
 jinja2
+
+#for static files
+aiofiles

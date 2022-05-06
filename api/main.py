@@ -1,29 +1,32 @@
-from fastapi import FastAPI, Form
-from crawler_for_api import Web_Crawler
+from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from crawler_for_api import *
 from core.config import settings
 from apis.general_pages.route_homepage import general_pages_router
+
+client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
+db = client.Restrictapp
 
 def include_router(app):
     app.include_router(general_pages_router)
 
 
+def configure_static(app):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
 def start_application():
     app = FastAPI(title=settings.PROJECT_NAME, version=settings.PROJECT_VERSION)
     include_router(app)
+    configure_static(app)
     return(app)
 
-app = start_application()
+app = FastAPI()
 
-"""
-@app.get("/")
-def welcome():
-    return "welcome"" ""world"
-
-@app.get("/greet/{name}")
-def greet(name:str):
-    return {"welcome":name}
-"""
 
 @app.get("/current/destination={destination}/origin={origin}")
 def current(destination:str, origin:str):
-    return Web_Crawler(destination, origin).clean_up_sections()
+    state = Web_Crawler(destination, origin).currency_check()
+    return state
+
+
+    
