@@ -17,23 +17,34 @@
     </div>-->
 
     <div class="container-fluid">
+    <!-- This is the main heading-->
         <h1 class="display-4 text-center" >&nbsp; {{country_name}} - Travel Guide</h1>
-        <!--<div id="Demo1" class="w3-hide w3-animate-zoom">
-        <button style="height:fit-content; margin: 0; position: absolute; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); background-color: orange;" type="submit" class="btn text-center" onclick="document.getElementById('id01').style.display='flex'"><h6>Overview</h6></button></div>-->
-        
-        
+    
+        <!-- This is the "Overview section - provides a general overview of country specific regulations and information on covid-19 vaccinations"-->
         <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-black container mt-5 mb-0">Overview</button>
         <div id="Demo1" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#002f42;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{ov_line2}}</br>
+        <p style="background-color:#002f42; text-align: justify;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{ov_line2}}</br>
             {{ov_line3}}</br>{{ov_line4}}<br>{{overview}}</p>
         </div>
 
+        <!-- This section provides information on entry requirements and other details where available-->
         <button onclick="myFunction('Demo2')" class="w3-button w3-block w3-black container mt-2 mb-0">Entry Details for {{country_name}}</button>
         <div id="Demo2" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#002f42;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{entry_details}}</p>
+        <p style="background-color:#002f42; text-align: justify;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{entry_details}}</p>
+        </div>
+        
+
+
+        <button onclick="myFunction('Demo3')" class="w3-button w3-block w3-black container mt-2 mb-0">Departure information for travellers to {{country_name}}</button>
+        <div id="Demo3" class="w3-hide w3-animate-zoom mt-0">
+        <p style="background-color:#002f42; text-align: justify;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"><b>{{o_t_d_line1}}</b><br>{{o_t_d_line2}}</p>
+        
         </div>
         </div>
 
+
+        
+        <!-- This is the JavaScript for the accordion-->
         <script>
         function myFunction(id) {
         var x = document.getElementById(id);

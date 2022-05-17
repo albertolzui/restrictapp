@@ -25,11 +25,11 @@ def start_application():
 
 app = start_application()
 
-
+"""
 @app.get("/current/destination={destination}/origin={origin}")
 def current(destination:str, origin:str):
     state = Web_Crawler(destination, origin).currency_check()
     return state["name"]
-
+"""
 
     

@@ -193,7 +193,7 @@ class Web_Crawler:
         check = self.cull_from_db()
         if check:
             entry_date = check["date"]
-            max_age_of_info = datetime.timedelta(days = 2)
+            max_age_of_info = datetime.timedelta(days = 1)
             time_now = datetime.datetime.utcnow()
             duration_of_info = time_now - entry_date
             if duration_of_info < max_age_of_info:
@@ -208,7 +208,7 @@ class Web_Crawler:
             check = self.cull_from_db()
             if check:
                 entry_date = check["date"]
-                max_age_of_info = datetime.timedelta(days = 2)
+                max_age_of_info = datetime.timedelta(days = 1)
                 time_now = datetime.datetime.utcnow()
                 duration_of_info = time_now - entry_date
                 if duration_of_info < max_age_of_info:
