@@ -1,0 +1,51 @@
+{% extends "shared/base.html" %}
+
+
+{% block title %}
+    <title>{{country_name}}</title>
+{% endblock %}
+
+
+
+
+{% block content %}
+    <!--<div class="w3-bar w3-display-container w3-white w3-border-bottom w3-xlarge">
+        <a href="#" class="w3-bar-item w3-button w3-text-red w3-hover-red"><b><i class="fa fa-map-marker w3-margin-right"></i>restrictapp</b></a>
+        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge"> login</a>
+        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge">enquiries</a>
+        
+    </div>-->
+
+    <div class="container-fluid">
+        <h1 class="display-4 text-center" >&nbsp; {{country_name}} - Travel Guide</h1>
+        <!--<div id="Demo1" class="w3-hide w3-animate-zoom">
+        <button style="height:fit-content; margin: 0; position: absolute; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); background-color: orange;" type="submit" class="btn text-center" onclick="document.getElementById('id01').style.display='flex'"><h6>Overview</h6></button></div>-->
+        
+        
+        <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-black container mt-5 mb-0">Overview</button>
+        <div id="Demo1" class="w3-hide w3-animate-zoom mt-0">
+        <p style="background-color:#002f42;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{ov_line2}}</br>
+            {{ov_line3}}</br>{{ov_line4}}<br>{{overview}}</p>
+        </div>
+
+        <button onclick="myFunction('Demo2')" class="w3-button w3-block w3-black container mt-2 mb-0">Entry Details for {{country_name}}</button>
+        <div id="Demo2" class="w3-hide w3-animate-zoom mt-0">
+        <p style="background-color:#002f42;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{entry_details}}</p>
+        </div>
+        </div>
+
+        <script>
+        function myFunction(id) {
+        var x = document.getElementById(id);
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else { 
+            x.className = x.className.replace(" w3-show", "");
+        }
+        }
+        </script>
+
+
+
+
+{% endblock %}

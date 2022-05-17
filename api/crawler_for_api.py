@@ -12,12 +12,25 @@ db = client.Restrictapp
 
 class Web_Crawler:
     def __init__(self, destination, origin):
-        self.destination = destination
+        self.destination = str(destination)
         self.origin = origin
-        self.country = destination.capitalize()
-        self.headings = [f"{self.country} Travel Restrictions", f"{self.country} entry details and exceptions", f"Outgoing travel to {self.country}", "Return travel",
-         f"Other COVID-19 restrictions for {self.country}", "Additional resources"]
+        self.country = self.destination.title()
+        self.country_name = self.country.replace("-", " ")
+        countries_that_take_a_definite_article = ["Gambia", "Czech Republic"]
+        countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros"]
+        if self.country_name in countries_that_take_a_definite_article:
+            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Outgoing travel to the {self.country_name}", "Return travel",
+            f"Other COVID-19 restrictions for the {self.country_name}", "Additional resources"]
+        else:
+            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Outgoing travel to {self.country_name}", "Return travel", 
+            f"Other COVID-19 restrictions for {self.country_name}", "Additional resources"]
         
+        if self.country_name in countries_that_take_a_definite_article_and_have_alt_headings:
+            self.alt_headings = [f"{self.country_name} Travel Restrictions", f"Outgoing travel to the {self.country_name}", "Return travel", 
+            f"Other COVID-19 restrictions for the {self.country_name}", "Additional resources"] 
+        else:
+            self.alt_headings = [f"{self.country_name} Travel Restrictions", f"Outgoing travel to {self.country_name}", "Return travel", 
+            f"Other COVID-19 restrictions for {self.country_name}", "Additional resources"] 
 
     def page_lister(self):
         ori= "origin="+self.origin
@@ -45,33 +58,59 @@ class Web_Crawler:
     def get_text_from_index(self, page):
         headings = self.headings
         page = self.page_lister()
-        i = 0
-        save_index = []
-        while i < len(headings):     
-            index = self.find_indices(page, headings[i])
-            bootleg = index[0]
-            save_index.append(bootleg)
-            i = i + 1
+        if f"{self.country_name} entry details and exceptions" in page:
+            headings = self.headings
+            i = 0
+            save_index = []
+            while i < len(headings):     
+                index = self.find_indices(page, headings[i])
+                bootleg = index[0]
+                save_index.append(bootleg)
+                i = i + 1
 
-        return save_index
+            return save_index
+        else:
+            headings = self.alt_headings
+            i = 0
+            save_index = []
+            while i < len(headings):     
+                index = self.find_indices(page, headings[i])
+                bootleg = index[0]
+                save_index.append(bootleg)
+                i = i + 1
+
+            return save_index
     
 
     # This function needs two parameters: first is the list returned by the get_text_from_index() function, and the list derived from all text on the webpage.
     # It then returns a list containing sublists which hold different page sections distinguished by the specified indexes in header_index.
 
     def sections_into_list(self):
-        headings = self.headings
-        header_index = self.get_text_from_index(headings)
         page = self.page_lister()
-        put_into_db = []
-        i = 0
-        while i < len(header_index):
-            if i+1 < len(header_index):
-                put_into_db.append(page[header_index[i]:header_index[i+1]])
-            else:
-                put_into_db.append(page[header_index[i]:])
-            i = i + 1
-        return put_into_db    
+        if f"{self.country_name} entry details and exceptions" in page:
+            headings = self.headings
+            header_index = self.get_text_from_index(headings)
+            put_into_db = []
+            i = 0
+            while i < len(header_index):
+                if i+1 < len(header_index):
+                    put_into_db.append(page[header_index[i]:header_index[i+1]])
+                else:
+                    put_into_db.append(page[header_index[i]:])
+                i = i + 1
+            return put_into_db             
+        else:
+            headings = self.alt_headings
+            header_index = self.get_text_from_index(headings)
+            put_into_db = []
+            i = 0
+            while i < len(header_index):
+                if i+1 < len(header_index):
+                    put_into_db.append(page[header_index[i]:header_index[i+1]])
+                else:
+                    put_into_db.append(page[header_index[i]:])
+                i = i + 1
+            return put_into_db    
     
 
 # This functions takes the list "put_into_db" generated by the "sections_into_list" function and removes the excess commas and apostrophes
@@ -82,25 +121,36 @@ class Web_Crawler:
             conveyor = str(dirty_list[i])
             first_clean = conveyor.replace("', '", " ")
             cleaned_list.append(first_clean)
-        return cleaned_list
+        return dirty_list
 
 
 # This function writes the "cleaned_list" generated by the "clean_up_sections" function into the database
     def crawl_into_db(self):
+        page = self.page_lister()
         payload = self.clean_up_sections()
+        if f"{self.country_name} entry details and exceptions" in page:
+            overview = payload[0]
+            entry_details = payload[1]
+            outgoing_travel = payload[2]
+            return_travel = payload[3]
+            other_covid_restrictions = payload[4]
+            additional_resources = payload[5]
 
-        overview = payload[0]
-        entry_details = payload[1]
-        outgoing_travel = payload[2]
-        return_travel = payload[3]
-        other_covid_restrictions = payload[4]
-        additional_resources = payload[5]
+            destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "date": datetime.datetime.utcnow()}        
+            insert = db.country_restrictions.insert_one(destination_log)
+            if insert:
+                return "Insert successful !"
+        else:
+            overview = payload[0]
+            outgoing_travel = payload[1]
+            return_travel = payload[2]
+            other_covid_restrictions = payload[3]
+            additional_resources = payload[4]
 
-        destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "date": datetime.datetime.utcnow()}        
-        insert = db.country_restrictions.insert_one(destination_log)
-        if insert:
-            return "Insert successful !"
-
+            destination_log = {"name": self.destination, "overview": overview, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "date": datetime.datetime.utcnow()}        
+            insert = db.country_restrictions.insert_one(destination_log)
+            if insert:
+                return "Insert successful !"
 
 # This function finds the first entry in the database where the "name" is the same as the destination input
     def cull_from_db(self):
