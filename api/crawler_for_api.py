@@ -42,6 +42,23 @@ class Web_Crawler:
         page = list(all_text_on_page.split("|"))
         return page
 
+    def link_lister(self):
+        ori= "origin="+self.origin
+        url = 'https://www.kayak.com/travel-restrictions/'+ self.destination + '?' + ori
+        r = requests.get(url)
+        src = r.content
+        soup = BeautifulSoup(src, 'html.parser')
+        links = soup.find_all("a")
+        linkie = []
+        for link in links:
+            linkie.append(link.get('href'))  
+        linked = linkie[8:]
+        del linked[-1]
+    #    for child in a_tag.children:
+    #        title.append(child)        
+        return linked
+
+
     # This function returns a list of indexes by searching a list (search_list) to see if it contains an element 
     # (search_item)from another list, and subsequently returning the corresponding index in search_list; 
     def find_indices(self, search_list, search_item):
@@ -128,6 +145,7 @@ class Web_Crawler:
     def crawl_into_db(self):
         page = self.page_lister()
         payload = self.clean_up_sections()
+        links_payload = self.link_lister()
         if f"{self.country_name} entry details and exceptions" in page:
             overview = payload[0]
             entry_details = payload[1]
@@ -136,7 +154,7 @@ class Web_Crawler:
             other_covid_restrictions = payload[4]
             additional_resources = payload[5]
 
-            destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "date": datetime.datetime.utcnow()}        
+            destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "relevant_links": links_payload, "date": datetime.datetime.utcnow()}        
             insert = db.country_restrictions.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
@@ -147,7 +165,7 @@ class Web_Crawler:
             other_covid_restrictions = payload[3]
             additional_resources = payload[4]
 
-            destination_log = {"name": self.destination, "overview": overview, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "date": datetime.datetime.utcnow()}        
+            destination_log = {"name": self.destination, "overview": overview, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "relevant_links": links_payload, "date": datetime.datetime.utcnow()}        
             insert = db.country_restrictions.insert_one(destination_log)
             if insert:
                 return "Insert successful !"

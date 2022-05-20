@@ -15,6 +15,19 @@ restriction_output_router = APIRouter()
 @restriction_output_router.get("/restriction-output/destination={destination}/origin={origin}")
 async def restriction_output(request:Request, destination:str, origin:str):
     state = Web_Crawler(destination, origin).currency_check()
+    relevant_links = state["relevant_links"]
+    clean_rel_links = []
+    for link in relevant_links:
+        if link.find(".html"):
+            new_link = link.replace("https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Risikogebiete_neu.html", "https://www.rki.de/DE/Home/homepage_node")
+            clean_rel_links.append(new_link)
+
+    response_other_covid_restrictions = state["other_covid_restrictions"]
+    other_covid_restrictions = {
+        "mask": response_other_covid_restrictions[3],
+        "restaurants": response_other_covid_restrictions[5],
+        "bars": response_other_covid_restrictions[7],
+    }
     response_name = state["name"]
     overview = state["overview"]
     overview_list_to_str = ' '.join(map(str, overview[1:]))
@@ -50,27 +63,41 @@ async def restriction_output(request:Request, destination:str, origin:str):
     response_country_name = response_country.replace("-", " ")
 
     outgoing_travel_details = state["outgoing_travel"]
+    return_travel_details = state["return_travel"]
 
     headings = ["Test type", "Details and exceptions", "Quarantine requirements", "Details and exceptions"]
-
-    outgoing_travel_details.remove("Test type")
-    outgoing_travel_details.remove("Details and exceptions")
-    outgoing_travel_details.remove("Quarantine requirements")
-    outgoing_travel_details.remove("Details and exceptions")
+    
+    for i in headings:
+        if i in outgoing_travel_details:
+            outgoing_travel_details.remove(i)
+        if i in return_travel_details:
+            return_travel_details.remove(i)
 
     o_t_d = {
         "line1" : outgoing_travel_details[3] + ":",
         "line2" : ' '.join(map(str, outgoing_travel_details[4:]))
     }
 
-    response_outgoing_travel = outgoing_travel_details
+    r_t_d = {
+        "line1" : return_travel_details[3] + ":",
+        "line2" : ' '.join(map(str, return_travel_details[4:]))
+    }
+
+
+
+
+
+
+
+
+    
     if len(overview) > 4:
-        return templates.TemplateResponse("general_pages/restriction_output.html", {"request":request, "country_name": response_country_name, 
+        return templates.TemplateResponse("general_pages/restriction_output.html", {"request":request, "country_name": response_country_name, "ov_mask": other_covid_restrictions["mask"], "ov_rest": other_covid_restrictions["restaurants"], "ov_bars": other_covid_restrictions["bars"],
         "ov_line1": response_overview["line1"], "ov_line2": response_overview["line2"], "ov_line3": response_overview["line3"], "ov_line4": response_overview["line4"], 
-        "entry_details": entry_info, "outgoing_travel_details": response_outgoing_travel, "o_t_d_line1": o_t_d["line1"], "o_t_d_line2": o_t_d["line2"]})
+        "entry_details": entry_info, "o_t_d_line1": o_t_d["line1"], "o_t_d_line2": o_t_d["line2"], "r_t_d_line1": r_t_d["line1"], "r_t_d_line2": r_t_d["line2"], "rel_links": clean_rel_links})
     elif len(overview) <= 4:
-        return templates.TemplateResponse("general_pages/restriction_output.html", {"request":request, "country_name": response_country_name, 
-        "ov_line1": response_overview["line1"], "ov_line2": response_overview["line2"], "ov_line3": response_overview["line3"], "entry_details": entry_info, "outgoing_travel_details": response_outgoing_travel, 
-        "o_t_d_line1": o_t_d["line1"], "o_t_d_line2": o_t_d["line2"]})
+        return templates.TemplateResponse("general_pages/restriction_output.html", {"request":request, "country_name": response_country_name, "ov_mask": other_covid_restrictions["mask"], "ov_rest": other_covid_restrictions["restaurants"], "ov_bars": other_covid_restrictions["bars"],
+        "ov_line1": response_overview["line1"], "ov_line2": response_overview["line2"], "ov_line3": response_overview["line3"], "entry_details": entry_info, 
+        "o_t_d_line1": o_t_d["line1"], "o_t_d_line2": o_t_d["line2"], "r_t_d_line1": r_t_d["line1"], "r_t_d_line2": r_t_d["line2"], "rel_links": clean_rel_links})
 
 

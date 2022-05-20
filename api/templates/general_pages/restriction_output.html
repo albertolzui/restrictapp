@@ -20,31 +20,67 @@
     <!-- This is the main heading-->
         <h1 class="display-4 text-center" >&nbsp; {{country_name}} - Travel Guide</h1>
     
+        <div class="mx-auto mt-5 mb-0">
+            <div style="color:white" class="container mt-0 mb-0 p-3 my-5">
+                <div class="row">
+                    <div style="text-align:justify; background-color: #457B9D;" class="col-sm-4">
+                        <h3 style="text-align:center; color: #FB8500; font-family:monospace">Bars</h3>
+                        <p style="text-align:center; font-family:'Roboto', sans-serif;">{{ov_bars}}</p>
+                    </div>
+                    <div style="text-align:justify; background-color: #14213D;" class="col-sm-4">
+                        <h3 style="text-align:center; color: #FB8500; font-family:monospace">Mask</h3>
+                        <p style="text-align:center; font-family:'Roboto', sans-serif;">{{ov_mask}}</p>
+                    </div>
+                    <div style="text-align:justify; background-color: #023047;" class="col-sm-4">
+                        <h3 style="text-align:center; color: #FB8500; font-family:monospace">Restaurants</h3>   
+                        <p style="text-align:center; font-family:'Roboto', sans-serif;">{{ov_rest}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- This is the "Overview section - provides a general overview of country specific regulations and information on covid-19 vaccinations"-->
-        <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-black container mt-5 mb-0">Overview</button>
+        <button onclick="myFunction('Demo1')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center;" class="w3-button w3-block container mt-1 mb-0">Overview</button>
         <div id="Demo1" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#002f42; text-align: justify;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{ov_line2}}</br>
+        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{ov_line2}}</br>
             {{ov_line3}}</br>{{ov_line4}}<br>{{overview}}</p>
         </div>
 
         <!-- This section provides information on entry requirements and other details where available-->
-        <button onclick="myFunction('Demo2')" class="w3-button w3-block w3-black container mt-2 mb-0">Entry Details for {{country_name}}</button>
+        <button onclick="myFunction('Demo2')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Entry Details</button>
         <div id="Demo2" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#002f42; text-align: justify;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{entry_details}}</p>
+        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{entry_details}}</p>
         </div>
         
 
 
-        <button onclick="myFunction('Demo3')" class="w3-button w3-block w3-black container mt-2 mb-0">Departure information for travellers to {{country_name}}</button>
+        <button onclick="myFunction('Demo3')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Departure information</button>
         <div id="Demo3" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#002f42; text-align: justify;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"><b>{{o_t_d_line1}}</b><br>{{o_t_d_line2}}</p>
+        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"><b>{{o_t_d_line1}}</b><br>{{o_t_d_line2}}</p>
         
+        </div>
+        
+
+        <button onclick="myFunction('Demo4')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Return information</button>
+        <div id="Demo4" class="w3-hide w3-animate-zoom mt-0 mb-5">
+        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"><b>{{r_t_d_line1}}</b><br>{{r_t_d_line2}}</p>
+        
+        </div>
+
+        <button onclick="myFunction('Demo5')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Relevant Links</button>
+        <div id="Demo5" class="w3-hide w3-animate-zoom mt-0 mb-5">
+            <ul style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: small; display: block; list-style-type: none; -ms-flex: 1; flex: 1;" class="bg-gradient w3-text-white container mt-1 ml-0 mr-0 mb-5 p-0 my-5 border rounded border-success">
+                {% for link in rel_links%}
+                    <li style="-ms-flex: 1; flex: 1;">{{link}}</li>
+                {% endfor %}  
+            </ul>
+            <br>
         </div>
         </div>
 
-
+            
         
-        <!-- This is the JavaScript for the accordion-->
+
         <script>
         function myFunction(id) {
         var x = document.getElementById(id);
