@@ -10,3 +10,5 @@ jinja2
 
 #for static files
 aiofiles
+
+python-multipart

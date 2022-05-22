@@ -4,7 +4,8 @@ from crawler_for_api import *
 from core.config import settings
 from apis.general_pages.route_homepage import general_pages_router
 from apis.general_pages.route_restrictions_output import restriction_output_router
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, File, UploadFile, Form
+
 
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
@@ -24,6 +25,9 @@ def start_application():
     return(app)
 
 app = start_application()
+
+     
+
 
 """
 @app.get("/current/destination={destination}/origin={origin}")
