@@ -42,31 +42,35 @@
         <!-- This is the "Overview section - provides a general overview of country specific regulations and information on covid-19 vaccinations"-->
         <button onclick="myFunction('Demo1')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center;" class="w3-button w3-block container mt-1 mb-0">Overview</button>
         <div id="Demo1" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{ov_line2}}</br>
-            {{ov_line3}}</br>{{ov_line4}}<br>{{overview}}</p>
+        <p style="background-color:#457B9D; text-align: center; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{ov_line1}}</br>{{ov_line2}}</br></p>
         </div>
 
         <!-- This section provides information on entry requirements and other details where available-->
         <button onclick="myFunction('Demo2')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Entry Details</button>
         <div id="Demo2" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{entry_details}}</p>
+        <p style="background-color:#457B9D; text-align: center; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{entry_details}}</p>
         </div>
         
 
 
-        <button onclick="myFunction('Demo3')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Departure information</button>
+        <button onclick="myFunction('Demo3')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Vaccination</button>
         <div id="Demo3" class="w3-hide w3-animate-zoom mt-0">
-        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"><b>{{o_t_d_line1}}</b><br>{{o_t_d_line2}}</p>
-        
-        </div>
-        
-
-        <button onclick="myFunction('Demo4')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Return information</button>
-        <div id="Demo4" class="w3-hide w3-animate-zoom mt-0 mb-5">
-        <p style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"><b>{{r_t_d_line1}}</b><br>{{r_t_d_line2}}</p>
+        <p style="background-color:#457B9D; text-align: center; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{vacc_line1}}<br>{{vacc_line2}}</p>
         
         </div>
 
+        <button onclick="myFunction('Demo4')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Testing</button>
+        <div id="Demo4" class="w3-hide w3-animate-zoom mt-0">
+        <p style="background-color:#457B9D; text-align: center; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{test}}</p>
+        
+        </div>        
+
+        <button onclick="myFunction('Demo5')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Quarantine</button>
+        <div id="Demo5" class="w3-hide w3-animate-zoom mt-0 mb-5">
+        <p style="background-color:#457B9D; text-align: center; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{quar_line1}}<br></p>
+        
+        </div>
+<!--
         <button onclick="myFunction('Demo5')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Relevant Links</button>
         <div id="Demo5" class="w3-hide w3-animate-zoom mt-0 mb-5">
             <ul style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: small; display: block; list-style-type: none; -ms-flex: 1; flex: 1;" class="bg-gradient w3-text-white container mt-1 ml-0 mr-0 mb-5 p-0 my-5 border rounded border-success">
@@ -74,7 +78,9 @@
                     <li style="-ms-flex: 1; flex: 1;"><a href="{{link}}">{{link}}</a></li>
                 {% endfor %}  
             </ul>
+            -->
             <br>
+
         </div>
         </div>
 

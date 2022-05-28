@@ -3,18 +3,9 @@ from bs4 import BeautifulSoup
 import datetime
 from pymongo import MongoClient
 from cred_albert import *
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
-
-#destination = input("destination?").lower()
-#origin = "DE"
-
-options = Options()
-options.headless = True
-options.add_argument("--window-size=1920,1200")
 
 
 
@@ -27,18 +18,18 @@ class Web_Crawler:
         countries_that_take_a_definite_article = ["Gambia", "Czech Republic"]
         countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros"]
         if self.country_name in countries_that_take_a_definite_article:
-            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Outgoing travel to the {self.country_name}", "Return travel",
-            f"Other COVID-19 restrictions for the {self.country_name}", "Additional resources"]
+            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            f"Can I travel to the {self.country_name} without quarantine?"]
         else:
-            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Outgoing travel to {self.country_name}", "Return travel", 
-            f"Other COVID-19 restrictions for {self.country_name}", "Additional resources"]
+            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
+            f"Can I travel to {self.country_name} without quarantine?"]
         
         if self.country_name in countries_that_take_a_definite_article_and_have_alt_headings:
-            self.alt_headings = [f"{self.country_name} Travel Restrictions", f"Outgoing travel to the {self.country_name}", "Return travel", 
-            f"Other COVID-19 restrictions for the {self.country_name}", "Additional resources"] 
+            self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            f"Can I travel to the {self.country_name} without quarantine?"]
         else:
-            self.alt_headings = [f"{self.country_name} Travel Restrictions", f"Outgoing travel to {self.country_name}", "Return travel", 
-            f"Other COVID-19 restrictions for {self.country_name}", "Additional resources"] 
+            self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
+            f"Can I travel to {self.country_name} without quarantine?"]
 
     def page_lister(self):
         ori= "origin="+self.origin
@@ -153,27 +144,26 @@ class Web_Crawler:
     def crawl_into_db(self):
         page = self.page_lister()
         payload = self.clean_up_sections()
-        links_payload = self.link_lister()
         if f"{self.country_name} entry details and exceptions" in page:
             overview = payload[0]
             entry_details = payload[1]
-            outgoing_travel = payload[2]
-            return_travel = payload[3]
-            other_covid_restrictions = payload[4]
-            additional_resources = payload[5]
+            vaccination = payload[3]
+            testing = payload[4]
+            quarantine = payload[5]
 
-            destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "relevant_links": links_payload, "date": datetime.datetime.utcnow()}        
+
+            destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
             insert = db.country_restrictions.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
         else:
             overview = payload[0]
-            outgoing_travel = payload[1]
-            return_travel = payload[2]
-            other_covid_restrictions = payload[3]
-            additional_resources = payload[4]
+            vaccination = payload[2]
+            testing = payload[3]
+            quarantine = payload[4]
 
-            destination_log = {"name": self.destination, "overview": overview, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "relevant_links": links_payload, "date": datetime.datetime.utcnow()}        
+
+            destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
             insert = db.country_restrictions.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
@@ -187,17 +177,23 @@ class Web_Crawler:
 
 # This function updates the first entry in the database where the "name" is the same as the destination input
     def update_db_entry(self):
+        page = self.page_lister()
         payload = self.clean_up_sections()
-
-        overview = payload[0]
-        entry_details = payload[1]
-        outgoing_travel = payload[2]
-        return_travel = payload[3]
-        other_covid_restrictions = payload[4]
-        additional_resources = payload[5]
-
         search_query = {"name": self.destination}
-        new_destination_log = {"$set": {"name": self.destination, "overview": overview, "entry_details": entry_details, "outgoing_travel": outgoing_travel, "return_travel": return_travel, "other_covid_restrictions": other_covid_restrictions, "additional_resources": additional_resources, "date": datetime.datetime.utcnow()}}        
+
+        if f"{self.country_name} entry details and exceptions" in page:
+            overview = payload[0]
+            entry_details = payload[1]
+            vaccination = payload[3]
+            testing = payload[4]
+            quarantine = payload[5]
+            new_destination_log = {"$set":  {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}}        
+        else:
+            overview = payload[0]
+            vaccination = payload[2]
+            testing = payload[3]
+            quarantine = payload[4]
+            new_destination_log = {"$set":  {"name": self.destination, "overview": overview, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}}        
         update = db.country_restrictions.update_one(search_query, new_destination_log)
         if update:
             return "Update successful !"

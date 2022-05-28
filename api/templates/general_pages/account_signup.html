@@ -1,0 +1,79 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+    <title>restrictapp</title>
+{% endblock %}
+
+
+{% block content %}
+    <!--<div class="w3-bar w3-display-container w3-white w3-border-bottom w3-xlarge">
+        <a href="#" class="w3-bar-item w3-button w3-text-red w3-hover-red"><b><i class="fa fa-map-marker w3-margin-right"></i>restrictapp</b></a>
+        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge"> login</a>
+        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge">enquiries</a>
+        
+    </div>-->
+
+    <div class="container">
+       <!-- <img src="{{ url_for('static', path='images/bg.jpg') }}" alt="Restrictapp" class="img-fluid">-->
+        <h3 style="text-align: center;" class="display-4"> Sign Up to use Restrictapp</h3>
+    </div>
+
+    <div class="mx-auto rounded border-success mt-5">
+
+        <div style="background-color:#002f42; color: aliceblue;" class="bg-gradient col-sm-4 container ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"> 
+            <div class="p-5">
+            
+            <form action="https://restrictapp.deta.dev/account/signup" method="post">
+                <div class="mb-5">
+                    <label for="uname" class="form-label">Choose a Username:</label>
+                    <input type="text" placeholder="Enter Username" name="uname" class="form-control col-6" required>
+                </div>
+                            <div class="mb-5">
+                    <label for="uname" class="form-label">First Name:</label>
+                    <input type="text" placeholder="Enter your first name" name="fname" class="form-control col-6" required>
+                </div>
+                <div class="mb-5">
+                    <label for="uname" class="form-label">Last Name/Surname:</label>
+                    <input type="text" placeholder="Enter your Last Name/Surname:" name="lname" class="form-control col-6" required>
+                </div>
+                <div class="mb-5">
+                    <label for="uname" class="form-label">Phone Number:</label>
+                    <input type="text" placeholder="Enter your phone number:" name="phonenum" class="form-control col-6" required>
+                </div>			
+                <div class="mb-5">
+                    <label for="exampleInputEmail1" class="form-label">Email address:</label>
+                    <input type="email" name="email" class="form-control col-6" placeholder="Enter your email address">
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="inputPassword5" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control col-6" placeholder="Enter your password" required>
+                    <div id="passwordHelpBlock" class="form-text">
+                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
+                    </div>
+                </div>
+                
+                <button style="background-color:#00c2cb;" type="submit" class="btn col-12">S     I     G     N          U     P</button>
+                <br><br>
+                <p class="bland">Already have an account? <a href="https://restrictapp.deta.dev/account/login" class="link-info">Login here</a></p>
+            </form>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script>
+        var input = document.getElementById("wohin")
+    
+            //this function gets called whenever the text in the text box changes
+        input.oninput = function() {
+        var link = document.getElementById("link");
+                //here, this.value is the value of the input "flowname"
+        var cup = this.value
+        link.href = "https://restrictapp.deta.dev/restriction-output/destination=" + cup.toLowerCase() + "/origin=DE";
+        }
+        </script>
+    </div>
+
+
+{% endblock %}
