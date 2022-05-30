@@ -14,22 +14,61 @@ class Web_Crawler:
         self.destination = str(destination)
         self.origin = origin
         self.country = self.destination.title()
-        self.country_name = self.country.replace("-", " ")
-        countries_that_take_a_definite_article = ["Gambia", "Czech Republic"]
-        countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros"]
+        self.country_name_and = self.country.replace("And", "and")
+        self.country_name_of = self.country_name_and.replace("Of", "of")
+        self.country_name_the = self.country_name_of.replace("The", "the")
+        self.country_name = self.country_name_the.replace("-", " ")
+        complex_name_format = {
+            "Antigua and Barbuda": "Antigua And Barbuda",
+            "Curacao": "Curaçao",
+            "Falkland Islands Islas Malvinas": "Falkland Islands (Islas Malvinas)",
+            "Guinea Bissau": "Guinea-Bissau",
+            "Reunion": "Réunion",
+            "Saint Barthelemy": "Saint Barthélemy",
+            "Sao Tome and Principe": "São Tomé and Príncipe",
+            "St Maarten": "St. Maarten",
+            "the Bahamas": "The Bahamas",
+            "U S Virgin Islands": "U.S. Virgin Islands"
+        }
+        if self.country_name in complex_name_format:
+            self.country_name = complex_name_format.get(self.country_name)
+
+        countries_that_take_a_definite_article = ["Gambia", "Czech Republic", "British Virgin Islands", "Caribbean Netherlands", "Cayman Islands", 
+        "Central African Republic", "Cook Islands", "Democratic Republic of the Congo", "Dominican Republic", "Faroe Islands", "Maldives", 
+        "Marshall Islands", "Netherlands", "Northern Mariana Islands", "Philippines", "Solomon Islands", "Turks and Caicos Islands", 'United Arab Emirates', 
+        'United States', 'United Kingdom', 'U.S. Virgin Islands'] 
+        countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", "Marshall Islands"]
         if self.country_name in countries_that_take_a_definite_article:
             self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
             f"Can I travel to the {self.country_name} without quarantine?"]
+            self.minus_doc = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            f"Can I travel to the {self.country_name} without quarantine?"]
+            self.minus_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?"]
         else:
             self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
             f"Can I travel to {self.country_name} without quarantine?"]
+            self.minus_doc = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
+            f"Can I travel to {self.country_name} without quarantine?"]
+            self.minus_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?"]
+            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from Germany?"]
+        
         
         if self.country_name in countries_that_take_a_definite_article_and_have_alt_headings:
             self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
             f"Can I travel to the {self.country_name} without quarantine?"]
+            self.minus_ede_and_doc = [f"{self.country_name} Travel Restrictions", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            f"Can I travel to the {self.country_name} without quarantine?"]
+            self.minus_ede_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?"]
+            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to the {self.country_name} from Germany?"]
         else:
             self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
             f"Can I travel to {self.country_name} without quarantine?"]
+            self.minus_ede_and_doc = [f"{self.country_name} Travel Restrictions", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", f"Can I travel to {self.country_name} without quarantine?"]
+            self.minus_ede_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"Can I travel to {self.country_name} from Germany?"]
+            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from Germany?"]
+            self.minus_ede_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?"]
+
+
 
     def page_lister(self):
         ori= "origin="+self.origin
@@ -72,10 +111,19 @@ class Web_Crawler:
     # Then it calls the find_indices function and takes the returned list and appends the contents of the elements and appends it into a new list(save_index)
     # Said list will be returned
     def get_text_from_index(self, page):
-        headings = self.headings
         page = self.page_lister()
+        dork = "Documents & Additional resources"
         if f"{self.country_name} entry details and exceptions" in page:
-            headings = self.headings
+            if dork in page:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.headings
+                else:
+                    headings = self.minus_test_question_and_quar_q
+            else:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.minus_doc
+                else:
+                    headings = self.minus_doc_and_test_question_and_quar_q
             i = 0
             save_index = []
             while i < len(headings):     
@@ -86,7 +134,16 @@ class Web_Crawler:
 
             return save_index
         else:
-            headings = self.alt_headings
+            if "Documents & Additional resources" in page:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.alt_headings
+                else:
+                    headings = self.minus_ede_and_test_question_and_quar_q
+            else:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.minus_ede_and_doc
+                else:
+                    headings = self.minus_ede_doc_and_test_question_and_quar_q
             i = 0
             save_index = []
             while i < len(headings):     
@@ -103,8 +160,18 @@ class Web_Crawler:
 
     def sections_into_list(self):
         page = self.page_lister()
+        dork = "Documents & Additional resources"
         if f"{self.country_name} entry details and exceptions" in page:
-            headings = self.headings
+            if dork in page:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.headings
+                else:
+                    headings = self.minus_test_question_and_quar_q
+            else:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.minus_doc
+                else:
+                    headings = self.minus_doc_and_test_question_and_quar_q
             header_index = self.get_text_from_index(headings)
             put_into_db = []
             i = 0
@@ -116,7 +183,16 @@ class Web_Crawler:
                 i = i + 1
             return put_into_db             
         else:
-            headings = self.alt_headings
+            if "Documents & Additional resources" in page:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.alt_headings
+                else:
+                    headings = self.minus_ede_and_test_question_and_quar_q
+            else:
+                if f"Do I need a COVID test to enter {self.country_name}?" in page or f"Do I need a COVID test to enter the {self.country_name}?" in page:
+                    headings = self.minus_ede_and_doc
+                else:
+                    headings = self.minus_ede_doc_and_test_question_and_quar_q
             header_index = self.get_text_from_index(headings)
             put_into_db = []
             i = 0
@@ -144,26 +220,66 @@ class Web_Crawler:
     def crawl_into_db(self):
         page = self.page_lister()
         payload = self.clean_up_sections()
+        dork = "Documents & Additional resources"
+        countries_with_incomplete_faq = ['American Samoa', 'Bhutan', 'Brunei Darussalam', 'Cameroon', 'China', 'Cook Islands', 
+        'East Timor', 'Eswatini', 'Falkland Islands (Islas Malvinas)', 'Federated States of Micronesia', 'French Guiana', 'Hong Kong', 
+        'Kiribati', 'Lesotho', 'Libya', 'Macau', 'Marshall Islands', 'Mayotte', 'Montserrat', 'Nauru', 'North Korea', 'Samoa', 'Syria', 
+        'Taiwan', 'Tonga', 'Turkmenistan', 'Tuvalu', 'Vanuatu', 'Wallis and Futuna', 'Western Sahara', 'Yemen']
         if f"{self.country_name} entry details and exceptions" in page:
-            overview = payload[0]
-            entry_details = payload[1]
-            vaccination = payload[3]
-            testing = payload[4]
-            quarantine = payload[5]
+            if dork in page:
+                if self.country_name in countries_with_incomplete_faq:
+                    overview = payload[0]
+                    entry_details = payload[1]
+                    vaccination = payload[3]
+                else:
+                    overview = payload[0]
+                    entry_details = payload[1]
+                    vaccination = payload[3]
+                    testing = payload[4]
+                    quarantine = payload[5]
+            else:
+                if self.country_name in countries_with_incomplete_faq:
+                    overview = payload[0]
+                    entry_details = payload[1]
+                    vaccination = payload[2]
+                else:
+                    overview = payload[0]
+                    entry_details = payload[1]
+                    vaccination = payload[2]
+                    testing = payload[3]
+                    quarantine = payload[4]
 
-
-            destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
+            if self.country_name in countries_with_incomplete_faq:
+                destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "date": datetime.datetime.utcnow()}        
+            else:
+                destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
             insert = db.country_restrictions.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
         else:
-            overview = payload[0]
-            vaccination = payload[2]
-            testing = payload[3]
-            quarantine = payload[4]
+            if dork in page:
+                if self.country_name in countries_with_incomplete_faq:
+                    overview = payload[0]
+                    vaccination = payload[2]
+                else:
+                    overview = payload[0]
+                    vaccination = payload[2]
+                    testing = payload[3]
+                    quarantine = payload[4]
+            else:
+                if self.country_name in countries_with_incomplete_faq:
+                    overview = payload[0]
+                    vaccination = payload[1]
+                else:
+                    overview = payload[0]
+                    vaccination = payload[1]
+                    testing = payload[2]
+                    quarantine = payload[3]
 
-
-            destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
+            if self.country_name in countries_with_incomplete_faq:
+                destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "date": datetime.datetime.utcnow()}        
+            else:
+                destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
             insert = db.country_restrictions.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
