@@ -31,15 +31,15 @@
         <div class="mt-0 mb-5">
             <div class="row center">
             <div class="form-check form-switch col-sm-2 mx-auto">
-                <input class="form-check-input" type="checkbox" role="switch" value="mask" id="mask">
+                <input class="form-check-input" type="checkbox" role="switch" id="mask">
                 <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="mask">Mask required</label>
             </div>
             <div class="form-check form-switch col-sm-2 mx-auto">
-                <input class="form-check-input" type="checkbox" role="switch" value="restaurant" id="restaurant">
+                <input class="form-check-input" type="checkbox" role="switch" id="restaurant">
                 <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="restaurant">Restaurants open</label>
             </div>
             <div class="form-check form-switch col-sm-2 mx-auto">
-                <input class="form-check-input" type="checkbox" role="switch" value="bar" id="bar">
+                <input class="form-check-input" type="checkbox" role="switch" id="bar">
                 <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="bar">Bars open</label>
             </div>
         </div>
@@ -51,6 +51,13 @@
         </div>
     
     <script>
+        document.getElementById("mask").addEventListener("change", myFunction);
+
+        function myFunction() {
+        var x = document.getElementById("mask");
+        x.value = "mask";
+        }
+
         var input = document.getElementById("wohin")
     
             //this function gets called whenever the text in the text box changes
@@ -59,13 +66,6 @@
         var mask = document.getElementById("mask").checked;
         var restaurant = document.getElementById("restaurant").checked;
         var bar = document.getElementById("bar").checked;
-        if (mask == false) {
-            mask_value = "hh"
-        }
-        if (mask == true) {
-            mask_value = "mask-"
-        }
-
         if (bar == false) {
             bar_value = " "
         } else {
@@ -79,7 +79,7 @@
         }
                 //here, this.value is the value of the input "wohin"
         var cup = this.value
-        link.href = "https://restrictapp.deta.dev/restriction-output/destination=" + cup.toLowerCase() + "/origin=DE/" + bar_value + mask_value + restaurant_value ;
+        link.href = "https://restrictapp.deta.dev/restriction-output/destination=" + cup.toLowerCase() + "/origin=DE/" + bar_value + x.value + restaurant_value ;
         }
         </script>
 

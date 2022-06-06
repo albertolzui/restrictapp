@@ -108,5 +108,5 @@ for origin in origins:
 #print(len(countries))
 #"""
 
-#doo = Web_Crawler_plus("nigeria", "AF").cull_from_db()
+#doo = Web_Crawler_plus("afghanistan", "DE").currency_check()
 #print(doo)

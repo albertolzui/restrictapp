@@ -271,6 +271,45 @@ class Web_Crawler_plus:
         page = self.page_lister()
         payload = self.clean_up_sections()
         dork = "Documents & Additional resources"
+        overview = payload[0]
+        mask_list = ['Recommended in public spaces.', 'Required in enclosed environments and public transportation.', 'Required in enclosed environments.', 'Recommended in public spaces and enclosed environments.',
+        'Required in public spaces and public transportation.', 'Required in public spaces.', 'Not required in public spaces.', 'Required on public transportation.', 'Required in public spaces and enclosed environments.',
+        'Required in public spaces, enclosed environments and public transportation.', 'Not required in public spaces, enclosed environments and public transportation.', 'Recommended in enclosed environments and public transportation.', 
+        'Not required in public spaces and public transportation.']
+        bars_or_restaurants_list = ['Open', 'Open with restrictions']
+        index_check_mask = -1
+        for req in mask_list:
+            for i in range(len(overview)):
+                if overview[i] == req:
+                    index_check_mask = i
+
+        if index_check_mask != -1:
+            masks = overview[index_check_mask]
+        else:
+            masks = "Information on mask use is currently unavailable"
+
+        index_check_bars = -1
+        for i in range(len(overview)):
+            if overview[i] == "Bars":
+                index_check_b = i+1
+                if overview[index_check_b] in bars_or_restaurants_list:
+                    index_check_bars = index_check_b
+        if index_check_bars != -1:
+            bars = overview[index_check_bars]
+        else:
+            bars = "Information on access into Bars is currently unavailable"    
+
+        index_check_restaurants = -1
+        for i in range(len(overview)):
+            if overview[i] == "Restaurants":
+                index_check_r = i+1
+                if overview[index_check_r] in bars_or_restaurants_list:
+                    index_check_restaurants = index_check_r
+        if index_check_restaurants != -1:
+            restaurants = overview[index_check_restaurants]
+        else:
+            restaurants = "Information on restaurant access is currently unavailable"  
+
         countries_with_incomplete_faq = ['American Samoa', 'Bhutan', 'Brunei Darussalam', 'Cameroon', 'China', 'Cook Islands', 
         'East Timor', 'Eswatini', 'Falkland Islands (Islas Malvinas)', 'Federated States of Micronesia', 'French Guiana', 'Hong Kong', 
         'Kiribati', 'Lesotho', 'Libya', 'Macau', 'Marshall Islands', 'Mayotte', 'Montserrat', 'Nauru', 'North Korea', 'Samoa', 'Syria', 
@@ -278,58 +317,50 @@ class Web_Crawler_plus:
         if f"{self.country_name} entry details and exceptions" in page:
             if dork in page:
                 if self.country_name in countries_with_incomplete_faq or len(payload) < 5:
-                    overview = payload[0]
                     entry_details = payload[1]
                     vaccination = payload[3]
                 else:
-                    overview = payload[0]
                     entry_details = payload[1]
                     vaccination = payload[3]
                     testing = payload[4]
                     quarantine = payload[5]
             else:
                 if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
-                    overview = payload[0]
                     entry_details = payload[1]
                     vaccination = payload[2]
                 else:
-                    overview = payload[0]
                     entry_details = payload[1]
                     vaccination = payload[2]
                     testing = payload[3]
                     quarantine = payload[4]
 
             if self.country_name in countries_with_incomplete_faq or len(payload) < 5:
-                destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "date": datetime.datetime.utcnow()}        
+                destination_log = {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "entry_details": entry_details, "vaccination": vaccination, "date": datetime.datetime.utcnow()}        
             else:
-                destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
+                destination_log = {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
             insert = db.all_possible_trips.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
         else:
             if dork in page:
                 if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
-                    overview = payload[0]
                     vaccination = payload[2]
                 else:
-                    overview = payload[0]
                     vaccination = payload[2]
                     testing = payload[3]
                     quarantine = payload[4]
             else:
                 if self.country_name in countries_with_incomplete_faq or len(payload) < 3:
-                    overview = payload[0]
                     vaccination = payload[1]
                 else:
-                    overview = payload[0]
                     vaccination = payload[1]
                     testing = payload[2]
                     quarantine = payload[3]
 
             if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
-                destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "date": datetime.datetime.utcnow()}        
+                destination_log =  {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "vaccination": vaccination, "date": datetime.datetime.utcnow()}        
             else:
-                destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
+                destination_log =  {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
             insert = db.all_possible_trips.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
