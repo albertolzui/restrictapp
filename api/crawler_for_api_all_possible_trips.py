@@ -36,8 +36,8 @@ class Web_Crawler_plus:
             'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'The-Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 
             'BZ': 'Belize', 'BJ': 'Benin', 'BM': 'Bermuda', 'BT': 'Bhutan', 'BO': 'Bolivia', 'BA': 'Bosnia-and-Herzegovina', 'BW': 'Botswana', 'BR': 'Brazil', 'BN': 'Brunei-Darussalam', 
             'BG': 'Bulgaria', 'BF': 'Burkina-Faso', 'BI': 'Burundi', 'CV': 'Cape-Verde', 'KH': 'Cambodia',  'CM': 'Cameroon', 'CA': 'Canada', 'BQ': 'Caribbean-Netherlands', 'KY': 'Cayman-Islands', 
-            'CF': 'Central-African-Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CO': 'Colombia', 'KM': 'Comoros', 'CG': 'Democratic-Republic-of-the-Congo', 
-            'CD': 'Republic-of-the-Congo', 'CK': 'Cook-Islands', 'CR': 'Costa-Rica', 'HR': 'Croatia', 'CU': 'Cuba', 'CW': 'Curacao', 'CY': 'Cyprus', 'CZ': 'Czech-Republic', 'CI': 'Ivory-Coast', 
+            'CF': 'Central-African-Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CO': 'Colombia', 'KM': 'Comoros', 'CD': 'Democratic-Republic-of-the-Congo', 
+            'CG': 'Republic-of-the-Congo', 'CK': 'Cook-Islands', 'CR': 'Costa-Rica', 'HR': 'Croatia', 'CU': 'Cuba', 'CW': 'Curacao', 'CY': 'Cyprus', 'CZ': 'Czech-Republic', 'CI': 'Ivory-Coast', 
             'DK': 'Denmark', 'DJ': 'Djibouti', 'DM': 'Dominica', 'DO': 'Dominican-Republic', 'EC': 'Ecuador', 'EG': 'Egypt', 'SV': 'El-Salvador', 'GQ': 'Equatorial-Guinea', 'ER': 'Eritrea', 
             'EE': 'Estonia', 'SZ': 'Eswatini', 'ET': 'Ethiopia', 'FK': 'Falkland-Islands-Islas-Malvinas', 'FO': 'Faroe-Islands', 'FJ': 'Fiji', 'FI': 'Finland', 'FR': 'France', 
             'GF': 'French-Guiana', 'PF': 'French-Polynesia', 'GA': 'Gabon', 'GM': 'Gambia', 'GE': 'Georgia', 'DE': 'Germany', 'GH': 'Ghana', 'GI': 'Gibraltar', 'GR': 'Greece', 'GL': 'Greenland', 
@@ -433,4 +433,101 @@ class Web_Crawler_plus:
                 if duration_of_info < max_age_of_info:
                     return check
 
+
+    def locally_first(self):
+        page = self.page_lister()
+        payload = self.clean_up_sections()
+        dork = "Documents & Additional resources"
+        overview = payload[0]
+        mask_list = ['Recommended in public spaces.', 'Required in enclosed environments and public transportation.', 'Required in enclosed environments.', 'Recommended in public spaces and enclosed environments.',
+        'Required in public spaces and public transportation.', 'Required in public spaces.', 'Not required in public spaces.', 'Required on public transportation.', 'Required in public spaces and enclosed environments.',
+        'Required in public spaces, enclosed environments and public transportation.', 'Not required in public spaces, enclosed environments and public transportation.', 'Recommended in enclosed environments and public transportation.', 
+        'Not required in public spaces and public transportation.']
+        bars_or_restaurants_list = ['Open', 'Open with restrictions']
+        index_check_mask = -1
+        for req in mask_list:
+            for i in range(len(overview)):
+                if overview[i] == req:
+                    index_check_mask = i
+
+        if index_check_mask != -1:
+            masks = overview[index_check_mask]
+        else:
+            masks = "Information on mask use is currently unavailable"
+
+        index_check_bars = -1
+        for i in range(len(overview)):
+            if overview[i] == "Bars":
+                index_check_b = i+1
+                if overview[index_check_b] in bars_or_restaurants_list:
+                    index_check_bars = index_check_b
+        if index_check_bars != -1:
+            bars = overview[index_check_bars]
+        else:
+            bars = "Information on access into Bars is currently unavailable"    
+
+        index_check_restaurants = -1
+        for i in range(len(overview)):
+            if overview[i] == "Restaurants":
+                index_check_r = i+1
+                if overview[index_check_r] in bars_or_restaurants_list:
+                    index_check_restaurants = index_check_r
+        if index_check_restaurants != -1:
+            restaurants = overview[index_check_restaurants]
+        else:
+            restaurants = "Information on restaurant access is currently unavailable"  
+
+        countries_with_incomplete_faq = ['American Samoa', 'Bhutan', 'Brunei Darussalam', 'Cameroon', 'China', 'Cook Islands', 
+        'East Timor', 'Eswatini', 'Falkland Islands (Islas Malvinas)', 'Federated States of Micronesia', 'French Guiana', 'Hong Kong', 
+        'Kiribati', 'Lesotho', 'Libya', 'Macau', 'Marshall Islands', 'Mayotte', 'Montserrat', 'Nauru', 'North Korea', 'Samoa', 'Syria', 
+        'Taiwan', 'Tonga', 'Turkmenistan', 'Tuvalu', 'Vanuatu', 'Wallis and Futuna', 'Western Sahara', 'Yemen', 'Japan']
+        if f"{self.country_name} entry details and exceptions" in page:
+            if dork in page:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 5:
+                    entry_details = payload[1]
+                    vaccination = payload[3]
+                else:
+                    entry_details = payload[1]
+                    vaccination = payload[3]
+                    testing = payload[4]
+                    quarantine = payload[5]
+            else:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
+                    entry_details = payload[1]
+                    vaccination = payload[2]
+                else:
+                    entry_details = payload[1]
+                    vaccination = payload[2]
+                    testing = payload[3]
+                    quarantine = payload[4]
+
+            if self.country_name in countries_with_incomplete_faq or len(payload) < 5:
+                destination_log = {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "entry_details": entry_details, "vaccination": vaccination, "date": datetime.datetime.utcnow()}        
+            else:
+                destination_log = {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}
+            
+            return destination_log
+
+        else:
+            if dork in page:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
+                    vaccination = payload[2]
+                else:
+                    vaccination = payload[2]
+                    testing = payload[3]
+                    quarantine = payload[4]
+            else:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 3:
+                    vaccination = payload[1]
+                else:
+                    vaccination = payload[1]
+                    testing = payload[2]
+                    quarantine = payload[3]
+
+            if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
+                destination_log =  {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "vaccination": vaccination, "date": datetime.datetime.utcnow()}        
+            else:
+                destination_log =  {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}
+            
+            return destination_log
 

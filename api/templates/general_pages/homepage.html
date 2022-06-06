@@ -51,32 +51,12 @@
         </div>
     
     <script>
-        document.getElementById("mask").addEventListener("change", myFunction);
-
-        function myFunction() {
-        var x = document.getElementById("mask");
-        x.value = "mask";
-        }
-
         var input = document.getElementById("wohin")
     
             //this function gets called whenever the text in the text box changes
         input.oninput = function() {
         var link = document.getElementById("link");
-        var mask = document.getElementById("mask").checked;
-        var restaurant = document.getElementById("restaurant").checked;
-        var bar = document.getElementById("bar").checked;
-        if (bar == false) {
-            bar_value = " "
-        } else {
-            bar_value = "bar-"
-        }
-
-        if (restaurant == false) {
-            restaurant_value = " "
-        } else {
-            restaurant_value = "restaurant"
-        }
+        
                 //here, this.value is the value of the input "wohin"
         var cup = this.value
         link.href = "https://restrictapp.deta.dev/restriction-output/destination=" + cup.toLowerCase() + "/origin=DE/" + bar_value + x.value + restaurant_value ;

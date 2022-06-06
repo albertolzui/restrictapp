@@ -41,8 +41,8 @@ country_code = {
     'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'The-Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 
     'BZ': 'Belize', 'BJ': 'Benin', 'BM': 'Bermuda', 'BT': 'Bhutan', 'BO': 'Bolivia', 'BA': 'Bosnia-and-Herzegovina', 'BW': 'Botswana', 'BR': 'Brazil', 'BN': 'Brunei-Darussalam', 
     'BG': 'Bulgaria', 'BF': 'Burkina-Faso', 'BI': 'Burundi', 'CV': 'Cape-Verde', 'KH': 'Cambodia',  'CM': 'Cameroon', 'CA': 'Canada', 'BQ': 'Caribbean-Netherlands', 'KY': 'Cayman-Islands', 
-    'CF': 'Central-African-Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CO': 'Colombia', 'KM': 'Comoros', 'CG': 'Democratic-Republic-of-the-Congo', 
-    'CD': 'Republic-of-the-Congo', 'CK': 'Cook-Islands', 'CR': 'Costa-Rica', 'HR': 'Croatia', 'CU': 'Cuba', 'CW': 'Curacao', 'CY': 'Cyprus', 'CZ': 'Czech-Republic', 'CI': 'Ivory-Coast', 
+    'CF': 'Central-African-Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CO': 'Colombia', 'KM': 'Comoros', 'CD': 'Democratic-Republic-of-the-Congo', 
+    'CG': 'Republic-of-the-Congo', 'CK': 'Cook-Islands', 'CR': 'Costa-Rica', 'HR': 'Croatia', 'CU': 'Cuba', 'CW': 'Curacao', 'CY': 'Cyprus', 'CZ': 'Czech-Republic', 'CI': 'Ivory-Coast', 
     'DK': 'Denmark', 'DJ': 'Djibouti', 'DM': 'Dominica', 'DO': 'Dominican-Republic', 'EC': 'Ecuador', 'EG': 'Egypt', 'SV': 'El-Salvador', 'GQ': 'Equatorial-Guinea', 'ER': 'Eritrea', 
     'EE': 'Estonia', 'SZ': 'Eswatini', 'ET': 'Ethiopia', 'FK': 'Falkland-Islands-Islas-Malvinas', 'FO': 'Faroe-Islands', 'FJ': 'Fiji', 'FI': 'Finland', 'FR': 'France', 
     'GF': 'French-Guiana', 'PF': 'French-Polynesia', 'GA': 'Gabon', 'GM': 'Gambia', 'GE': 'Georgia', 'DE': 'Germany', 'GH': 'Ghana', 'GI': 'Gibraltar', 'GR': 'Greece', 'GL': 'Greenland', 
@@ -86,7 +86,7 @@ for country in countries:
 
 
 # All possible trips:
-
+"""
 l = len(countries)
 i = 1
 for origin in origins:
@@ -110,3 +110,27 @@ for origin in origins:
 
 #doo = Web_Crawler_plus("afghanistan", "DE").currency_check()
 #print(doo)
+
+
+l = len(countries)
+i = 1
+to_be_inserted = []
+readability = []
+for origin in origins:
+    for country in countries:
+        base = country.lower()
+        print(f"{country} : {base}")
+        state = Web_Crawler_plus(base, origin).locally_first()
+        if state:
+            print(f"{origin} to {country} entry was successful!... ... ... ... ... ... ... ... ... ... ... ... ... ... ...  {i} of {l * l}")
+            to_be_inserted.append(state)
+            readability.append(str(state))
+            with open('see.txt', 'w') as f:
+                f.writelines('\n'.join(readability))
+            i = i + 1
+
+
+
+insert = db.all_possible_trips.insert_many(to_be_inserted)
+if insert:
+    print("Insert successful !")
