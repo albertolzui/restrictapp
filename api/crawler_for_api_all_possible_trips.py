@@ -9,15 +9,8 @@ db = client.Restrictapp
 
 
 
-class Web_Crawler:
+class Web_Crawler_plus:
     def __init__(self, destination, origin):
-        self.destination = str(destination)
-        self.origin = origin
-        self.country = self.destination.title()
-        self.country_name_and = self.country.replace("And", "and")
-        self.country_name_of = self.country_name_and.replace("Of", "of")
-        self.country_name_the = self.country_name_of.replace("The", "the")
-        self.country_name = self.country_name_the.replace("-", " ")
         complex_name_format = {
             "Antigua and Barbuda": "Antigua And Barbuda",
             "Curacao": "Curaçao",
@@ -30,43 +23,94 @@ class Web_Crawler:
             "the Bahamas": "The Bahamas",
             "U S Virgin Islands": "U.S. Virgin Islands"
         }
+        self.destination = str(destination)
+        self.origin = origin
+        origins_dict = {
+            'AF': 'Afghanistan', 'AL': 'Albania', 'DZ': 'Algeria', 'AS': 'American-Samoa', 'AO': 'Angola', 'AI': 'Anguilla', 'AG': 'Antigua-and-Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 
+            'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'The-Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 
+            'BZ': 'Belize', 'BJ': 'Benin', 'BM': 'Bermuda', 'BT': 'Bhutan', 'BO': 'Bolivia', 'BA': 'Bosnia-and-Herzegovina', 'BW': 'Botswana', 'BR': 'Brazil', 'BN': 'Brunei-Darussalam', 
+            'BG': 'Bulgaria', 'BF': 'Burkina-Faso', 'BI': 'Burundi', 'CV': 'Cape-Verde', 'KH': 'Cambodia',  'CM': 'Cameroon', 'CA': 'Canada', 'BQ': 'Caribbean-Netherlands', 'KY': 'Cayman-Islands', 
+            'CF': 'Central-African-Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CO': 'Colombia', 'KM': 'Comoros', 'CG': 'Democratic-Republic-of-the-Congo', 
+            'CD': 'Republic-of-the-Congo', 'CK': 'Cook-Islands', 'CR': 'Costa-Rica', 'HR': 'Croatia', 'CU': 'Cuba', 'CW': 'Curacao', 'CY': 'Cyprus', 'CZ': 'Czech-Republic', 'CI': 'Ivory-Coast', 
+            'DK': 'Denmark', 'DJ': 'Djibouti', 'DM': 'Dominica', 'DO': 'Dominican-Republic', 'EC': 'Ecuador', 'EG': 'Egypt', 'SV': 'El-Salvador', 'GQ': 'Equatorial-Guinea', 'ER': 'Eritrea', 
+            'EE': 'Estonia', 'SZ': 'Eswatini', 'ET': 'Ethiopia', 'FK': 'Falkland-Islands-Islas-Malvinas', 'FO': 'Faroe-Islands', 'FJ': 'Fiji', 'FI': 'Finland', 'FR': 'France', 
+            'GF': 'French-Guiana', 'PF': 'French-Polynesia', 'GA': 'Gabon', 'GM': 'Gambia', 'GE': 'Georgia', 'DE': 'Germany', 'GH': 'Ghana', 'GI': 'Gibraltar', 'GR': 'Greece', 'GL': 'Greenland', 
+            'GD': 'Grenada', 'GP': 'Guadeloupe', 'GU': 'Guam', 'GT': 'Guatemala', 'GN': 'Guinea', 'GW': 'Guinea-Bissau', 'GY': 'Guyana', 'HT': 'Haiti', 'HN': 'Honduras', 'HK': 'Hong-Kong', 
+            'HU': 'Hungary', 'IS': 'Iceland', 'IN': 'India', 'ID': 'Indonesia', 'IQ': 'Iraq', 'IE': 'Ireland', 'IL': 'Israel', 'IT': 'Italy', 'JM': 'Jamaica', 'JP': 'Japan', 'JE': 'Jersey', 
+            'JO': 'Jordan', 'KZ': 'Kazakhstan', 'KE': 'Kenya', 'KI': 'Kiribati', 'XK': 'Kosovo', 'KP': 'North-Korea', 'KR': 'South-Korea', 'KW': 'Kuwait', 'KG': 'Kyrgyzstan', 'LA': 'Laos', 
+            'LV': 'Latvia', 'LB': 'Lebanon', 'LS': 'Lesotho', 'LR': 'Liberia', 'LY': 'Libya', 'LI': 'Liechtenstein', 'LT': 'Lithuania', 'LU': 'Luxembourg', 'MO': 'Macau', 'MG': 'Madagascar', 
+            'MW': 'Malawi', 'MY': 'Malaysia', 'MV': 'Maldives', 'ML': 'Mali', 'MT': 'Malta', 'MH': 'Marshall-Islands', 'MQ': 'Martinique', 'MR': 'Mauritania', 'MU': 'Mauritius', 'YT': 'Mayotte', 
+            'MX': 'Mexico', 'FM': 'Federated-States-of-Micronesia', 'MD': 'Moldova', 'MN': 'Mongolia', 'ME': 'Montenegro', 'MS': 'Montserrat', 'MA': 'Morocco', 'MZ': 'Mozambique', 'MM': 'Myanmar', 
+            'NA': 'Namibia', 'NR': 'Nauru', 'NP': 'Nepal', 'NL': 'Netherlands', 'NC': 'New-Caledonia', 'NZ': 'New-Zealand', 'NI': 'Nicaragua', 'NE': 'Niger', 'NG': 'Nigeria', 'MK': 'North-Macedonia',
+            'MP': 'Northern-Mariana-Islands', 'NO': 'Norway', 'OM': 'Oman', 'PK': 'Pakistan', 'PW': 'Palau', 'PS': 'Palestinian-Territories', 'PA': 'Panama', 'PG': 'Papua-New-Guinea', 
+            'PY': 'Paraguay', 'PE': 'Peru', 'PH': 'Philippines', 'PL': 'Poland', 'PT': 'Portugal', 'PR': 'Puerto-Rico', 'QA': 'Qatar', 'RO': 'Romania', 'RU': 'Russia', 'RW': 'Rwanda', 'RE': 'Reunion', 
+            'BL': 'Saint-Barthelemy', 'KN': 'Saint-Kitts-and-Nevis', 'LC': 'Saint-Lucia', 'MF': 'Saint-Martin', 'VC': 'Saint-Vincent-and-the-Grenadines', 'WS': 'Samoa', 
+            'ST': 'Sao-Tome-and-Principe', 'SA': 'Saudi-Arabia', 'SN': 'Senegal', 'RS': 'Serbia', 'SC': 'Seychelles', 'SL': 'Sierra-Leone', 'SG': 'Singapore', 'SX': 'St-Maarten', 'SK': 'Slovakia', 
+            'SI': 'Slovenia', 'SB': 'Solomon-Islands', 'SO': 'Somalia', 'ZA': 'South-Africa', 'SS': 'South-Sudan', 'ES': 'Spain', 'LK': 'Sri-Lanka', 'SD': 'Sudan', 'SR': 'Suriname', 'SE': 'Sweden', 
+            'CH': 'Switzerland', 'SY': 'Syria', 'TW': 'Taiwan', 'TJ': 'Tajikistan', 'TZ': 'Tanzania', 'TH': 'Thailand', 'TL': 'East-Timor', 'TG': 'Togo', 'TO': 'Tonga', 'TT': 'Trinidad-and-Tobago', 
+            'TN': 'Tunisia', 'TR': 'Turkey', 'TM': 'Turkmenistan', 'TC': 'Turks-and-Caicos-Islands', 'TV': 'Tuvalu', 'UG': 'Uganda', 'UA': 'Ukraine', 'AE': 'United-Arab-Emirates', 
+            'GB': 'United-Kingdom', 'US': 'United-States', 'UY': 'Uruguay', 'UZ': 'Uzbekistan', 'VU': 'Vanuatu', 'VE': 'Venezuela', 'VN': 'Vietnam', 'VG': 'British-Virgin-Islands', 
+            'VI': 'U-S-Virgin-Islands', 'WF': 'Wallis-and-Futuna', 'EH': 'Western-Sahara', 'YE': 'Yemen', 'ZM': 'Zambia', 'ZW': 'Zimbabwe'
+        }
+        
+        if self.origin in origins_dict:
+            self.origin_nom = origins_dict.get(self.origin)
+            self.origin_name_and = self.origin_nom.replace("And", "and")
+            self.origin_name_of = self.origin_name_and.replace("Of", "of")
+            self.origin_name_the = self.origin_name_of.replace("The", "the")
+            self.origin_name = self.origin_name_the.replace("-", " ")
+        if self.origin_name in complex_name_format:
+            self.origin_name = complex_name_format.get(self.origin_name)
+            if self.origin_name in countries_that_take_a_definite_article or self.origin_name in countries_that_take_a_definite_article_and_have_alt_headings:
+                self.origin_name_headers = f"the {self.origin_name}"
+            else:
+                self.origin_name_headers = self.origin_name
+        
+        self.country = self.destination.title()
+        self.country_name_and = self.country.replace("And", "and")
+        self.country_name_of = self.country_name_and.replace("Of", "of")
+        self.country_name_the = self.country_name_of.replace("The", "the")
+        self.country_name = self.country_name_the.replace("-", " ")
+        
         if self.country_name in complex_name_format:
             self.country_name = complex_name_format.get(self.country_name)
 
+            
         countries_that_take_a_definite_article = ["Gambia", "Czech Republic", "British Virgin Islands", "Caribbean Netherlands", "Cayman Islands", 
         "Central African Republic", "Cook Islands", "Democratic Republic of the Congo", "Dominican Republic", "Faroe Islands", "Maldives", 
         "Marshall Islands", "Netherlands", "Northern Mariana Islands", "Philippines", "Solomon Islands", "Turks and Caicos Islands", 'United Arab Emirates', 
         'United States', 'United Kingdom', 'U.S. Virgin Islands'] 
-        countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", "Faroe Islands", "Marshall Islands"]
+        countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", 
+        "Faroe Islands", "Marshall Islands", "Solomon Islands"]
         if self.country_name in countries_that_take_a_definite_article:
-            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter the {self.country_name}?", 
             f"Can I travel to the {self.country_name} without quarantine?"]
-            self.minus_doc = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            self.minus_doc = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter the {self.country_name}?", 
             f"Can I travel to the {self.country_name} without quarantine?"]
-            self.minus_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?"]
+            self.minus_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?"]
         else:
-            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
+            self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter {self.country_name}?", 
             f"Can I travel to {self.country_name} without quarantine?"]
-            self.minus_doc = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
+            self.minus_doc = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter {self.country_name}?", 
             f"Can I travel to {self.country_name} without quarantine?"]
-            self.minus_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?"]
-            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from Germany?"]
+            self.minus_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to {self.country_name} from {self.origin_name_headers}?"]
+            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from {self.origin_name_headers}?"]
         
         
         if self.country_name in countries_that_take_a_definite_article_and_have_alt_headings:
-            self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter the {self.country_name}?", 
             f"Can I travel to the {self.country_name} without quarantine?"]
-            self.minus_ede_and_doc = [f"{self.country_name} Travel Restrictions", f"Can I travel to the {self.country_name} from Germany?", f"Do I need a COVID test to enter the {self.country_name}?", 
+            self.minus_ede_and_doc = [f"{self.country_name} Travel Restrictions", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter the {self.country_name}?", 
             f"Can I travel to the {self.country_name} without quarantine?"]
-            self.minus_ede_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from Germany?"]
-            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to the {self.country_name} from Germany?"]
+            self.minus_ede_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?"]
+            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?"]
         else:
-            self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", 
+            self.alt_headings = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter {self.country_name}?", 
             f"Can I travel to {self.country_name} without quarantine?"]
-            self.minus_ede_and_doc = [f"{self.country_name} Travel Restrictions", f"Can I travel to {self.country_name} from Germany?", f"Do I need a COVID test to enter {self.country_name}?", f"Can I travel to {self.country_name} without quarantine?"]
-            self.minus_ede_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"Can I travel to {self.country_name} from Germany?"]
-            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from Germany?"]
-            self.minus_ede_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to {self.country_name} from Germany?"]
+            self.minus_ede_and_doc = [f"{self.country_name} Travel Restrictions", f"Can I travel to {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter {self.country_name}?", f"Can I travel to {self.country_name} without quarantine?"]
+            self.minus_ede_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"Can I travel to {self.country_name} from {self.origin_name_headers}?"]
+            self.minus_doc_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", f"Can I travel to {self.country_name} from {self.origin_name_headers}?"]
+            self.minus_ede_and_test_question_and_quar_q = [f"{self.country_name} Travel Restrictions", "Documents & Additional resources", f"Can I travel to {self.country_name} from {self.origin_name_headers}?"]
 
 
 
@@ -227,7 +271,7 @@ class Web_Crawler:
         'Taiwan', 'Tonga', 'Turkmenistan', 'Tuvalu', 'Vanuatu', 'Wallis and Futuna', 'Western Sahara', 'Yemen', 'Japan']
         if f"{self.country_name} entry details and exceptions" in page:
             if dork in page:
-                if self.country_name in countries_with_incomplete_faq:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 5:
                     overview = payload[0]
                     entry_details = payload[1]
                     vaccination = payload[3]
@@ -238,7 +282,7 @@ class Web_Crawler:
                     testing = payload[4]
                     quarantine = payload[5]
             else:
-                if self.country_name in countries_with_incomplete_faq:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
                     overview = payload[0]
                     entry_details = payload[1]
                     vaccination = payload[2]
@@ -249,16 +293,16 @@ class Web_Crawler:
                     testing = payload[3]
                     quarantine = payload[4]
 
-            if self.country_name in countries_with_incomplete_faq:
+            if self.country_name in countries_with_incomplete_faq or len(payload) < 5:
                 destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "date": datetime.datetime.utcnow()}        
             else:
                 destination_log = {"name": self.destination, "overview": overview, "entry_details": entry_details, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
-            insert = db.country_restrictions.insert_one(destination_log)
+            insert = db.all_possible_trips.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
         else:
             if dork in page:
-                if self.country_name in countries_with_incomplete_faq:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
                     overview = payload[0]
                     vaccination = payload[2]
                 else:
@@ -267,7 +311,7 @@ class Web_Crawler:
                     testing = payload[3]
                     quarantine = payload[4]
             else:
-                if self.country_name in countries_with_incomplete_faq:
+                if self.country_name in countries_with_incomplete_faq or len(payload) < 3:
                     overview = payload[0]
                     vaccination = payload[1]
                 else:
@@ -276,18 +320,18 @@ class Web_Crawler:
                     testing = payload[2]
                     quarantine = payload[3]
 
-            if self.country_name in countries_with_incomplete_faq:
+            if self.country_name in countries_with_incomplete_faq or len(payload) < 4:
                 destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "date": datetime.datetime.utcnow()}        
             else:
                 destination_log =  {"name": self.destination, "overview": overview,"vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}        
-            insert = db.country_restrictions.insert_one(destination_log)
+            insert = db.all_possible_trips.insert_one(destination_log)
             if insert:
                 return "Insert successful !"
 
 # This function finds the first entry in the database where the "name" is the same as the destination input
     def cull_from_db(self):
-        find_entry_where = {"name": self.destination}
-        cull = db.country_restrictions.find_one(find_entry_where, {'_id': 0})
+        find_entry_from = {"name": self.destination, "overview": self.origin_name}
+        cull = db.all_possible_trips.find_one(find_entry_from, {'_id': 0})
         if cull:
             return cull
 
@@ -310,14 +354,14 @@ class Web_Crawler:
             testing = payload[3]
             quarantine = payload[4]
             new_destination_log = {"$set":  {"name": self.destination, "overview": overview, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}}        
-        update = db.country_restrictions.update_one(search_query, new_destination_log)
+        update = db.all_possible_trips.update_one(search_query, new_destination_log)
         if update:
             return "Update successful !"
 
 # This function deletes the first entry in the database where the "name" is the same as the destination input
     def delete_entry(self):
-        delete_entry_where = {"name": self.destination}
-        delete = db.country_restrictions.delete_one(delete_entry_where)
+        delete_entry_where = {"name": self.destination, "overview": self.origin_name}
+        delete = db.all_possible_trips.delete_one(delete_entry_where)
         if delete:
             return "Delete successful !"
 
@@ -331,7 +375,7 @@ class Web_Crawler:
         check = self.cull_from_db()
         if check:
             entry_date = check["date"]
-            max_age_of_info = datetime.timedelta(days = 1)
+            max_age_of_info = datetime.timedelta(days = 4)
             time_now = datetime.datetime.utcnow()
             duration_of_info = time_now - entry_date
             if duration_of_info < max_age_of_info:
@@ -346,7 +390,7 @@ class Web_Crawler:
             check = self.cull_from_db()
             if check:
                 entry_date = check["date"]
-                max_age_of_info = datetime.timedelta(days = 1)
+                max_age_of_info = datetime.timedelta(days = 4)
                 time_now = datetime.datetime.utcnow()
                 duration_of_info = time_now - entry_date
                 if duration_of_info < max_age_of_info:
