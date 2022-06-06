@@ -26,9 +26,9 @@
             <option value="{{country}}"></option>
         {% endfor %}
         </datalist>
-        <button onclick="myFunction('Demo1')" style="color: #3D5A80; font-family:monospace; text-align: center;" class="btn w3-right container mt-2 mb-0 col-sm-2 rounded-pill">Filter search</button>
+
         <br>
-        <div id="Demo1" class="w3-hide w3-animate-zoom mt-0 mb-5">
+        <div class="mt-0 mb-5">
             <div class="row center">
             <div class="form-check form-switch col-sm-2 mx-auto">
                 <input class="form-check-input" type="checkbox" role="switch" value="mask" id="mask">
@@ -49,16 +49,6 @@
         <div class="d-grid gap-2 col-6 mx-auto">
             <a style="border: 2px solid #14213D; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center;" class="btn me-md-2 btn-lg rounded-pill" href="https://restrictapp.deta.dev/restriction-output/destination=" role="button" id="link">Proceed</a>
         </div>
-        <script>
-        function myFunction(id) {
-        var x = document.getElementById(id);
-        if (x.className.indexOf("w3-show") == -1) {
-            x.className += " w3-show";
-        } else { 
-            x.className = x.className.replace(" w3-show", "");
-        }
-        }
-        </script>
     
     <script>
         var input = document.getElementById("wohin")

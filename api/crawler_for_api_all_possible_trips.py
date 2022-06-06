@@ -25,6 +25,12 @@ class Web_Crawler_plus:
         }
         self.destination = str(destination)
         self.origin = origin
+        countries_that_take_a_definite_article = ["Gambia", "Czech Republic", "British Virgin Islands", "Caribbean Netherlands", "Cayman Islands", 
+        "Central African Republic", "Cook Islands", "Democratic Republic of the Congo", "Dominican Republic", "Faroe Islands", "Maldives", 
+        "Marshall Islands", "Netherlands", "Northern Mariana Islands", "Philippines", "Solomon Islands", "Turks and Caicos Islands", 'United Arab Emirates', 
+        'United States', 'United Kingdom', 'U.S. Virgin Islands'] 
+        countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", 
+        "Faroe Islands", "Marshall Islands", "Solomon Islands"]
         origins_dict = {
             'AF': 'Afghanistan', 'AL': 'Albania', 'DZ': 'Algeria', 'AS': 'American-Samoa', 'AO': 'Angola', 'AI': 'Anguilla', 'AG': 'Antigua-and-Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 
             'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'The-Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 
@@ -61,10 +67,10 @@ class Web_Crawler_plus:
             self.origin_name = self.origin_name_the.replace("-", " ")
         if self.origin_name in complex_name_format:
             self.origin_name = complex_name_format.get(self.origin_name)
-            if self.origin_name in countries_that_take_a_definite_article or self.origin_name in countries_that_take_a_definite_article_and_have_alt_headings:
-                self.origin_name_headers = f"the {self.origin_name}"
-            else:
-                self.origin_name_headers = self.origin_name
+        if self.origin_name in countries_that_take_a_definite_article or self.origin_name in countries_that_take_a_definite_article_and_have_alt_headings:
+            self.origin_name_headers = f"the {self.origin_name}"
+        else:
+            self.origin_name_headers = self.origin_name
         
         self.country = self.destination.title()
         self.country_name_and = self.country.replace("And", "and")
