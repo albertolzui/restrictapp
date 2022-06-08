@@ -1,3 +1,4 @@
+import ast
 import requests
 from bs4 import BeautifulSoup 
 import datetime
@@ -24,6 +25,15 @@ countries = ['Afghanistan', 'Albania', 'Algeria', 'American-Samoa', 'Angola', 'A
 'Tonga', 'Trinidad-and-Tobago', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks-and-Caicos-Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United-Arab-Emirates', 'United-Kingdom', 
 'United-States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Venezuela', 'Vietnam', 'British-Virgin-Islands', 'U-S-Virgin-Islands', 'Wallis-and-Futuna', 'Western-Sahara', 'Yemen', 'Zambia', 
 'Zimbabwe']
+
+unmodified = ['AF', 'AL', 'DZ', 'AS', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ', 'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BR', 'BN', 'BG',
+ 'BF', 'BI', 'CV', 'KH', 'CM', 'CA', 'BQ', 'KY', 'CF', 'TD', 'CL', 'CN', 'CO', 'KM', 'CG', 'CD', 'CK', 'CR', 'HR', 'CU', 'CW', 'CY', 'CZ', 'CI', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG',
+ 'SV', 'GQ', 'ER', 'EE', 'SZ', 'ET', 'FK', 'FO', 'FJ', 'FI', 'FR', 'GF', 'PF', 'GA', 'GM', 'GE', 'DE', 'GH', 'GI', 'GR', 'GL', 'GD', 'GP', 'GU', 'GT', 'GN', 'GW', 'GY', 'HT', 'HN', 
+ 'HK', 'HU', 'IS', 'IN', 'ID', 'IQ', 'IE', 'IL', 'IT', 'JM', 'JP', 'JE', 'JO', 'KZ', 'KE', 'KI', 'XK', 'KP', 'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU', 
+ 'MO', 'MG', 'MW', 'MY', 'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU', 'YT', 'MX', 'FM', 'MD', 'MN', 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA', 'NR', 'NP', 'NL', 'NC', 'NZ', 'NI', 'NE', 'NG', 
+ 'MK', 'MP', 'NO', 'OM', 'PK', 'PW', 'PS', 'PA', 'PG', 'PY', 'PE', 'PH', 'PL', 'PT', 'PR', 'QA', 'RO', 'RU', 'RW', 'RE', 'BL', 'KN', 'LC', 'MF', 'VC', 'WS', 'ST', 'SA', 'SN', 'RS', 
+ 'SC', 'SL', 'SG', 'SX', 'SK', 'SI', 'SB', 'SO', 'ZA', 'SS', 'ES', 'LK', 'SD', 'SR', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 
+ 'UG', 'UA', 'AE', 'GB', 'US', 'UY', 'UZ', 'VU', 'VE', 'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW']
 
 origins = ['AF', 'AL', 'DZ', 'AS', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ', 'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BR', 'BN', 'BG',
  'BF', 'BI', 'CV', 'KH', 'CM', 'CA', 'BQ', 'KY', 'CF', 'TD', 'CL', 'CN', 'CO', 'KM', 'CG', 'CD', 'CK', 'CR', 'HR', 'CU', 'CW', 'CY', 'CZ', 'CI', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG',
@@ -86,21 +96,32 @@ for country in countries:
 
 
 # All possible trips:
-"""
+
+failed_entry = {}
 l = len(countries)
 i = 1
 for origin in origins:
     for country in countries:
         base = country.lower()
         print(f"{country} : {base}")
+        if base == "saudi-arabia" and origin == "AF":
+            continue
         state = Web_Crawler_plus(base, origin).currency_check()
         if state:
             print(f"{origin} to {country} entry was successful!... ... ... ... ... ... ... ... ... ... ... ... ... ... ...  {i} of {l * l}")
+        else:
+            failed_entry[base] = origin
+            with open('failed.txt', 'w') as f:
+                f.writelines('\n'.join(failed_entry))
+            continue
         i = i + 1
 #    print(f" All possible destinations from {origin} have been covered, moving on to next possible origin")
 #"""
 
-
+#state = Web_Crawler_plus("saudi-arabia", "AF").page_lister()
+#print(state)
+#if state:
+#    print("entry was successful!")
     
 
 #clay = Web_Crawler("british-virgin-islands", "DE").get_text_from_index(Web_Crawler("british-virgin-islands", "DE").page_lister()) 
@@ -111,7 +132,7 @@ for origin in origins:
 #doo = Web_Crawler_plus("afghanistan", "DE").currency_check()
 #print(doo)
 
-
+"""
 l = len(countries)
 i = 1
 to_be_inserted = []
@@ -128,9 +149,19 @@ for origin in origins:
             with open('see.txt', 'w') as f:
                 f.writelines('\n'.join(readability))
             i = i + 1
+"""    
+
+#for i in range(5198):
+#    beamer = str(to_be_inserted[i])
+#    worry.append(beamer.strip())
+#    print(worry)
+#    i = i + 1
 
 
+#insert = db.all_possible_trips.insert_many()
+#if insert:
+#    print("Insert successful !")
 
-insert = db.all_possible_trips.insert_many(to_be_inserted)
-if insert:
-    print("Insert successful !")
+#"""
+#state = Web_Crawler_plus("dominican-republic", "AW").locally_first()
+#print(state)

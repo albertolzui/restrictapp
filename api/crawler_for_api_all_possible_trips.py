@@ -24,13 +24,13 @@ class Web_Crawler_plus:
             "U S Virgin Islands": "U.S. Virgin Islands"
         }
         self.destination = str(destination)
-        self.origin = origin
+        self.origin = str(origin)
         countries_that_take_a_definite_article = ["Gambia", "Czech Republic", "British Virgin Islands", "Caribbean Netherlands", "Cayman Islands", 
         "Central African Republic", "Cook Islands", "Democratic Republic of the Congo", "Dominican Republic", "Faroe Islands", "Maldives", 
         "Marshall Islands", "Netherlands", "Northern Mariana Islands", "Philippines", "Solomon Islands", "Turks and Caicos Islands", 'United Arab Emirates', 
         'United States', 'United Kingdom', 'U.S. Virgin Islands'] 
         countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", 
-        "Faroe Islands", "Marshall Islands", "Solomon Islands"]
+        "Faroe Islands", "Marshall Islands", "Dominican Republic", "Solomon Islands"]
         origins_dict = {
             'AF': 'Afghanistan', 'AL': 'Albania', 'DZ': 'Algeria', 'AS': 'American-Samoa', 'AO': 'Angola', 'AI': 'Anguilla', 'AG': 'Antigua-and-Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 
             'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'The-Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 
@@ -81,13 +81,6 @@ class Web_Crawler_plus:
         if self.country_name in complex_name_format:
             self.country_name = complex_name_format.get(self.country_name)
 
-            
-        countries_that_take_a_definite_article = ["Gambia", "Czech Republic", "British Virgin Islands", "Caribbean Netherlands", "Cayman Islands", 
-        "Central African Republic", "Cook Islands", "Democratic Republic of the Congo", "Dominican Republic", "Faroe Islands", "Maldives", 
-        "Marshall Islands", "Netherlands", "Northern Mariana Islands", "Philippines", "Solomon Islands", "Turks and Caicos Islands", 'United Arab Emirates', 
-        'United States', 'United Kingdom', 'U.S. Virgin Islands'] 
-        countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", 
-        "Faroe Islands", "Marshall Islands", "Solomon Islands"]
         if self.country_name in countries_that_take_a_definite_article:
             self.headings = [f"{self.country_name} Travel Restrictions", f"{self.country_name} entry details and exceptions", "Documents & Additional resources", f"Can I travel to the {self.country_name} from {self.origin_name_headers}?", f"Do I need a COVID test to enter the {self.country_name}?", 
             f"Can I travel to the {self.country_name} without quarantine?"]
