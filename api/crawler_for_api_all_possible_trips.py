@@ -30,7 +30,7 @@ class Web_Crawler_plus:
         "Marshall Islands", "Netherlands", "Northern Mariana Islands", "Philippines", "Solomon Islands", "Turks and Caicos Islands", 'United Arab Emirates', 
         'United States', 'United Kingdom', 'U.S. Virgin Islands'] 
         countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", 
-        "Faroe Islands", "Marshall Islands", "Dominican Republic", "Solomon Islands"]
+        "Faroe Islands", "Marshall Islands", "Dominican Republic", 'United Arab Emirates', "Solomon Islands", "Myanmar"]
         origins_dict = {
             'AF': 'Afghanistan', 'AL': 'Albania', 'DZ': 'Algeria', 'AS': 'American-Samoa', 'AO': 'Angola', 'AI': 'Anguilla', 'AG': 'Antigua-and-Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 
             'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'The-Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 
@@ -405,7 +405,7 @@ class Web_Crawler_plus:
         check = self.cull_from_db()
         if check:
             entry_date = check["date"]
-            max_age_of_info = datetime.timedelta(days = 4)
+            max_age_of_info = datetime.timedelta(days = 30)
             time_now = datetime.datetime.utcnow()
             duration_of_info = time_now - entry_date
             if duration_of_info < max_age_of_info:
@@ -420,7 +420,7 @@ class Web_Crawler_plus:
             check = self.cull_from_db()
             if check:
                 entry_date = check["date"]
-                max_age_of_info = datetime.timedelta(days = 4)
+                max_age_of_info = datetime.timedelta(days = 30)
                 time_now = datetime.datetime.utcnow()
                 duration_of_info = time_now - entry_date
                 if duration_of_info < max_age_of_info:

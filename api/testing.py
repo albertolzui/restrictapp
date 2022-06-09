@@ -35,14 +35,8 @@ unmodified = ['AF', 'AL', 'DZ', 'AS', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW', 'AU', 
  'SC', 'SL', 'SG', 'SX', 'SK', 'SI', 'SB', 'SO', 'ZA', 'SS', 'ES', 'LK', 'SD', 'SR', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 
  'UG', 'UA', 'AE', 'GB', 'US', 'UY', 'UZ', 'VU', 'VE', 'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW']
 
-origins = ['AF', 'AL', 'DZ', 'AS', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ', 'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BA', 'BW', 'BR', 'BN', 'BG',
- 'BF', 'BI', 'CV', 'KH', 'CM', 'CA', 'BQ', 'KY', 'CF', 'TD', 'CL', 'CN', 'CO', 'KM', 'CG', 'CD', 'CK', 'CR', 'HR', 'CU', 'CW', 'CY', 'CZ', 'CI', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG',
- 'SV', 'GQ', 'ER', 'EE', 'SZ', 'ET', 'FK', 'FO', 'FJ', 'FI', 'FR', 'GF', 'PF', 'GA', 'GM', 'GE', 'DE', 'GH', 'GI', 'GR', 'GL', 'GD', 'GP', 'GU', 'GT', 'GN', 'GW', 'GY', 'HT', 'HN', 
- 'HK', 'HU', 'IS', 'IN', 'ID', 'IQ', 'IE', 'IL', 'IT', 'JM', 'JP', 'JE', 'JO', 'KZ', 'KE', 'KI', 'XK', 'KP', 'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU', 
- 'MO', 'MG', 'MW', 'MY', 'MV', 'ML', 'MT', 'MH', 'MQ', 'MR', 'MU', 'YT', 'MX', 'FM', 'MD', 'MN', 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA', 'NR', 'NP', 'NL', 'NC', 'NZ', 'NI', 'NE', 'NG', 
- 'MK', 'MP', 'NO', 'OM', 'PK', 'PW', 'PS', 'PA', 'PG', 'PY', 'PE', 'PH', 'PL', 'PT', 'PR', 'QA', 'RO', 'RU', 'RW', 'RE', 'BL', 'KN', 'LC', 'MF', 'VC', 'WS', 'ST', 'SA', 'SN', 'RS', 
- 'SC', 'SL', 'SG', 'SX', 'SK', 'SI', 'SB', 'SO', 'ZA', 'SS', 'ES', 'LK', 'SD', 'SR', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 
- 'UG', 'UA', 'AE', 'GB', 'US', 'UY', 'UZ', 'VU', 'VE', 'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW']
+origins = ['GN', 'GW', 'GY', 'HT', 'HN', 'HK', 'HU', 'IS', 'IN', 'ID', 'IQ', 'IE', 'IL', 'IT', 'JM', 'JP', 'JE', 'JO', 'KZ', 'KE', 
+'KI', 'XK', 'KP', 'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU']
 
 #triad = dict(zip(origins, countries))
 #print(triad)
@@ -97,23 +91,21 @@ for country in countries:
 
 # All possible trips:
 
-failed_entry = {}
+
 l = len(countries)
 i = 1
 for origin in origins:
     for country in countries:
         base = country.lower()
         print(f"{country} : {base}")
-        if base == "saudi-arabia" and origin == "AF":
+        if base == "saudi-arabia" and origin == "AF" or base == "myanmar" and origin == "GN":
             continue
         state = Web_Crawler_plus(base, origin).currency_check()
-        if state:
+        try: 
+            state
             print(f"{origin} to {country} entry was successful!... ... ... ... ... ... ... ... ... ... ... ... ... ... ...  {i} of {l * l}")
-        else:
-            failed_entry[base] = origin
-            with open('failed.txt', 'w') as f:
-                f.writelines('\n'.join(failed_entry))
-            continue
+        except IndexError:
+            pass
         i = i + 1
 #    print(f" All possible destinations from {origin} have been covered, moving on to next possible origin")
 #"""
@@ -129,7 +121,7 @@ for origin in origins:
 #print(len(countries))
 #"""
 
-#doo = Web_Crawler_plus("afghanistan", "DE").currency_check()
+#doo = Web_Crawler_plus("myanmar", "GN").page_lister()
 #print(doo)
 
 """
