@@ -4,6 +4,7 @@ import datetime
 from pymongo import MongoClient
 from cred_albert import *
 
+
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
 
@@ -523,4 +524,8 @@ class Web_Crawler_plus:
                 destination_log =  {"name": self.destination, "overview": overview, "bars": bars, "masks": masks, "restaurants": restaurants, "vaccination": vaccination, "testing": testing, "quarantine": quarantine, "date": datetime.datetime.utcnow()}
             
             return destination_log
+
+
+
+
 

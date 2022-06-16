@@ -17,51 +17,287 @@
        <!-- <img src="{{ url_for('static', path='images/bg.jpg') }}" alt="Restrictapp" class="img-fluid">-->
         <h1 class="display-4"> Where do you want to travel?</h1>
     </div>
-    <div class="container mt-5">
-        <div class=" container-sm input-group input-group-lg mb-3">
-            <input list="countries" style="background-color: white; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; width: 60%; height: 60px;" type="text" name="wohin" id="wohin" class="form-control mx-auto rounded-pill" placeholder="Ländername /  Country Name" aria-label="Destination" aria-describedby="button-addon2">
+    <div class="container">
+        <div class="row center mt-5 mb-5">
+        <div class=" container-sm col-9 mr-0 p-0">
+            <input list="countries" style="border: 2px solid #110363; border-top-left-radius: 25px; border-bottom-left-radius: 25px; background-color: white; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content" type="text" name="wohin" id="wohin" class="form-control mx-auto" placeholder="Ländername /  Country Name" aria-label="Destination" aria-describedby="button-addon2">
         </div>
         <datalist id="countries">
         {% for country in countries%}
             <option value="{{country}}"></option>
         {% endfor %}
         </datalist>
+        <div class="d-grid col-3 mx-auto ml-0 p-0">
+            <a style="border: 2px solid #110363; border-top-right-radius: 25px; border-bottom-right-radius: 25px; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/restriction-output/destination=" role="button" id="link1">Proceed</a>
+        </div>
+        </div>
+        <br>
+        <br>
+        <br>
+
+
+
+    <div class="container mt-5">
+       <!-- <img src="{{ url_for('static', path='images/bg.jpg') }}" alt="Restrictapp" class="img-fluid">-->
+        <h1 class="display-4"> Need filtered suggestions? Try here:</h1>
+    </div>
 
         <br>
-        <div class="mt-0 mb-5">
-            <div class="row center">
+        <div class="mt-0 mb-1">
+            <div class="row center" style="background-color: #E0FBFC;">
             <div class="form-check form-switch col-sm-2 mx-auto">
-                <input class="form-check-input" type="checkbox" role="switch" id="mask">
-                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="mask">Mask required</label>
+                <label style="color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: center;" class="form-check-label"><b>Mask Use</b></label>
+            </div>            
+            <div class="form-check form-switch col-sm-2 mx-auto">
+                <input class="form-check-input" type="checkbox" id="mask1" onclick="maskRegister1()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="mask1">Mandatory</label>
             </div>
-            <div class="form-check form-switch col-sm-2 mx-auto">
-                <input class="form-check-input" type="checkbox" role="switch" id="restaurant">
-                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="restaurant">Restaurants open</label>
+
+            <div class="form-check form-switch col-sm-3 mx-auto">
+                <input class="form-check-input" type="checkbox" id="mask2" onclick="maskRegister2()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="mask2">Recommended</label>
             </div>
+
             <div class="form-check form-switch col-sm-2 mx-auto">
-                <input class="form-check-input" type="checkbox" role="switch" id="bar">
-                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="bar">Bars open</label>
+                <input class="form-check-input" type="checkbox" id="mask3" onclick="maskRegister3()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="mask3">Not required</label>
+            </div>
+
+        </div>
+        </div>
+
+        <div class="mt-0 mb-1">
+            <div class="row center" style="background-color: #E0FBFC;">
+            <div class="form-check form-switch col-sm-2 mx-auto">
+                <label style="color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: center;" class="form-check-label"><b>Restaurants:</b></label>
+            </div>                
+            <div class="form-check form-switch col-sm-2 mx-auto">
+                <input class="form-check-input" type="checkbox" id="res1" onclick="resRegister1()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="res1">Open</label>
+            </div>
+
+            <div class="form-check form-switch col-sm-3 mx-auto">
+                <input class="form-check-input" type="checkbox" id="res2" onclick="resRegister2()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="res2">Open with restrictions</label>
+            </div>
+
+            <div class="form-check form-switch col-sm-2 mx-auto">
+                <input class="form-check-input" type="checkbox" id="res3" onclick="resRegister3()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="res3">Closed</label>
+            </div>
+
+        </div>
+        </div>
+
+        <div class="mt-0 mb-2">
+            <div class="row center" style="background-color: #E0FBFC;">
+            <div class="form-check form-switch col-sm-2 mx-auto">
+                <label style="color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: center;" class="form-check-label"><b>Bars:</b></label>
+            </div>                           
+            <div class="form-check form-switch col-sm-2 mx-auto">
+                <input class="form-check-input" type="checkbox" id="bar1" onclick="barRegister1()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="bar1">Open</label>
+            </div>
+
+            <div class="form-check form-switch col-sm-3 mx-auto">
+                <input class="form-check-input" type="checkbox" id="bar2" onclick="barRegister2()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="bar2">Open with restrictions</label>
+            </div>
+
+            <div class="form-check form-switch col-sm-2 mx-auto">
+                <input class="form-check-input" type="checkbox" id="bar3" onclick="barRegister3()">
+                <label style="color: #3D5A80; font-family:monospace; text-align: center;" class="form-check-label" for="bar3">Closed</label>
             </div>
         </div>
         </div>
         <br>
+
+
         <br>
         <div class="d-grid gap-2 col-6 mx-auto">
-            <a style="border: 2px solid #14213D; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center;" class="btn me-md-2 btn-lg rounded-pill" href="https://restrictapp.deta.dev/restriction-output/destination=" role="button" id="link">Proceed</a>
+            <a style="border: 2px solid #14213D; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center;" class="btn me-md-2 btn-lg rounded-pill" href="https://restrictapp.deta.dev/restriction-output/destination=" role="button" id="link2">Fetch Destinations</a>
         </div>
     
     <script>
-        var input = document.getElementById("wohin")
+        var pointing = document.getElementById("wohin");
+        pointing.oninput = function() {
+            var link1 = document.getElementById("link1");
+            var countryName = this.value;
+            link1.href = "https://restrictapp.deta.dev/restriction-output/destination=" + countryName.toLowerCase() + "/origin=DE/";
+        }
+//        var link1 = document.getElementById("link1");
+    
+//        link1.onclick = function() {
+//            var input1 = document.getElementById("wohin");
+//            var cup1 = input1.value;
+//            link1.href = "https://restrictapp.deta.dev/restriction-output/destination=" + cup.toLowerCase() + "/origin=DE/";
+//        }
+
+
+        function maskRegister1() {
+            document.getElementById("mask1").value = "relevant";
+        }
+
+        function maskRegister2() {
+            document.getElementById("mask2").value = "relevant";
+        }
+
+        function maskRegister3() {
+            document.getElementById("mask3").value = "relevant";
+        }
+        
+        
+
+        function resRegister1() {
+            document.getElementById("res1").value = "relevant";
+        }
+
+        function resRegister2() {
+            document.getElementById("res2").value = "relevant";
+        }
+
+        function resRegister3() {
+            document.getElementById("res3").value = "relevant";
+        }
+
+
+
+        function barRegister1() {
+            document.getElementById("bar1").value = "relevant";
+        }
+
+        function barRegister2() {
+            document.getElementById("bar2").value = "relevant";
+        }
+
+        function barRegister3() {
+            document.getElementById("bar3").value = "relevant";
+        }
+                
+
+        var link2 = document.getElementById("link2");
     
             //this function gets called whenever the text in the text box changes
-        input.oninput = function() {
-        var link = document.getElementById("link");
-        
-                //here, this.value is the value of the input "wohin"
-        var cup = this.value
-        link.href = "https://restrictapp.deta.dev/restriction-output/destination=" + cup.toLowerCase() + "/origin=DE/" + bar_value + x.value + restaurant_value ;
+        link2.onclick = function() {
+
+        var maskCheck1 = document.getElementById("mask1").value;
+        if (maskCheck1 == "relevant") {
+            var mask1 = "mandatory";
+        } else {
+            mask1 = "no";
         }
-        </script>
+
+        var maskCheck2 = document.getElementById("mask2").value;
+        if (maskCheck2 == "relevant") {
+            var mask2 = "recommended";
+        } else {
+            mask2 = "no";
+        }
+
+        var maskCheck3 = document.getElementById("mask3").value;
+        if (maskCheck3 == "relevant") {
+            var mask3 = "not-required";
+        } else {
+            mask3 = "no";
+        }
+
+
+        var resCheck1 = document.getElementById("res1").value;
+        if (resCheck1 == "relevant") {
+            var res1 = "open";
+        } else {
+            res1 = "no";
+        }
+
+        var resCheck2 = document.getElementById("res2").value;
+        if (resCheck2 == "relevant") {
+            var res2 = "owr";
+        } else {
+            res2 = "no";
+        }
+
+        var resCheck3 = document.getElementById("res3").value;
+        if (resCheck3 == "relevant") {
+            var res3 = "closed";
+        } else {
+            res3 = "no";
+        }
+
+
+        var barCheck1 = document.getElementById("bar1").value;
+        if (barCheck1 == "relevant") {
+            var bar1 = "open";
+        } else {
+            bar1 = "no";
+        }
+
+        var barCheck2 = document.getElementById("bar2").value;
+        if (barCheck2 == "relevant") {
+            var bar2 = "owr";
+        } else {
+            bar2 = "no";
+        }
+
+        var barCheck3 = document.getElementById("bar3").value;
+        if (barCheck3 == "relevant") {
+            var bar3 = "closed";
+        } else {
+            bar3 = "no";
+        }
+
+        
+
+        allMask = mask1 + mask2 + mask3;
+        allBar = bar1 + bar2 + bar3; 
+        allRes = res1 + res2 + res3;
+
+        if (allMask.includes("mandatory")) {
+            if (allMask.includes("recommended")) {
+                var maskOutput = "mandatory-or-recommended";
+            } else {
+                maskOutput = "mandatory";
+            }   
+        } else if (allMask.includes("not-required")) {
+            maskOutput = "not-required";
+        } else if (allMask == "norecommendedno") {
+            maskOutput = "recommended";
+        } else if (allMask == "nonono") {
+            maskOutput = "egal";
+        }
+
+
+        if (allBar.includes("open")) {
+            if (allBar.includes("owr")) {
+                var barOutput = "open-or-owr";
+            } else {
+                barOutput = "open";
+            }   
+        } else if (allBar.includes("closed")) {
+            barOutput = "closed";
+        } else if (allBar == "noowrno") {
+            barOutput = "owr";
+        } else if (allBar == "nonono") {
+            barOutput = "egal";
+        }
+        
+
+        if (allRes.includes("open")) {
+            if (allRes.includes("owr")) {
+                var resOutput = "open-or-owr";
+            } else {
+                resOutput = "open";
+            }   
+        } else if (allRes.includes("closed")) {
+            resOutput = "closed";
+        } else if (allRes == "noowrno") {
+            resOutput = "owr";
+        } else if (allRes == "nonono") {
+            resOutput = "egal";
+        }
+
+        link2.href = "https://restrictapp.deta.dev/restriction-output/all-possible-destinations-with-mask=" + maskOutput + "-bar="+ barOutput + "-restaurant=" + resOutput + "/from-origin=DE/" ;
+        }
+    </script>
 
 
     </div>

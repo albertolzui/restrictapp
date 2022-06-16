@@ -35,8 +35,7 @@ unmodified = ['AF', 'AL', 'DZ', 'AS', 'AO', 'AI', 'AG', 'AR', 'AM', 'AW', 'AU', 
  'SC', 'SL', 'SG', 'SX', 'SK', 'SI', 'SB', 'SO', 'ZA', 'SS', 'ES', 'LK', 'SD', 'SR', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG', 'TO', 'TT', 'TN', 'TR', 'TM', 'TC', 'TV', 
  'UG', 'UA', 'AE', 'GB', 'US', 'UY', 'UZ', 'VU', 'VE', 'VN', 'VG', 'VI', 'WF', 'EH', 'YE', 'ZM', 'ZW']
 
-origins = ['GN', 'GW', 'GY', 'HT', 'HN', 'HK', 'HU', 'IS', 'IN', 'ID', 'IQ', 'IE', 'IL', 'IT', 'JM', 'JP', 'JE', 'JO', 'KZ', 'KE', 
-'KI', 'XK', 'KP', 'KR', 'KW', 'KG', 'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU']
+origins = []
 
 #triad = dict(zip(origins, countries))
 #print(triad)
@@ -98,7 +97,7 @@ for origin in origins:
     for country in countries:
         base = country.lower()
         print(f"{country} : {base}")
-        if base == "saudi-arabia" and origin == "AF" or base == "myanmar" and origin == "GN":
+        if base == "peru" and origin == "TN" or base == "united-states" and origin == "US":
             continue
         state = Web_Crawler_plus(base, origin).currency_check()
         try: 
@@ -110,7 +109,7 @@ for origin in origins:
 #    print(f" All possible destinations from {origin} have been covered, moving on to next possible origin")
 #"""
 
-#state = Web_Crawler_plus("saudi-arabia", "AF").page_lister()
+#state = Web_Crawler_plus("peru", "TN").currency_check()
 #print(state)
 #if state:
 #    print("entry was successful!")
@@ -121,7 +120,7 @@ for origin in origins:
 #print(len(countries))
 #"""
 
-#doo = Web_Crawler_plus("myanmar", "GN").page_lister()
+#doo = Web_Crawler_plus("peru", "TN").page_lister()
 #print(doo)
 
 """
