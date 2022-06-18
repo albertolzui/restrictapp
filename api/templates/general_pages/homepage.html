@@ -18,16 +18,24 @@
         <h1 class="display-4"> Where do you want to travel?</h1>
     </div>
     <div class="container">
-        <div class="row center mt-5 mb-5">
-        <div class=" container-sm col-9 mr-0 p-0">
-            <input list="countries" style="border: 2px solid #110363; border-top-left-radius: 25px; border-bottom-left-radius: 25px; background-color: white; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content" type="text" name="wohin" id="wohin" class="form-control mx-auto" placeholder="Ländername /  Country Name" aria-label="Destination" aria-describedby="button-addon2">
+        <div class="row center mt-5 mb-4">
+        <div class="container-sm col-4 mr-0 p-0">
+            <input list="countries" style="border: 2px solid #110363; border-top-left-radius: 25px; border-bottom-left-radius: 25px; background-color: white; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content" type="text" name="woraus" id="woraus" class="form-control mx-auto" placeholder="Origin" aria-label="Origin aria-describedby="button-addon2">
+        </div>
+        <datalist id="countries">
+        {% for country in countries%}
+            <option value="{{country}}"></option>
+        {% endfor %}
+        </datalist>        
+        <div class="container-sm col-4 mr-0 p-0">
+            <input list="countries" style="border: 2px solid #110363; background-color: white; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content" type="text" name="wohin" id="wohin" class="form-control mx-auto" placeholder="Destination" aria-label="Destination" aria-describedby="button-addon2">
         </div>
         <datalist id="countries">
         {% for country in countries%}
             <option value="{{country}}"></option>
         {% endfor %}
         </datalist>
-        <div class="d-grid col-3 mx-auto ml-0 p-0">
+        <div class="d-grid col-4 mx-auto ml-0 p-0">
             <a style="border: 2px solid #110363; border-top-right-radius: 25px; border-bottom-right-radius: 25px; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/restriction-output/destination=" role="button" id="link1">Proceed</a>
         </div>
         </div>
@@ -113,17 +121,62 @@
         <br>
 
 
-        <br>
-        <div class="d-grid gap-2 col-6 mx-auto">
-            <a style="border: 2px solid #14213D; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center;" class="btn me-md-2 btn-lg rounded-pill" href="https://restrictapp.deta.dev/restriction-output/destination=" role="button" id="link2">Fetch Destinations</a>
+
+    <div class="container">
+        <div class="row center mt-3 mb-2">
+            <div class="container-sm col-9 mr-0 p-0">
+                <input list="origin" style="border: 2px solid #110363; border-top-left-radius: 25px; border-bottom-left-radius: 25px; background-color: white; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content" type="text" name="woher" id="woher" class="form-control mx-auto" placeholder="Origin Country" aria-label="Origin" aria-describedby="button-addon2">
+            </div>
+            <datalist id="origin">
+            {% for country in countries%}
+                <option value="{{country}}"></option>
+            {% endfor %}
+            </datalist>
+        <div class="d-grid col-3 mx-auto ml-0 p-0">
+            <a style="border: 2px solid #110363; border-top-right-radius: 25px; border-bottom-right-radius: 25px; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/restriction-output/all-possible-destinations-with-mask=egal/bar=egal/restaurant=egal/from-origin=Germany" role="button" id="link2">Fetch</a>
         </div>
-    
+        </div>
+    </div>
+        <br>
+        <br>
+
+        <div class="container-fluid col-8">
+            <ul style="background-color: white; color: #3D5A80; font-family:monospace; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-0 mr-0 mb-1 p-0 my-5 border rounded border-success">
+                <br>
+                <p style="background-color: white; color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: center;">Top picks based on your location and preferences:</p>
+                <br>
+                <div class="row center mt-2 mb-2">
+                    <div class="container-sm col-3"></div>
+                    <div class="container-sm col-3 mr-0 p-3">
+                        {% for src in source %}
+                            <img src="/static/images/flags/{{src}}" alt="Flag" height="45px" width="45px">
+                            <br>
+                            <br>
+                        {% endfor %}
+                    </div>                    
+                    <div class="container-sm col-3 ml-0 p-2">
+                        <br>
+                        {% for land in länder%}
+                            <li style="list-style-type: none;"><a style="color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: justify;" href="https://restrictapp.deta.dev/restriction-output/destination={{land}}/origin=DE/">{{land.title()}}</a></li>
+                            <br>
+                            <br>
+                        {% endfor %} 
+                    </div>
+                    <div class="container-sm col-3"></div>
+                </div>
+            </ul>
+            <br>
+        </div>
+
+
     <script>
         var pointing = document.getElementById("wohin");
         pointing.oninput = function() {
+            var meek = document.getElementById("woraus");
+            var ish = meek.value
             var link1 = document.getElementById("link1");
             var countryName = this.value;
-            link1.href = "https://restrictapp.deta.dev/restriction-output/destination=" + countryName.toLowerCase() + "/origin=DE/";
+            link1.href = "https://restrictapp.deta.dev/restriction-output/destination=" + countryName.toLowerCase() + "/origin=" + ish;
         }
 //        var link1 = document.getElementById("link1");
     
@@ -179,7 +232,7 @@
     
             //this function gets called whenever the text in the text box changes
         link2.onclick = function() {
-
+        var goto = document.getElementById("woher");
         var maskCheck1 = document.getElementById("mask1").value;
         if (maskCheck1 == "relevant") {
             var mask1 = "mandatory";
@@ -295,7 +348,8 @@
             resOutput = "egal";
         }
 
-        link2.href = "https://restrictapp.deta.dev/restriction-output/all-possible-destinations-with-mask=" + maskOutput + "-bar="+ barOutput + "-restaurant=" + resOutput + "/from-origin=DE/" ;
+        var originCountry = goto.value
+        link2.href = "https://restrictapp.deta.dev/restriction-output/all-possible-destinations-with-mask=" + maskOutput + "/bar="+ barOutput + "/restaurant=" + resOutput + "/from-origin=" + originCountry ;
         }
     </script>
 

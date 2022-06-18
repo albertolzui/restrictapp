@@ -3,6 +3,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from crawler_for_api_revised import *
+from crawler_for_api_all_possible_trips import *
 
 templates = Jinja2Templates(directory="templates")
 restriction_output_router = APIRouter()
@@ -17,23 +18,27 @@ restriction_output_router = APIRouter()
 
 @restriction_output_router.get("/restriction-output/destination={destination}/origin={origin}")
 async def restriction_output(request:Request, destination:str, origin:str):
-    state = Web_Crawler(destination, origin).currency_check()
-    
-    response_other_covid_restrictions = state["overview"]
-
+    state = Web_Crawler_plus(destination, origin).currency_check()   
+    overview = state["overview"]
     other_covid_restrictions = {
-        "mask": response_other_covid_restrictions[22],
-        "restaurants": response_other_covid_restrictions[18],
-        "bars": response_other_covid_restrictions[20],
+        "mask": state["masks"],
+        "restaurants": state["restaurants"],
+        "bars": state["bars"],
     }
     response_name = state["name"]
-    overview = state["overview"]
-    overview_list_to_str = {
-        "line1" : overview[1],
-        "line2" : overview[9] + overview[10], 
-        }
+    if overview[10] == "Entry":
+        overview_list_to_str = {
+            "line1" : overview[1],
+            "line2" : overview[9], 
+            }
+    else:
+        overview_list_to_str = {
+            "line1" : overview[1],
+            "line2" : overview[9] + overview[10], 
+            }
     
     response_overview = overview_list_to_str
+
     if "entry_details" in state:
         entry_information = state["entry_details"]
         del entry_information[-1]
@@ -46,27 +51,31 @@ async def restriction_output(request:Request, destination:str, origin:str):
     response_country = response_name.title()
     response_country_name = response_country.replace("-", " ")
 
-    vaccination = state["vaccination"]
-    testing = state["testing"]
-    quarantine = state["quarantine"]
-    lock = quarantine.index(f"Do I need to wear a mask in {response_country_name}?")
-    del quarantine[lock:]
+    
+    if "vaccination" in state:
+        vac_info = state["vaccination"]
+        bow = vac_info.index(f"Can I travel to {response_country_name} if I am vaccinated?")
+        del vac_info[bow:]
+        vaccination = ' '.join(map(str, vac_info[1:]))
+    else:
+        vaccination = "Information on vaccination requirements not currently available"
 
-    vacc = {
-        "line1" : vaccination[1] + vaccination[2],
-        "line2" : vaccination[3] + vaccination[4],
-    }
+    if "testing" in state:
+        test_info = state["testing"]
+        testing = ' '.join(map(str, test_info[1:]))
+    else:
+        testing = "Information on travel test requirements not currently available"
 
-    test = {
-        "line1" : ' '.join(map(str, testing[1:]))
-    }
-
-    quar = {
-        "line1" : ' '.join(map(str, quarantine[1:]))
-    }
+    if "quarantine" in state:
+        quar = state["quarantine"]
+        lock = quar.index(f"Do I need to wear a mask in {response_country_name}?")
+        del quar[lock:]
+        quarantine = ' '.join(map(str, quar[1:]))
+    else:
+        quarantine = "Information on quarantine requirements not currently available"
 
     return templates.TemplateResponse("general_pages/restriction_output.html", {"request":request, "country_name": response_country_name, "ov_mask": other_covid_restrictions["mask"], "ov_rest": other_covid_restrictions["restaurants"], "ov_bars": other_covid_restrictions["bars"],
-    "ov_line1": response_overview["line1"], "ov_line2": response_overview["line2"], "entry_details": entry_info, "vacc_line1": vacc["line1"], "vacc_line2": vacc["line2"], "test": test["line1"], "quar_line1": quar["line1"]})
+    "ov_line1": response_overview["line1"], "ov_line2": response_overview["line2"], "entry_details": entry_info, "vacc": vaccination, "test": testing, "quar": quarantine})
 
 
 

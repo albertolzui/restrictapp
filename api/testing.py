@@ -90,7 +90,7 @@ for country in countries:
 
 # All possible trips:
 
-
+"""
 l = len(countries)
 i = 1
 for origin in origins:
@@ -157,3 +157,15 @@ for origin in origins:
 #state = Web_Crawler_plus("dominican-republic", "AW").locally_first()
 #print(state)
 # This is a comment to push testing.py as a commit. It is a pretty useless comment so ignore it
+
+
+x = country_code.values()
+y = country_code.keys()
+dayt = []
+for i in x:
+    day = i + ".svg"
+    dayt.append(day)
+
+for b in dayt:
+    print(b)
+

@@ -25,7 +25,7 @@ class Web_Crawler_plus:
             "U S Virgin Islands": "U.S. Virgin Islands"
         }
         self.destination = str(destination)
-        self.origin = str(origin)
+        self.origin_nom = str(origin)
         countries_that_take_a_definite_article = ["Gambia", "Czech Republic", "British Virgin Islands", "Caribbean Netherlands", "Cayman Islands", 
         "Central African Republic", "Cook Islands", "Democratic Republic of the Congo", "Dominican Republic", "Faroe Islands", "Maldives", 
         "Marshall Islands", "Netherlands", "Northern Mariana Islands", "Philippines", "Solomon Islands", "Turks and Caicos Islands", 'United Arab Emirates', 
@@ -33,39 +33,39 @@ class Web_Crawler_plus:
         countries_that_take_a_definite_article_and_have_alt_headings = ["Comoros", "Caribbean Netherlands", "Central African Republic", "Cook Islands", 
         "Faroe Islands", "Marshall Islands", "Dominican Republic", 'United Arab Emirates', "Solomon Islands", "Myanmar"]
         origins_dict = {
-            'AF': 'Afghanistan', 'AL': 'Albania', 'DZ': 'Algeria', 'AS': 'American-Samoa', 'AO': 'Angola', 'AI': 'Anguilla', 'AG': 'Antigua-and-Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 
-            'AW': 'Aruba', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan', 'BS': 'The-Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 
-            'BZ': 'Belize', 'BJ': 'Benin', 'BM': 'Bermuda', 'BT': 'Bhutan', 'BO': 'Bolivia', 'BA': 'Bosnia-and-Herzegovina', 'BW': 'Botswana', 'BR': 'Brazil', 'BN': 'Brunei-Darussalam', 
-            'BG': 'Bulgaria', 'BF': 'Burkina-Faso', 'BI': 'Burundi', 'CV': 'Cape-Verde', 'KH': 'Cambodia',  'CM': 'Cameroon', 'CA': 'Canada', 'BQ': 'Caribbean-Netherlands', 'KY': 'Cayman-Islands', 
-            'CF': 'Central-African-Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CO': 'Colombia', 'KM': 'Comoros', 'CD': 'Democratic-Republic-of-the-Congo', 
-            'CG': 'Republic-of-the-Congo', 'CK': 'Cook-Islands', 'CR': 'Costa-Rica', 'HR': 'Croatia', 'CU': 'Cuba', 'CW': 'Curacao', 'CY': 'Cyprus', 'CZ': 'Czech-Republic', 'CI': 'Ivory-Coast', 
-            'DK': 'Denmark', 'DJ': 'Djibouti', 'DM': 'Dominica', 'DO': 'Dominican-Republic', 'EC': 'Ecuador', 'EG': 'Egypt', 'SV': 'El-Salvador', 'GQ': 'Equatorial-Guinea', 'ER': 'Eritrea', 
-            'EE': 'Estonia', 'SZ': 'Eswatini', 'ET': 'Ethiopia', 'FK': 'Falkland-Islands-Islas-Malvinas', 'FO': 'Faroe-Islands', 'FJ': 'Fiji', 'FI': 'Finland', 'FR': 'France', 
-            'GF': 'French-Guiana', 'PF': 'French-Polynesia', 'GA': 'Gabon', 'GM': 'Gambia', 'GE': 'Georgia', 'DE': 'Germany', 'GH': 'Ghana', 'GI': 'Gibraltar', 'GR': 'Greece', 'GL': 'Greenland', 
-            'GD': 'Grenada', 'GP': 'Guadeloupe', 'GU': 'Guam', 'GT': 'Guatemala', 'GN': 'Guinea', 'GW': 'Guinea-Bissau', 'GY': 'Guyana', 'HT': 'Haiti', 'HN': 'Honduras', 'HK': 'Hong-Kong', 
-            'HU': 'Hungary', 'IS': 'Iceland', 'IN': 'India', 'ID': 'Indonesia', 'IQ': 'Iraq', 'IE': 'Ireland', 'IL': 'Israel', 'IT': 'Italy', 'JM': 'Jamaica', 'JP': 'Japan', 'JE': 'Jersey', 
-            'JO': 'Jordan', 'KZ': 'Kazakhstan', 'KE': 'Kenya', 'KI': 'Kiribati', 'XK': 'Kosovo', 'KP': 'North-Korea', 'KR': 'South-Korea', 'KW': 'Kuwait', 'KG': 'Kyrgyzstan', 'LA': 'Laos', 
-            'LV': 'Latvia', 'LB': 'Lebanon', 'LS': 'Lesotho', 'LR': 'Liberia', 'LY': 'Libya', 'LI': 'Liechtenstein', 'LT': 'Lithuania', 'LU': 'Luxembourg', 'MO': 'Macau', 'MG': 'Madagascar', 
-            'MW': 'Malawi', 'MY': 'Malaysia', 'MV': 'Maldives', 'ML': 'Mali', 'MT': 'Malta', 'MH': 'Marshall-Islands', 'MQ': 'Martinique', 'MR': 'Mauritania', 'MU': 'Mauritius', 'YT': 'Mayotte', 
-            'MX': 'Mexico', 'FM': 'Federated-States-of-Micronesia', 'MD': 'Moldova', 'MN': 'Mongolia', 'ME': 'Montenegro', 'MS': 'Montserrat', 'MA': 'Morocco', 'MZ': 'Mozambique', 'MM': 'Myanmar', 
-            'NA': 'Namibia', 'NR': 'Nauru', 'NP': 'Nepal', 'NL': 'Netherlands', 'NC': 'New-Caledonia', 'NZ': 'New-Zealand', 'NI': 'Nicaragua', 'NE': 'Niger', 'NG': 'Nigeria', 'MK': 'North-Macedonia',
-            'MP': 'Northern-Mariana-Islands', 'NO': 'Norway', 'OM': 'Oman', 'PK': 'Pakistan', 'PW': 'Palau', 'PS': 'Palestinian-Territories', 'PA': 'Panama', 'PG': 'Papua-New-Guinea', 
-            'PY': 'Paraguay', 'PE': 'Peru', 'PH': 'Philippines', 'PL': 'Poland', 'PT': 'Portugal', 'PR': 'Puerto-Rico', 'QA': 'Qatar', 'RO': 'Romania', 'RU': 'Russia', 'RW': 'Rwanda', 'RE': 'Reunion', 
-            'BL': 'Saint-Barthelemy', 'KN': 'Saint-Kitts-and-Nevis', 'LC': 'Saint-Lucia', 'MF': 'Saint-Martin', 'VC': 'Saint-Vincent-and-the-Grenadines', 'WS': 'Samoa', 
-            'ST': 'Sao-Tome-and-Principe', 'SA': 'Saudi-Arabia', 'SN': 'Senegal', 'RS': 'Serbia', 'SC': 'Seychelles', 'SL': 'Sierra-Leone', 'SG': 'Singapore', 'SX': 'St-Maarten', 'SK': 'Slovakia', 
-            'SI': 'Slovenia', 'SB': 'Solomon-Islands', 'SO': 'Somalia', 'ZA': 'South-Africa', 'SS': 'South-Sudan', 'ES': 'Spain', 'LK': 'Sri-Lanka', 'SD': 'Sudan', 'SR': 'Suriname', 'SE': 'Sweden', 
-            'CH': 'Switzerland', 'SY': 'Syria', 'TW': 'Taiwan', 'TJ': 'Tajikistan', 'TZ': 'Tanzania', 'TH': 'Thailand', 'TL': 'East-Timor', 'TG': 'Togo', 'TO': 'Tonga', 'TT': 'Trinidad-and-Tobago', 
-            'TN': 'Tunisia', 'TR': 'Turkey', 'TM': 'Turkmenistan', 'TC': 'Turks-and-Caicos-Islands', 'TV': 'Tuvalu', 'UG': 'Uganda', 'UA': 'Ukraine', 'AE': 'United-Arab-Emirates', 
-            'GB': 'United-Kingdom', 'US': 'United-States', 'UY': 'Uruguay', 'UZ': 'Uzbekistan', 'VU': 'Vanuatu', 'VE': 'Venezuela', 'VN': 'Vietnam', 'VG': 'British-Virgin-Islands', 
-            'VI': 'U-S-Virgin-Islands', 'WF': 'Wallis-and-Futuna', 'EH': 'Western-Sahara', 'YE': 'Yemen', 'ZM': 'Zambia', 'ZW': 'Zimbabwe'
-        }
-        
-        if self.origin in origins_dict:
-            self.origin_nom = origins_dict.get(self.origin)
-            self.origin_name_and = self.origin_nom.replace("And", "and")
-            self.origin_name_of = self.origin_name_and.replace("Of", "of")
-            self.origin_name_the = self.origin_name_of.replace("The", "the")
-            self.origin_name = self.origin_name_the.replace("-", " ")
+        'Afghanistan': 'AF', 'Albania': 'AL', 'Algeria': 'DZ', 'American-Samoa': 'AS', 'Angola': 'AO', 'Anguilla': 'AI', 'Antigua-and-Barbuda': 'AG', 'Argentina': 'AR', 'Armenia': 'AM', 
+        'Aruba': 'AW', 'Australia': 'AU', 'Austria': 'AT', 'Azerbaijan': 'AZ', 'The-Bahamas': 'BS', 'Bahrain': 'BH', 'Bangladesh': 'BD', 'Barbados': 'BB', 'Belarus': 'BY', 'Belgium': 'BE', 
+        'Belize': 'BZ', 'Benin': 'BJ', 'Bermuda': 'BM', 'Bhutan': 'BT', 'Bolivia': 'BO', 'Bosnia-and-Herzegovina': 'BA', 'Botswana': 'BW', 'Brazil': 'BR', 'Brunei-Darussalam': 'BN', 
+        'Bulgaria': 'BG', 'Burkina-Faso': 'BF', 'Burundi': 'BI', 'Cape-Verde': 'CV', 'Cambodia': 'KH', 'Cameroon': 'CM', 'Canada': 'CA', 'Caribbean-Netherlands': 'BQ', 
+        'Cayman-Islands': 'KY', 'Central-African-Republic': 'CF', 'Chad': 'TD', 'Chile': 'CL', 'China': 'CN', 'Colombia': 'CO', 'Comoros': 'KM', 'Democratic-Republic-of-the-Congo': 'CD', 
+        'Republic-of-the-Congo': 'CG', 'Cook-Islands': 'CK', 'Costa-Rica': 'CR', 'Croatia': 'HR', 'Cuba': 'CU', 'Curacao': 'CW', 'Cyprus': 'CY', 'Czech-Republic': 'CZ', 'Ivory-Coast': 'CI', 
+        'Denmark': 'DK', 'Djibouti': 'DJ', 'Dominica': 'DM', 'Dominican-Republic': 'DO', 'Ecuador': 'EC', 'Egypt': 'EG', 'El-Salvador': 'SV', 'Equatorial-Guinea': 'GQ', 'Eritrea': 'ER', 
+        'Estonia': 'EE', 'Eswatini': 'SZ', 'Ethiopia': 'ET', 'Falkland-Islands-Islas-Malvinas': 'FK', 'Faroe-Islands': 'FO', 'Fiji': 'FJ', 'Finland': 'FI', 'France': 'FR', 
+        'French-Guiana': 'GF', 'French-Polynesia': 'PF', 'Gabon': 'GA', 'Gambia': 'GM', 'Georgia': 'GE', 'Germany': 'DE', 'Ghana': 'GH', 'Gibraltar': 'GI', 'Greece': 'GR', 
+        'Greenland': 'GL', 'Grenada': 'GD', 'Guadeloupe': 'GP', 'Guam': 'GU', 'Guatemala': 'GT', 'Guinea': 'GN', 'Guinea-Bissau': 'GW', 'Guyana': 'GY', 'Haiti': 'HT', 'Honduras': 'HN', 
+        'Hong-Kong': 'HK', 'Hungary': 'HU', 'Iceland': 'IS', 'India': 'IN', 'Indonesia': 'ID', 'Iraq': 'IQ', 'Ireland': 'IE', 'Israel': 'IL', 'Italy': 'IT', 'Jamaica': 'JM', 'Japan': 'JP', 
+        'Jersey': 'JE', 'Jordan': 'JO', 'Kazakhstan': 'KZ', 'Kenya': 'KE', 'Kiribati': 'KI', 'Kosovo': 'XK', 'North-Korea': 'KP', 'South-Korea': 'KR', 'Kuwait': 'KW', 'Kyrgyzstan': 'KG', 
+        'Laos': 'LA', 'Latvia': 'LV', 'Lebanon': 'LB', 'Lesotho': 'LS', 'Liberia': 'LR', 'Libya': 'LY', 'Liechtenstein': 'LI', 'Lithuania': 'LT', 'Luxembourg': 'LU', 'Macau': 'MO', 
+        'Madagascar': 'MG', 'Malawi': 'MW', 'Malaysia': 'MY', 'Maldives': 'MV', 'Mali': 'ML', 'Malta': 'MT', 'Marshall-Islands': 'MH', 'Martinique': 'MQ', 'Mauritania': 'MR', 
+        'Mauritius': 'MU', 'Mayotte': 'YT', 'Mexico': 'MX', 'Federated-States-of-Micronesia': 'FM', 'Moldova': 'MD', 'Mongolia': 'MN', 'Montenegro': 'ME', 'Montserrat': 'MS', 'Morocco': 
+        'MA', 'Mozambique': 'MZ', 'Myanmar': 'MM', 'Namibia': 'NA', 'Nauru': 'NR', 'Nepal': 'NP', 'Netherlands': 'NL', 'New-Caledonia': 'NC', 'New-Zealand': 'NZ', 'Nicaragua': 'NI', 
+        'Niger': 'NE', 'Nigeria': 'NG', 'North-Macedonia': 'MK', 'Northern-Mariana-Islands': 'MP', 'Norway': 'NO', 'Oman': 'OM', 'Pakistan': 'PK', 'Palau': 'PW', 
+        'Palestinian-Territories': 'PS', 'Panama': 'PA', 'Papua-New-Guinea': 'PG', 'Paraguay': 'PY', 'Peru': 'PE', 'Philippines': 'PH', 'Poland': 'PL', 'Portugal': 'PT', 
+        'Puerto-Rico': 'PR', 'Qatar': 'QA', 'Romania': 'RO', 'Russia': 'RU', 'Rwanda': 'RW', 'Reunion': 'RE', 'Saint-Barthelemy': 'BL', 'Saint-Kitts-and-Nevis': 'KN', 'Saint-Lucia': 'LC', 
+        'Saint-Martin': 'MF', 'Saint-Vincent-and-the-Grenadines': 'VC', 'Samoa': 'WS', 'Sao-Tome-and-Principe': 'ST', 'Saudi-Arabia': 'SA', 'Senegal': 'SN', 'Serbia': 'RS', 
+        'Seychelles': 'SC', 'Sierra-Leone': 'SL', 'Singapore': 'SG', 'St-Maarten': 'SX', 'Slovakia': 'SK', 'Slovenia': 'SI', 'Solomon-Islands': 'SB', 'Somalia': 'SO', 'South-Africa': 'ZA', 
+        'South-Sudan': 'SS', 'Spain': 'ES', 'Sri-Lanka': 'LK', 'Sudan': 'SD', 'Suriname': 'SR', 'Sweden': 'SE', 'Switzerland': 'CH', 'Syria': 'SY', 'Taiwan': 'TW', 'Tajikistan': 'TJ', 
+        'Tanzania': 'TZ', 'Thailand': 'TH', 'East-Timor': 'TL', 'Togo': 'TG', 'Tonga': 'TO', 'Trinidad-and-Tobago': 'TT', 'Tunisia': 'TN', 'Turkey': 'TR', 'Turkmenistan': 'TM', 
+        'Turks-and-Caicos-Islands': 'TC', 'Tuvalu': 'TV', 'Uganda': 'UG', 'Ukraine': 'UA', 'United-Arab-Emirates': 'AE', 'United-Kingdom': 'GB', 'United-States': 'US', 'Uruguay': 'UY', 
+        'Uzbekistan': 'UZ', 'Vanuatu': 'VU', 'Venezuela': 'VE', 'Vietnam': 'VN', 'British-Virgin-Islands': 'VG', 'U-S-Virgin-Islands': 'VI', 'Wallis-and-Futuna': 'WF', 
+        'Western-Sahara': 'EH', 'Yemen': 'YE', 'Zambia': 'ZM', 'Zimbabwe': 'ZW'}
+
+        if self.origin_nom in origins_dict:
+            self.origin = origins_dict.get(self.origin_nom)        
+        self.origin_name_and = self.origin_nom.replace("And", "and")
+        self.origin_name_of = self.origin_name_and.replace("Of", "of")
+        self.origin_name_the = self.origin_name_of.replace("The", "the")
+        self.origin_name = self.origin_name_the.replace("-", " ")
         if self.origin_name in complex_name_format:
             self.origin_name = complex_name_format.get(self.origin_name)
         if self.origin_name in countries_that_take_a_definite_article or self.origin_name in countries_that_take_a_definite_article_and_have_alt_headings:
@@ -406,7 +406,7 @@ class Web_Crawler_plus:
         check = self.cull_from_db()
         if check:
             entry_date = check["date"]
-            max_age_of_info = datetime.timedelta(days = 30)
+            max_age_of_info = datetime.timedelta(days = 45)
             time_now = datetime.datetime.utcnow()
             duration_of_info = time_now - entry_date
             if duration_of_info < max_age_of_info:
@@ -421,7 +421,7 @@ class Web_Crawler_plus:
             check = self.cull_from_db()
             if check:
                 entry_date = check["date"]
-                max_age_of_info = datetime.timedelta(days = 30)
+                max_age_of_info = datetime.timedelta(days = 45)
                 time_now = datetime.datetime.utcnow()
                 duration_of_info = time_now - entry_date
                 if duration_of_info < max_age_of_info:

@@ -163,5 +163,11 @@ class Empfehler:
                 for doc in cull:
 #                    land = cull["name"]
                     empfehlungen.append(doc)
+                hold = []
+                for dict in empfehlungen:
+                    land = dict.get("name")
+                    hold.append(land)
+                länder = list(set(hold))
+                länder.sort()
 
-                return empfehlungen        
+                return länder        
