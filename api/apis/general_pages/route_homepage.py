@@ -62,4 +62,4 @@ async def homelist(request:Request, mask_output:str, bar_output:str, res_output:
         im = f"{item}.svg"
         src.append(im)
 
-    return templates.TemplateResponse("general_pages/homepage.html", {"request":request, "countries":countries, "länder": länder, "flags": flags, "source": src})
+    return templates.TemplateResponse("general_pages/homepage.html", {"request":request, "countries":countries, "länder": länder, "flags": flags, "source": src, "origin_country": origin_country})

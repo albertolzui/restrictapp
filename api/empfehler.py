@@ -110,6 +110,44 @@ class Empfehler:
                 "masks": {"$in" : ['Required in public spaces and enclosed environments.', 'Required in public spaces and public transportation.', 'Recommended in enclosed environments and public transportation.', 'Required in public spaces, enclosed environments and public transportation.', 'Required in enclosed environments.','Recommended in public spaces.', 'Required on public transportation.', 'Required in enclosed environments and public transportation.', 'Required in public spaces.', 'Required in public spaces, enclosed environments and public transportation']}, 
                 "bars": {"$in" : ['Information on restaurant access is currently unavailable']}, 
                 "restaurants": {"$in" : ['Information on restaurant access is currently unavailable']} },
+            
+            "recommendedopenopen": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Open']}, 
+                "restaurants": {"$in" : ['Open']} },
+            "recommendedopenowr" : {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Open']}, 
+                "restaurants": {"$in" : ['Open with restrictions']} },
+            "recommendedopenclosed": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Open']}, 
+                "restaurants": {"$in" : ['Information on restaurant access is currently unavailable']} },
+            "recommendedowropen": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Open with restrictions']}, 
+                "restaurants": {"$in" : ['Open']} },
+            "recommendedowrowr": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Open with restrictions']}, 
+                "restaurants": {"$in" : ['Open with restrictions']} },
+            "recommendedowrclosed": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Open with restrictions']}, 
+                "restaurants": {"$in" : ['Information on restaurant access is currently unavailable']} },
+            "recommendedclosedopen": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Information on restaurant access is currently unavailable']}, 
+                "restaurants": {"$in" : ['Open']} },
+            "recommendedclosedowr": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Information on restaurant access is currently unavailable']}, 
+                "restaurants": {"$in" : ['Open with restrictions']} },
+            "recommendedclosedclosed": {
+                "masks": {"$in" : ['Recommended in enclosed environments and public transportation.', 'Recommended in public spaces.']}, 
+                "bars": {"$in" : ['Information on restaurant access is currently unavailable']}, 
+                "restaurants": {"$in" : ['Information on restaurant access is currently unavailable']} },
+
 
             "not-requiredopenopen": {
                 "masks": {"$in" : ['Required in public spaces and enclosed environments.', 'Required in public spaces and public transportation.', 'Recommended in enclosed environments and public transportation.', 'Required in public spaces, enclosed environments and public transportation.', 'Required in enclosed environments.','Recommended in public spaces.', 'Required on public transportation.', 'Required in enclosed environments and public transportation.', 'Required in public spaces.', 'Required in public spaces, enclosed environments and public transportation']}, 
@@ -153,11 +191,11 @@ class Empfehler:
     def oracle_picks(self):
         find_entry_from = {"masks": self.mask_output, "bars": self.bar_output, "restaurants": self.res_output}
         if self.mask_output == "egal" and self.bar_output == "egal" and self.res_output == "egal":
-            random_seven = random.sample(self.countries, 7)
+            random_seven = random.sample(self.countries, 20)
             return random_seven
 
         else:
-            cull = db.all_possible_trips.find(self.use_this_query, {'_id': 0}).limit(7)
+            cull = db.all_possible_trips.find(self.use_this_query, {'_id': 0}).limit(20)
             if cull:
                 empfehlungen = []
                 for doc in cull:

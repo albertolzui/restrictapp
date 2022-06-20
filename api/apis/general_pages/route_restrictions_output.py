@@ -18,7 +18,7 @@ restriction_output_router = APIRouter()
 
 @restriction_output_router.get("/restriction-output/destination={destination}/origin={origin}")
 async def restriction_output(request:Request, destination:str, origin:str):
-    state = Web_Crawler_plus(destination, origin).currency_check()   
+    state = Web_Crawler_plus(destination, origin.title()).currency_check()   
     overview = state["overview"]
     other_covid_restrictions = {
         "mask": state["masks"],
