@@ -15,7 +15,7 @@
 
     <div class="container">
        <!-- <img src="{{ url_for('static', path='images/bg.jpg') }}" alt="Restrictapp" class="img-fluid">-->
-        <h3 style="text-align: center;" class="display-4"> Login to access your Restrictapp Dashboard</h3>
+        <h3 style="text-align: center;" class="display-4"> Login details were incorrect, ensure you have entered the right username and password</h3>
     </div>
     
     
@@ -28,12 +28,12 @@
             <form action="https://restrictapp.deta.dev/account/login" method="post">
                 <div class="mb-5">
                     <label for="uname" class="form-label">Username</label>
-                    <input type="text" placeholder="Enter Username" name="uname" class="form-control col-6" required>
+                    <input type="text" placeholder="Enter Username" name="username" id="username" class="form-control col-6" oninput="setUser()" required>
                 </div>
                 <br>
                 <div class="mb-3">
                     <label for="inputPassword5" class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control col-6" placeholder="Enter your password" required>
+                    <input type="password" name="password" class="form-control col-6" id="password" placeholder="Enter your password" oninput="setPass()" required>
                     <div id="passwordHelpBlock" class="form-text">
                     Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
                     </div>
@@ -47,20 +47,22 @@
             </div>
         </div>
     </div>
-    
-    
+
+
     <script>
-        var input = document.getElementById("wohin")
-    
-            //this function gets called whenever the text in the text box changes
-        input.oninput = function() {
-        var link = document.getElementById("link");
-                //here, this.value is the value of the input "flowname"
-        var cup = this.value
-        link.href = "https://restrictapp.deta.dev/restriction-output/destination=" + cup.toLowerCase() + "/origin=DE";
+        function setUser() {
+            var user = document.getElementById("username").value;
+            sessionStorage.setItem("user", user);
         }
-        </script>
-    </div>
+        
+        function setPass() {
+            var pass = document.getElementById("pass");
+            sessionStorage.setItem("pass", pass);
+        }
+    </script>
+
+        
+
 
 
 {% endblock %}

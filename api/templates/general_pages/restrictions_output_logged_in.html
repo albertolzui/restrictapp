@@ -16,7 +16,30 @@
         
     </div>-->
 
-    <div class="container-fluid">
+
+
+    <div class="container">
+        <div class="row center col-12 mt-5 mb-4">
+            <div class="d-grid col-6 mx-auto ml-0 p-0">            
+            </div>
+            <div class="d-grid col-2 mx-auto ml-0 p-0">
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/account/rtd/{{user}}" role="button" id="dashboard">Dashboard</a>
+            </div>            
+            <div class="d-grid col-2 mx-auto ml-0 p-0">
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/account/delete" role="button" id="delete">Delete Account</a>
+            </div>            
+            <div class="d-grid col-2 mx-auto ml-0 p-0">
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/" role="button" id="logout">Log Out</a>
+            </div>
+        </div>
+        <div class="d-grid col-12 mx-auto ml-0 p-0 mt-3">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="{{save_packet}}" role="button" id="save">Save Trip</a>
+            </div>
+        </div>
+
+        <hr style="height:2px;border-width:0;color:gray;background-color:gray">
     <!-- This is the main heading-->
         <h1 class="display-4 text-center" >&nbsp; {{country_name}} - Travel Guide</h1>
         <p id="username" value="{{user}}" ></p>
@@ -88,6 +111,8 @@
         
 
         <script>
+
+        
         function myFunction(id) {
         var x = document.getElementById(id);
         if (x.className.indexOf("w3-show") == -1) {
@@ -96,6 +121,15 @@
             x.className = x.className.replace(" w3-show", "");
         }
         }
+
+        window.onload = function() {
+            var statemsgsrc = document.getElementById("save");
+            var statemsglnk = statemsgsrc.href;
+            if (statemsglnk == "javascript:void(0);") {
+                statemsgsrc.innerHTML = "Trip saved";
+        }
+        }
+
         </script>
 
 

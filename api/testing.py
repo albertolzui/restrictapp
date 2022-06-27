@@ -158,7 +158,7 @@ for origin in origins:
 #print(state)
 # This is a comment to push testing.py as a commit. It is a pretty useless comment so ignore it
 
-
+"""
 x = country_code.values()
 y = country_code.keys()
 dayt = []
@@ -169,3 +169,58 @@ for i in x:
 for b in dayt:
     print(b)
 
+foobar = []
+foo = {}
+
+foo["michael"] = "name"
+foo["sex"] = "male"
+
+bar = {}
+
+bar["mugl"] = "name"
+bar["height"] = "seven"
+
+foobar.append(foo)
+foobar.append(bar)
+
+print(foobar)
+
+for dico in foobar:
+    if "mugl" in dico and "height" in dico:
+        print(dico)
+for dico in foobar:
+    if "mugl" in dico and "height" in dico:
+        foobar.remove(dico)
+        print(foobar)
+print(foobar)
+"""
+
+
+from user_management import *
+
+"""
+bro = User_man("albertolz", "overthinking1").user_login()
+u_name = bro["username"]
+p_word = bro["password"]
+
+print(bro)
+print("__________________________________________________________")
+print(u_name)
+print(p_word)
+print("__________________________________________________________")
+if "username" in bro:
+    print(bro["username"])
+    print(bro["password"])
+
+bra = User_man("MugltheKugl", "1234qwer#").user_login()
+if bra == None:
+    print("User not registered")
+"""
+
+bro = User_man("albertolz").get_saved_trips()
+print(bro)
+
+#from user_management import *
+#link = f"https://restrictapp.deta.dev/restriction-output/destination=nigeria/origin=germany/user=albertolz"
+#bro = User_man("albertolz").user_preferences("germany", "nigeria", link)
+#print(bro)

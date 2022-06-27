@@ -1,0 +1,62 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+    <title>restrictapp</title>
+{% endblock %}
+
+
+{% block content %}
+    <!--<div class="w3-bar w3-display-container w3-white w3-border-bottom w3-xlarge">
+        <a href="#" class="w3-bar-item w3-button w3-text-red w3-hover-red"><b><i class="fa fa-map-marker w3-margin-right"></i>restrictapp</b></a>
+        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge"> login</a>
+        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge">enquiries</a>
+        
+    </div>-->
+
+    <div class="container">
+       <!-- <img src="{{ url_for('static', path='images/bg.jpg') }}" alt="Restrictapp" class="img-fluid">-->
+        <h3 style="text-align: center;" class="display-4"> Enter details to confirm account deletion</h3>
+        <h3 id="message" style="text-align: center;" class="display-4" value="{{message}}"></h3>
+    </div>
+    
+    
+    <div class="mx-auto rounded border-success mt-5">
+    
+        <div style="background-color:#002f42; color: aliceblue;" class="bg-gradient col-sm-4 container ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success"> 
+    
+            <div class="p-5">
+    
+            <form action="https://restrictapp.deta.dev/account/delete" method="post">
+                <div class="mb-5">
+                    <label for="uname" class="form-label">Username</label>
+                    <input type="text" placeholder="Enter Username" name="username" class="form-control col-6" required>
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="inputPassword5" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control col-6" placeholder="Enter your password" required>
+                </div>
+                
+                <button style="background-color:#00c2cb;" type="submit" class="mx-auto btn col-12">D   E   L   E   T   E</button>
+                <br><br>
+            </form>
+            </div>
+        </div>
+    </div>
+    
+
+    <script>
+        var failuremsg = document.getElementById("message");
+        var msg = failuremsg.value;
+        failuremsg.onload = function() {
+            failuremsg.innerHTML = msg;
+        }
+        var username = document.getElementById("username");
+            //this function gets called whenever the text in the text box changes
+        username.oninput = function() {
+        failuremsg.innerHTML = " ";
+        }
+    </script>
+
+
+{% endblock %}
