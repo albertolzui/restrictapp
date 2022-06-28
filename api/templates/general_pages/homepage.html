@@ -1,21 +1,42 @@
 {% extends "shared/base.html" %}
 
 {% block title %}
-    <title>restrictapp</title>
+    <title>Restrictapp | Home</title>
 {% endblock %}
 
 
 {% block content %}
-    <!--<div class="w3-bar w3-display-container w3-white w3-border-bottom w3-xlarge">
-        <a href="#" class="w3-bar-item w3-button w3-text-red w3-hover-red"><b><i class="fa fa-map-marker w3-margin-right"></i>restrictapp</b></a>
-        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge"> login</a>
-        <a href="" class="w3-bar-item w3-button w3-right w3-hover-red w3-text-orange w3-xlarge">enquiries</a>
+<div class="mt-5 container-fluid text-white text-center" style="background-color: #8ECAE6; margin-top:50px">
+    <div id="demo" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+        </div>
         
-    </div>-->
+        <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="/static/images/gutdtr_.png" alt="First slide" class="img-fluid">
+        </div>
+        <div class="carousel-item">
+            <img src="/static/images/mooose.png" alt="Second slide" class="img-fluid">
+        </div>
+        <div class="carousel-item">
+            <img src="/static/images/syft_.png" alt="Third slide" class="img-fluid">
+        </div>        
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+</div>
 
     <div class="container mt-5">
        <!-- <img src="{{ url_for('static', path='images/bg.jpg') }}" alt="Restrictapp" class="img-fluid">-->
-        <h1 class="display-4 mt-5"> Where do you want to travel?</h1>
+       <h1 class="mt-5" style="text-align:center; margin: auto;">Get the current travel restrictions for your trip</h1>
     </div>
     <div class="container">
         <div class="row center mt-5 mb-4">
@@ -48,7 +69,7 @@
     <div class="container mt-5">
     </div>
     <div class="row center d-flex justify-content-center">
-    <button onclick="myFunction('Demo1')" style="margin-left: 7.5px; border: 2px solid #110363; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content;" id="klik" class="btn me-md-2 mt-1 mb-0 col-4 p-0">Need filtered suggestions? Click here</button>
+    <button onclick="myFunction('Demo1')" style="margin-left: 7.5px; border: 2px solid #110363; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content;" id="klik" class="btn me-md-2 mt-1 mb-0 col-4 p-2">Need filtered suggestions? Click here</button>
         <div id="Demo1" class="w3-hide w3-animate-zoom mt-0 mb-2">
 
             <br>
@@ -160,7 +181,7 @@
                         <div class="container-sm col-3 mr-0 p-3">
                             {% if source %}
                             {% for src in source %}
-                                <img src="/static/images/flags/{{src}}" alt="Flag" height="40px" width="40px">
+                                <img id="fuzz" src="/static/images/flags/{{src}}" alt="Flag" height="40px" width="40px">
                                 <br>
                                 <br>
                             {% endfor %}
@@ -170,7 +191,7 @@
                             <br>
                             {% if länder %}
                             {% for land in länder%}
-                                <li style="list-style-type: none;"><a style="color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: justify;" href="https://restrictapp.deta.dev/restriction-output/destination={{land.lower()}}/origin={{origin_country}}/">{{land.title()}}</a></li>
+                                <li style="list-style-type: none;"><a id="omnom" style="color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: justify;" href="https://restrictapp.deta.dev/restriction-output/destination={{land.lower()}}/origin={{origin_country}}/">{{land.title()}}</a></li>
                                 <br>
                                 <br>
                             {% endfor %}
@@ -188,7 +209,8 @@
     <input type="hidden" id="bar_sel" name="bar_sel" value="{{bar_sel}}">
     <input type="hidden" id="res_sel" name="res_sel" value="{{res_sel}}">
     <input type="hidden" id="origin_sel" name="origin_sel" value="{{origin_sel}}">
-
+    </div>
+    <footer class="container-fluid mt-5 mb-0 bottom" style="background-color: rgb(4, 4, 31); height: 100px;"><br><div class="container mt-5"><p class="mt-5" style="color: #67a8fd; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: center;">All rights reserved (c) 2022. The Restrictapp Team</p></div></footer>    
     <script>
 
         function myFunction(id) {
@@ -211,8 +233,8 @@
             } else if (countryName == "" && ish == ""){
                 link1.href = "javascript:void(0);"
             } else {
-                link1.href = "https://restrictapp.deta.dev/restriction-output/destination=" + countryName.toLowerCase() + "/origin=" + ish + "/user=" + username ;
-            }
+                link1.href = "https://restrictapp.deta.dev/restriction-output/destination=" + countryName.toLowerCase() + "/origin=" + ish;
+            }      
         }
 
 
@@ -292,6 +314,12 @@
         
 
         window.onload = function() {
+            var empfehlerNone = document.getElementById("omnom");
+            if (empfehlerNone.innerHTML == "Sorry, But There Are No Results Based On Your Selections") {
+                empfehlerNone.innerHTML = "We are really sorry, but there are just no results based on your selections.";
+                empfehlerNone.href = "javascript:void(0);" ;
+                empfehlerNone.style = "color: #3D5A80; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; text-align: justify; text-decoration: none; font-weight: bold;";
+            }
             var filterstand = document.getElementById("klik");
             var maskfilter = document.getElementById("mask_sel").value;
             var barfilter = document.getElementById("bar_sel").value;
@@ -337,11 +365,11 @@
 
 
         }
+
+
                 
     </script>
 
-
-    </div>
 
 
 {% endblock %}

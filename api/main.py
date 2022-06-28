@@ -1,6 +1,6 @@
 from logging import exception
 from fastapi.staticfiles import StaticFiles
-from crawler_for_api_revised import *
+from crawler_for_api_all_possible_trips import *
 from core.config import settings
 from apis.general_pages.route_homepage import general_pages_router
 from apis.general_pages.route_restrictions_output import restriction_output_router

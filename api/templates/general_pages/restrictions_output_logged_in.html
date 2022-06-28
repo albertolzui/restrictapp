@@ -20,16 +20,16 @@
 
     <div class="container">
         <div class="row center col-12 mt-5 mb-4">
-            <div class="d-grid col-6 mx-auto ml-0 p-0">            
+            <div class="d-grid col-3 mx-auto ml-0 p-0">            
             </div>
-            <div class="d-grid col-2 mx-auto ml-0 p-0">
-                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/account/rtd/{{user}}" role="button" id="dashboard">Dashboard</a>
+            <div class="d-grid col-3 mx-auto ml-0 p-0">
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/account/rtd/{{user}}" role="button" id="dashboard">Dashboard</a>
             </div>            
-            <div class="d-grid col-2 mx-auto ml-0 p-0">
-                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/account/delete" role="button" id="delete">Delete Account</a>
+            <div class="d-grid col-3 mx-auto ml-0 p-0">
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/account/delete" role="button" id="delete">Delete Account</a>
             </div>            
-            <div class="d-grid col-2 mx-auto ml-0 p-0">
-                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/" role="button" id="logout">Log Out</a>
+            <div class="d-grid col-3 mx-auto ml-0 p-0">
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/" role="button" id="logout">Log Out</a>
             </div>
         </div>
         <div class="d-grid col-12 mx-auto ml-0 p-0 mt-3">
@@ -60,6 +60,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
         <!-- This is the "Overview section - provides a general overview of country specific regulations and information on covid-19 vaccinations"-->
@@ -93,19 +94,10 @@
         <p style="background-color:#457B9D; text-align: center; font-family:'Roboto', sans-serif; font-size: large;" class="bg-gradient w3-text-white container mt-1 ml-5 mr-5 mb-5 p-5 my-5 border rounded border-success">{{quar}}<br></p>
         
         </div>
-<!--
-        <button onclick="myFunction('Demo5')" style="background-color: #E0FBFC; color: #3D5A80; font-family:monospace; text-align: center;" class="w3-button w3-block container mt-2 mb-0">Relevant Links</button>
-        <div id="Demo5" class="w3-hide w3-animate-zoom mt-0 mb-5">
-            <ul style="background-color:#457B9D; text-align: justify; font-family:'Roboto', sans-serif; font-size: small; display: block; list-style-type: none; -ms-flex: 1; flex: 1;" class="bg-gradient w3-text-white container mt-1 ml-0 mr-0 mb-5 p-0 my-5 border rounded border-success">
-                {% for link in rel_links%}
-                    <li style="-ms-flex: 1; flex: 1;"><a href="{{link}}">{{link}}</a></li>
-                {% endfor %}  
-            </ul>
-            -->
-            <br>
+        </div>
 
-        </div>
-        </div>
+
+
 
             
         
@@ -131,8 +123,6 @@
         }
 
         </script>
-
-
 
 
 {% endblock %}

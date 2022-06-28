@@ -2,7 +2,6 @@ from operator import index
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from crawler_for_api_revised import *
 from crawler_for_api_all_possible_trips import *
 from user_management import *
 

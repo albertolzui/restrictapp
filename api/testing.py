@@ -195,10 +195,10 @@ for dico in foobar:
 print(foobar)
 """
 
-
+"""
 from user_management import *
 
-"""
+
 bro = User_man("albertolz", "overthinking1").user_login()
 u_name = bro["username"]
 p_word = bro["password"]
@@ -215,12 +215,115 @@ if "username" in bro:
 bra = User_man("MugltheKugl", "1234qwer#").user_login()
 if bra == None:
     print("User not registered")
-"""
+
 
 bro = User_man("albertolz").get_saved_trips()
 print(bro)
-
+"""
 #from user_management import *
 #link = f"https://restrictapp.deta.dev/restriction-output/destination=nigeria/origin=germany/user=albertolz"
 #bro = User_man("albertolz").user_preferences("germany", "nigeria", link)
 #print(bro)
+
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Test Source File: empfehler.py
+
+# Test Class: Empfehler
+
+# Test Class __init__ parameters:
+                                # mask_output: user's preference on mask use
+                                # bar_output: user's preference on access into bars
+                                # res_output: user's prefernece on access into restaurants
+                                # origin_country: country where user is travelling from
+
+# Test Class Function(s): 
+                        # oracle_picks():
+                                    # Parameters: All ___init___ parameters
+
+
+                                    # Return:
+                                            # Type: list of strings or None
+                                            # Content: Names of countries where the user's preferences match the travel restriction requirements.
+                                            # Maximum number of matches returned: 20
+                                            # Minimum number of matches returned: none.
+
+# Class responsible for: Generating travel suggestions using a user's origin and preferences on Mask use, and access to bars and restaurants.
+
+# API Routes Served: 
+            #1. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}")
+                #Called by function: homelist()
+
+                # Returns to:
+                            # homepage.html - The homepage
+                
+            #2. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}/for={username}")
+                #Called by function: homelist2()
+
+                # Returns to:
+                            # homepage.html - The User Dashboard                
+
+# Sample Call:
+#               from empfehler import *
+
+#               empfehlertest_oracle_picks = Empfehler("mandatory", "closed","owr", "Germany").oracle_picks()
+#               if empfehlertest_oracle_picks == []:
+#                   print("We're sorry, your search criteria returned no matches")
+#               else:
+#                   print(empfehlertest_oracle_picks) 
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# Test Source File: crawler_for_api_all_possible_trips.py
+# Test Class: Web_Crawler_plus
+# Test Class __init__ parameters:
+
+# Test Class Function(s): 
+                        # 1. oracle_picks():
+                                        # Parameters: 
+                                                # mask_output: user's preference on mask use
+                                                # bar_output: user's preference on access into bars
+                                                # res_output: user's prefernece on access into restaurants
+                                                # origin_country: country where user is travelling from
+
+                                        # Return:
+                                                # Type: list of strings or None
+                                                # Content: Names of countries where the user's preferences match the travel restriction requirements.
+                                                # Maximum number of matches returned: 20
+                                                # Minimum number of matches returned: none.
+
+# Class responsible for: Generating travel suggestions using a user's origin and preferences on Mask use, and access to bars and restaurants.
+
+# API Routes Served: 
+            #1. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}")
+                #Called by function: homelist()
+
+                # Returns to:
+                            # homepage.html - The homepage
+                
+            #2. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}/for={username}")
+                #Called by function: homelist2()
+
+                # Returns to:
+                            # homepage.html - The User Dashboard                
+
+# Sample Call:
+#               from empfehler import *
+
+#               empfehlertest_oracle_picks = Empfehler("mandatory", "closed","owr", "Germany").oracle_picks()
+#               if empfehlertest_oracle_picks == []:
+#                   print("We're sorry, your search criteria returned no matches")
+#               else:
+#                   print(empfehlertest_oracle_picks) 
+
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

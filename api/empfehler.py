@@ -1,3 +1,5 @@
+# Import Requirements:
+
 import requests
 from bs4 import BeautifulSoup 
 import datetime
@@ -5,9 +7,19 @@ from pymongo import MongoClient
 from cred_albert import *
 import random
 
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# MongoDB Connection Credentials:
+
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
 
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# The Empfehler Class: 
+# (See notes on the Empfehler Class in testing.py along with a sample call you can make)
 
 class Empfehler:
     def __init__(self, mask_output, bar_output, res_output, origin):
@@ -116,7 +128,6 @@ class Empfehler:
         if self.all_filter_queries in find_entry_switch:
             self.use_this_query = find_entry_switch.get(self.all_filter_queries)        
     def oracle_picks(self):
-        find_entry_from = {"masks": self.mask_output, "bars": self.bar_output, "restaurants": self.res_output}
         if self.mask_output == "egal" and self.bar_output == "egal" and self.res_output == "egal":
             random_twenty = random.sample(self.countries, 20)
             return random_twenty
@@ -126,7 +137,6 @@ class Empfehler:
             if cull:
                 empfehlungen = []
                 for doc in cull:
-#                    land = cull["name"]
                     empfehlungen.append(doc)
                 hold = []
                 for dict in empfehlungen:

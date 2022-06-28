@@ -1,3 +1,5 @@
+# Import Requirements:
+
 import requests
 from bs4 import BeautifulSoup 
 import datetime
@@ -5,10 +7,17 @@ from pymongo import MongoClient
 from cred_albert import *
 
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# MongoDB Connection Credentials:
+
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# The Web_Crawler_plus Class: 
+# (See notes on the Web_Crawler_plus Class in testing.py along with a sample call you can make)
 
 class Web_Crawler_plus:
     def __init__(self, destination, origin):
@@ -24,6 +33,7 @@ class Web_Crawler_plus:
             "the Bahamas": "The Bahamas",
             "U S Virgin Islands": "U.S. Virgin Islands"
         }
+
         self.destination = str(destination)
         self.origin_nom = str(origin)
         countries_that_take_a_definite_article = ["Gambia", "Czech Republic", "British Virgin Islands", "Caribbean Netherlands", "Cayman Islands", 

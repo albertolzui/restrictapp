@@ -1,27 +1,27 @@
 {% extends "shared/base.html" %}
 
 {% block title %}
-    <title>restrictapp</title>
+    <title>Restrictapp | Dashboard</title>
 {% endblock %}
 
 
 {% block content %}
 
 <div class="container">
-    <div class="row center col-12 mt-3 mb-0"><p class="d-grid col-1 mx-auto ml-2 p-0" style="text-align: right; color: #1182ec;">Hello, &nbsp;</p><p style="text-align: left; color: #1182ec;" class="d-grid col-1 mx-auto ml-0 p-0" id="username">{{user}}</p><p class="d-grid col-10 mx-auto ml-0 p-0" style="text-align: center;"></p></p></div>
+    <div class="row center col-12 mt-3 mb-0"><p class="d-grid col-1 mx-auto ml-2 p-1" style="text-align: right; color: #1182ec;">Hello, &nbsp;</p><p style="text-align: left; color: #1182ec;" class="d-grid col-1 mx-auto ml-0 p-1" id="username">{{user}}</p><p class="d-grid col-10 mx-auto ml-0 p-0" style="text-align: center;"></p></div>
     
     <div class="row center col-12 mt-1 mb-2">
-    <div class="d-grid col-8 mx-auto ml-0 p-0">            
+    <div class="d-grid col-6 mx-auto ml-0 p-0">            
     </div>
-    <div class="d-grid col-2 mx-auto ml-0 mr-0 p-0">
-        <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/account/delete" role="button" id="delete">Delete Account</a>
+    <div class="d-grid col-3 mx-auto ml-0 mr-0 p-0">
+        <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/account/delete" role="button" id="delete">Delete Account</a>
     </div>
-    <div class="d-grid col-2 mx-auto ml-0 p-0">
-        <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2" href="https://restrictapp.deta.dev/" role="button" id="delete">Log Out</a>
+    <div class="d-grid col-3 mx-auto ml-0 p-0">
+        <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/" role="button" id="delete">Log Out</a>
     </div>
 </div>
 
-    <button onclick="myFunction('Demo1')" style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: right;" id="kilik" class="btn me-md-2 mt-1 mb-0">Saved Trips</button>
+    <button onclick="myFunction('Demo1')" style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: right;" id="kilik" class="btn me-md-2 mt-1 mb-0 p-2">Saved Trips</button>
     <div id="Demo1" class="w3-hide w3-animate-zoom mt-0 mb-2">
     <div class="row center mt-0 mb-0">
         <div class="d-grid col-9 mx-auto ml-0 p-0">            
@@ -56,7 +56,7 @@
 
     <div class="container mt-5">
        <!-- <img src="{{ url_for('static', path='images/bg.jpg') }}" alt="Restrictapp" class="img-fluid">-->
-        <h1 class="display-4 mt-5"> Where do you want to travel?</h1>
+       <h1 class="mt-5" style="text-align:center; margin: auto;">Get the current travel restrictions for your trip</h1>
     </div>
     <div class="container">
         <div class="row center mt-5 mb-4">
@@ -89,7 +89,7 @@
     <div class="container mt-5">
     </div>
     <div class="row center d-flex justify-content-center">
-    <button onclick="myFunction('Demo3')" style="margin-left: 7.5px; border: 2px solid #110363; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content;" id="klik" class="btn me-md-2 mt-1 mb-0 col-4 p-0">Need filtered suggestions? Click here</button>
+    <button onclick="myFunction('Demo3')" style="margin-left: 7.5px; border: 2px solid #110363; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: large; text-align: center; height: fit-content;" id="klik" class="btn me-md-2 mt-1 mb-0 col-4 p-2">Need filtered suggestions? Click here</button>
         <div id="Demo3" class="w3-hide w3-animate-zoom mt-0 mb-2">
 
             <br>
@@ -229,6 +229,8 @@
     <input type="hidden" id="bar_sel" name="bar_sel" value="{{bar_sel}}">
     <input type="hidden" id="res_sel" name="res_sel" value="{{res_sel}}">
     <input type="hidden" id="origin_sel" name="origin_sel" value="{{origin_sel}}">
+    </div>
+
 
     <script>
 
@@ -389,9 +391,6 @@
 
                 
     </script>
-
-
-    </div>
 
 
 {% endblock %}
