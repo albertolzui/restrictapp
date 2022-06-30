@@ -7,7 +7,7 @@ from pymongo import MongoClient
 from cred_albert import *
 import random
 
-
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # MongoDB Connection Credentials:
@@ -16,6 +16,7 @@ client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8
 db = client.Restrictapp
 
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # The Empfehler Class: 
@@ -127,6 +128,7 @@ class Empfehler:
         }
         if self.all_filter_queries in find_entry_switch:
             self.use_this_query = find_entry_switch.get(self.all_filter_queries)        
+
     def oracle_picks(self):
         if self.mask_output == "egal" and self.bar_output == "egal" and self.res_output == "egal":
             random_twenty = random.sample(self.countries, 20)

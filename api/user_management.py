@@ -1,19 +1,32 @@
+# Import Requirements:
+
 import requests
 from bs4 import BeautifulSoup 
 import datetime
 from pymongo import MongoClient
 from cred_albert import *
 
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# MongoDB Connection Credentials:
 
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
 
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# The User_man Class: 
+# (See notes on the User_man Class in testing.py along with a sample call you can make)
 
 class User_man:
     def __init__(self, username, password=None, email=None):
         self.username = username
         self.password = password
         self.email = email
+
 
 
     def user_signup(self):
@@ -31,25 +44,30 @@ class User_man:
                 return "Insert successful !"
 
 
+
     def user_login(self):
         user_check = {"username": self.username, "password": self.password}        
         cull = db.user.find_one(user_check, {'_id': 0})
         if cull:
             return cull
 
+
+
     def user_preferences(self, origin, destination, link):
         find_user_with = {"username": self.username}
         cull = db.user.find_one(find_user_with, {'_id': 0})
-#        preferences = list(cull["preferences"])
+
         new_entry = {}
         new_entry["origin"] = origin
         new_entry["destination"] = destination
         new_entry["link"] = link
- #       updated_preferences = preferences.append(new_entry)
+
         preference_set = {"$set":  {"preferences": new_entry, "date": datetime.datetime.utcnow()}}        
         update = db.user.update_one(find_user_with, preference_set)
         if update:
             return "Update successful !"
+
+
 
     def get_saved_trips(self):
         find_user_with = {"username": self.username}
@@ -64,6 +82,8 @@ class User_man:
         else:
             return None
 
+
+
     def delete_saved_trips(self, origin, destination):
         find_user_with = {"username": self.username}
         cull = db.user.find_one(find_user_with, {'_id': 0})
@@ -76,6 +96,8 @@ class User_man:
                 update = db.user.update_one(find_user_with, preference_set)
                 if update:
                     return "Update successful !"
+
+
 
     def delete_user_account(self):
         delete_entry_where = {"username": self.username, "password": self.password}
