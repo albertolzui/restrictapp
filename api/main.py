@@ -10,9 +10,24 @@ from fastapi import FastAPI, Response, File, UploadFile, Form, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import PlainTextResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from cred import *
 
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# MongoDB Connection Credentials:
+
+load_dotenv(find_dotenv())
+
+USER = os.environ.get("USER")
+KEY = os.environ.get("KEY")
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 def include_router(app):
     app.include_router(general_pages_router)

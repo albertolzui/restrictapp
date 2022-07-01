@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import datetime
 from pymongo import MongoClient
 from user_management import User_man
-from cred_albert import *
+from cred import *
 from crawler_for_api_all_possible_trips import *
 
 
@@ -67,22 +67,125 @@ from crawler_for_api_all_possible_trips import *
 # Test Source File: crawler_for_api_all_possible_trips.py
 # Test Class: Web_Crawler_plus
 # Test Class __init__ parameters:
+                                # destination: user's intended destination
+                                # origin: where user will be travelling from
 
 # Test Class Function(s): 
-                        # 1. oracle_picks():
+                        # 1. page_lister(self):
+                                        # Parameters: All __init__ parameters
+                                        # Return:
+                                                # Type: list of strings
+                                                # Content: All text accessible on webscrapped page using requests and BeautifulSoup.
+
+
+                        # 2. link_lister(self):
+                                        # Parameters: All __init__ parameters
+                                        # Return:
+                                                # Type: list of strings
+                                                # Content: All links accessible on webscrapped page using requests and BeautifulSoup.
+
+
+                        # 3. find_indices(self, search_item, search_list):
                                         # Parameters: 
-                                                # mask_output: user's preference on mask use
-                                                # bar_output: user's preference on access into bars
-                                                # res_output: user's prefernece on access into restaurants
-                                                # origin_country: country where user is travelling from
+                                                    # search_list: a list containing the title of each page section to be indexed
+                                                    # search_item: a text section from the page that is to be matched with a title in the search_list
+                                        # Return:
+                                                # Type: list of strings
+                                                # Content: the corresponding index of the search_item in search_list
+                                                
+
+                        # 4. get_text_from_index(self, page):
+                                        # Calls the find_indices() function
+                                        # Parameters: 
+                                                    # page: a list containing the title of each page section to be indexed
+                                                    # heading: a text section from the page that is to be matched with a title in the search_list
+                                        # Return:
+                                                # Type: list of strings
+                                                # Content: the corresponding index of the heading(s) in page
+
+
+                        # 5. sections_into_list(self):
+                                        # Calls the get_text_from_index() function
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
 
                                         # Return:
-                                                # Type: list of strings or None
-                                                # Content: Names of countries where the user's preferences match the travel restriction requirements.
-                                                # Maximum number of matches returned: 20
-                                                # Minimum number of matches returned: none.
+                                                # Type: list of strings
+                                                # Content: sublists which hold all text contained within different page sections distinguished by the specified indexes in header_index.
 
-# Class responsible for: Generating travel suggestions using a user's origin and preferences on Mask use, and access to bars and restaurants.
+
+                        # 6. clean_up_sections(self):
+                                        # Calls the sections_into_list() function
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
+
+                                        # Return:
+                                                # Type: list of strings
+                                                # Content: removes the excess commas and apostrophes from sublists which hold all text contained within different page sections 
+                                                #          distinguished by the specified indexes in header_index.
+
+
+                        # 7. crawl_into_db(self):
+                                        # Calls the clean_up_sections() function and writes the contents of the indexes of the list generated into arrays in the database
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
+                                        # Return:
+                                                # Type: strings
+                                                # Content: Database success message
+
+
+                        # 8. cull_from_db(self):
+                                        # Finds the first entry in the database with the "name" is the same as the destination input, and the overview containing the origin name
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
+
+                                        # Return:
+                                                # Type: dictionary
+                                                # Content: dictionary matching query parameters from database
+
+
+                        # 9. update_db_entry(self):
+                                        # Updates the first entry in the database where the "name" is the same as the destination input, and the overview containing the origin name
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
+
+                                        # Return:
+                                                # Type: String
+                                                # Content: "Update successful !"                                        
+
+
+                        # 10. delete_entry(self):
+                                        # deletes the first entry in the database where the "name" is the same as the destination input, and the overview containing the origin name
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
+
+                                        # Return:
+                                                # Type: String
+                                                # Content: "Delete successful !"                             
+
+
+                        # 11. currency_check(self):
+                                        # Finds the first entry in the database using the cull_from_db() function, if it exists; 
+                                        # the function checks to see if it is not more than 48 hours old, if it isn't the function returns the entry; if the entry is older 
+                                        # than 48 hours it is deleted and a newly crawled version of the deleted entry is written into the database and then returned. If 
+                                        # the entry did not exist at all at the first attempt, then it is crawled and written into the database from where it is returned.
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
+
+                                        # Return:
+                                                # Type: dictionary
+                                                # Content: dictionary matching query parameters from database
+
+
+                        # 12. locally_first(self):
+                                        # Calls the clean_up_sections() function and writes the contents of the indexes of the list generated into a dictionary
+
+                                        # Parameters: All __init__ parameters, and some __init__ variable
+                                        # Return:
+                                                # Type: dictionary
+                                                # Content: Dictionary containing entries to be written into the database.
+
+# Class responsible for: Populating database with travel restriction information from and to various countries.
 
 # API Routes Served: 
             #1. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}")

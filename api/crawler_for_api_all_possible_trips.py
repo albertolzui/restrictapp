@@ -4,7 +4,9 @@ import requests
 from bs4 import BeautifulSoup 
 import datetime
 from pymongo import MongoClient
-from cred_albert import *
+import os
+from dotenv import load_dotenv, find_dotenv
+from cred import *
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -12,15 +14,20 @@ from cred_albert import *
 
 # MongoDB Connection Credentials:
 
+load_dotenv(find_dotenv())
+
+USER = os.environ.get("USER")
+KEY = os.environ.get("KEY")
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # The Web_Crawler_plus Class: 
-# (See notes on the Web_Crawler_plus Class in testing.py along with a sample call you can make)
+# (See notes on the Web_Crawler_plus Class in testing.py)
 
 class Web_Crawler_plus:
     def __init__(self, destination, origin):
@@ -149,8 +156,6 @@ class Web_Crawler_plus:
             linkie.append(link.get('href'))  
         linked = linkie[8:]
         del linked[-1]
-    #    for child in a_tag.children:
-    #        title.append(child)        
         return linked
 
 
@@ -372,18 +377,18 @@ class Web_Crawler_plus:
             if insert:
                 return "Insert successful !"
 
-# This function finds the first entry in the database where the "name" is the same as the destination input
+# This function finds the first entry in the database with the "name" is the same as the destination input, and the overview containing the origin name
     def cull_from_db(self):
         find_entry_from = {"name": self.destination, "overview": self.origin_name}
         cull = db.all_possible_trips.find_one(find_entry_from, {'_id': 0})
         if cull:
             return cull
 
-# This function updates the first entry in the database where the "name" is the same as the destination input
+# This function updates the first entry in the database where the "name" is the same as the destination input and the overview containing the origin name
     def update_db_entry(self):
         page = self.page_lister()
         payload = self.clean_up_sections()
-        search_query = {"name": self.destination}
+        search_query = {"name": self.destination, "overview": self.origin_name}
 
         if f"{self.country_name} entry details and exceptions" in page:
             overview = payload[0]
@@ -402,7 +407,7 @@ class Web_Crawler_plus:
         if update:
             return "Update successful !"
 
-# This function deletes the first entry in the database where the "name" is the same as the destination input
+# This function deletes the first entry in the database where the "name" is the same as the destination input and the overview containing the origin name
     def delete_entry(self):
         delete_entry_where = {"name": self.destination, "overview": self.origin_name}
         delete = db.all_possible_trips.delete_one(delete_entry_where)

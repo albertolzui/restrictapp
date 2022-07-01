@@ -4,15 +4,24 @@ import requests
 from bs4 import BeautifulSoup 
 import datetime
 from pymongo import MongoClient
-from cred_albert import *
+import os
+from dotenv import load_dotenv, find_dotenv
+from cred import *
+
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # MongoDB Connection Credentials:
 
+load_dotenv(find_dotenv())
+
+USER = os.environ.get("USER")
+KEY = os.environ.get("KEY")
 client = MongoClient("mongodb+srv://" + user + ":" + key + "@restrictapp-one.sb8jy.mongodb.net/Restrictapp?retryWrites=true&w=majority")
 db = client.Restrictapp
+
+
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
