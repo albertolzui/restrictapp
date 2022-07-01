@@ -188,26 +188,30 @@ from crawler_for_api_all_possible_trips import *
 # Class responsible for: Populating database with travel restriction information from and to various countries.
 
 # API Routes Served: 
-            #1. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}")
-                #Called by function: homelist()
+            #1. @restriction_output_router.get("/restriction-output/destination={destination}/origin={origin}")
+                #Called by function: restriction_output()
 
                 # Returns to:
-                            # homepage.html - The homepage
+                            # restriction_output.html - The Restriction Information page
                 
-            #2. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}/for={username}")
-                #Called by function: homelist2()
+            #2. @restriction_output_router.get("/restriction-output/destination={destination}/origin={origin}/user={username}")
+                #Called by function: restriction_output_logged_in()
 
                 # Returns to:
-                            # homepage.html - The User Dashboard                
+                            # restriction_output_logged_in.html - The Restriction Information page for logged in users  
+                                          
+            #3. @restriction_output_router.get("/restriction-output/save/destination={destination}/origin={origin}/user={username}")
+                #Called by function: restriction_output_logged_in_save_trip()
+
+                # Returns to:
+                            # restriction_output_logged_in.html - The Restriction Information page for logged in users                
+
 
 # Sample Call:
 #               from empfehler import *
 
-#               empfehlertest_oracle_picks = Empfehler("mandatory", "closed","owr", "Germany").oracle_picks()
-#               if empfehlertest_oracle_picks == []:
-#                   print("We're sorry, your search criteria returned no matches")
-#               else:
-#                   print(empfehlertest_oracle_picks) 
+#               webcrawlerplus_currency_check = Web_crawler_plus("Germany", "Nigeria").currency_check()
+#               print(webcrawlerplus_currency_check) 
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

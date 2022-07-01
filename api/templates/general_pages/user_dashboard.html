@@ -17,7 +17,7 @@
         <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/account/delete" role="button" id="delete">Delete Account</a>
     </div>
     <div class="d-grid col-3 mx-auto ml-0 p-0">
-        <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/" role="button" id="delete">Log Out</a>
+        <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" onclick="logOut()" href="https://restrictapp.deta.dev/" role="button" id="logout">Log Out</a>
     </div>
 </div>
 
@@ -234,6 +234,13 @@
 
     <script>
 
+        window.onload = function() {
+            var navHome = document.getElementById("nav");
+            var navIcon = document.getElementById("noose");
+            navHome.href = "https://restrictapp.deta.dev/account/rtd/{{user}}";
+            navIcon.href = "https://restrictapp.deta.dev/account/rtd/{{user}}";
+        }
+
         function myFunction(id) {
         var x = document.getElementById(id);
         if (x.className.indexOf("w3-show") == -1) {
@@ -272,6 +279,9 @@
             
         }
 
+        function logOut() {
+            sessionStorage.clear();
+        }
 
         function maskRegister(checkbox) {
             var maskswitches = document.getElementsByName("maskswitch");
@@ -388,7 +398,6 @@
 
                 originC = originfilter;
             }
-
                 
     </script>
 

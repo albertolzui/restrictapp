@@ -29,7 +29,7 @@
                 <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/account/delete" role="button" id="delete">Delete Account</a>
             </div>            
             <div class="d-grid col-3 mx-auto ml-0 p-0">
-                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/" role="button" id="logout">Log Out</a>
+                <a style="border: 2px solid #1182ec; background-color: #E0FBFC; color: #3D5A80; font-family:monospace; font-size: medium; text-align: center; height: fit-content;" class="btn me-md-2 p-2" href="https://restrictapp.deta.dev/" role="button" onclick="logOut()" id="logout">Log Out</a>
             </div>
         </div>
         <div class="d-grid col-12 mx-auto ml-0 p-0 mt-3">
@@ -99,11 +99,12 @@
 
 
 
-            
+        
         
 
         <script>
-
+        
+        
         
         function myFunction(id) {
         var x = document.getElementById(id);
@@ -114,7 +115,15 @@
         }
         }
 
+        function logOut() {
+            sessionStorage.clear();
+        }
+
         window.onload = function() {
+            var navHome = document.getElementById("nav");
+            var navIcon = document.getElementById("noose");
+            navHome.href = "https://restrictapp.deta.dev/account/rtd/{{user}}";
+            navIcon.href = "https://restrictapp.deta.dev/account/rtd/{{user}}";
             var statemsgsrc = document.getElementById("save");
             var statemsglnk = statemsgsrc.href;
             if (statemsglnk == "javascript:void(0);") {

@@ -9,4 +9,19 @@
 <div class="row center container-fluid p-5 mt-5 mb-5">
 <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdX2fExVZ3L_vaVb3ck1oxV_G6nOBlvKi66mZethUsTPJYAcg/viewform?embedded=true" width="640" height="1059" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 </div>
+
+<script>
+    window.onload = function() {
+        var userE = sessionStorage.getItem("user");
+        var navHome = document.getElementById("nav");
+        var navIcon = document.getElementById("noose");        
+        if (userE == null){
+            navHome.href = "https://restrictapp.deta.dev";
+            navIcon.href = "https://restrictapp.deta.dev";             
+        } else {
+            navHome.href = "https://restrictapp.deta.dev/account/rtd/" + userE;
+            navIcon.href = "https://restrictapp.deta.dev/account/rtd/" + userE;         
+        }
+    }    
+</script>
 {% endblock %}

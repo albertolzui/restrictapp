@@ -27,7 +27,7 @@ db = client.Restrictapp
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # The Web_Crawler_plus Class: 
-# (See notes on the Web_Crawler_plus Class in testing.py)
+# (See notes on the Web_Crawler_plus Class in testing.py along with a sample call you can make)
 
 class Web_Crawler_plus:
     def __init__(self, destination, origin):
