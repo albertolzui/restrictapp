@@ -48,7 +48,7 @@ from crawler_for_api_all_possible_trips import *
                 #Called by function: homelist2()
 
                 # Returns to:
-                            # homepage.html - The User Dashboard                
+                            # user_dashboard.html - The User Dashboard                
 
 # Sample Call:
 #               from empfehler import *
@@ -210,7 +210,7 @@ from crawler_for_api_all_possible_trips import *
 # Sample Call:
 #               from empfehler import *
 
-#               webcrawlerplus_currency_check = Web_crawler_plus("Germany", "Nigeria").currency_check()
+#               webcrawlerplus_currency_check = Web_Crawler_plus("Germany", "Nigeria").currency_check()
 #               print(webcrawlerplus_currency_check) 
 
 
@@ -220,45 +220,129 @@ from crawler_for_api_all_possible_trips import *
 
 # Test Source File: user_management.py
 # Test Class: User_man
-# Test Class __init__ parameters:
+# Test Class __init__() parameters:
+                                # username: signup / login username provided by user
+                                # password: signup / login password provided by user
+                                # email: email address provided by user on signup page
 
 # Test Class Function(s): 
-                        # 1. oracle_picks():
-                                        # Parameters: 
-                                                # mask_output: user's preference on mask use
-                                                # bar_output: user's preference on access into bars
-                                                # res_output: user's prefernece on access into restaurants
-                                                # origin_country: country where user is travelling from
+                        # 1. user_signup(self):
+                                        # Creates user account
+
+                                        # Parameters: All __init__() parameters
 
                                         # Return:
-                                                # Type: list of strings or None
-                                                # Content: Names of countries where the user's preferences match the travel restriction requirements.
-                                                # Maximum number of matches returned: 20
-                                                # Minimum number of matches returned: none.
+                                                # Type: String
+                                                # Content: "User already exists!" or "Insert successful !" depending on whether or not the signup details already exist in the database
 
-# Class responsible for: Generating travel suggestions using a user's origin and preferences on Mask use, and access to bars and restaurants.
+                        # 2. user_login(self):
+                                        # Validates user login credentials
+                                        
+                                        # Parameters: All __init__() parameters
+
+                                        # Return:
+                                                # Type: Dictionary or None
+                                                # Content: Dictionary contains a user's credentials as registered on signup as well as up-to-date user preferences (saved trips)
+
+                        # 3. user_preferences(self):
+                                        # Updates user's saved travel preferences (trips)
+                                                                                
+                                        # Parameters: 
+                                                    # All __init__() parameters
+                                                    # origin: where the user is travelling from
+                                                    # destination: where the user is travelling to
+                                                    # link: a direct hyperlink to the page with information on the trip
+
+                                        # Return:
+                                                # Type: String
+                                                # Content: "Update Successful !" confirming user update has been successful.
+
+                        # 4. get_saved_trips(self):
+                                        # Fetches information stored on saved trips including origin name, destination name and hyperlink to page
+                                        
+                                        # Parameters: All __init__() parameters
+
+                                        # Return:
+                                                # Type: Dictionary, String, or None
+                                                # Content: Dictionary contains a user's saved trips. The String "no saved trips" is returned when the user hasn't yet saved any trip.
+
+                        # 5. delete_saved_trips(self):
+                                        # deletes information stored on saved trips including origin name, destination name and hyperlink to page
+                                        
+                                        # Parameters: All __init__() parameters
+
+                                        # Return:
+                                                # Type: String
+                                                # Content: The String "no saved trips" is returned when the user hasn't yet saved any trip, otherwise "Update successful !" is returned
+
+                        # 6. delete_user_account(self):
+                                        # Deletes a user's account
+                                        
+                                        # Parameters: All __init__() parameters
+
+                                        # Return:
+                                                # Type: String
+                                                # Content: "Delete successful !"
+
+                        # 7. user_password(self):
+                                        # Changes / Updates a user's login password
+                                        
+                                        # Parameters: All __init__() parameters
+
+                                        # Return:
+                                                # Type: String
+                                                # Content: "Update successful !"
+
+
+# Class responsible for: Creating, Reading, Updating and Deleting user accounts the information they contain
 
 # API Routes Served: 
-            #1. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}")
-                #Called by function: homelist()
+            #1. @account_login_router.get("/account/rtd/{username}")
+                #Called by function: rtd()
 
                 # Returns to:
-                            # homepage.html - The homepage
+                            # user_dashboard.html - The User Dashboard
                 
-            #2. @general_pages_router.get("/restriction-output/all-possible-destinations-with-mask={mask_output}/bar={bar_output}/restaurant={res_output}/from-origin={origin_country}/for={username}")
-                #Called by function: homelist2()
+            #2. @account_login_router.post("/account/delete")
+                #Called by function: account_delete()
 
                 # Returns to:
-                            # homepage.html - The User Dashboard                
+                            # del_confirmation.html - The deletion confirmation page                
 
+            #3. @account_login_router.get("/{username}/trip/delete/{origin}-to-{destination}")
+                #Called by function: delete_trip()
+
+                # Returns to:
+                            # user_dashboard.html - The User Dashboard                
+
+            #4. @account_login_router.post("/account/login")
+                #Called by function: login()
+
+                # Returns to:
+                            # user_dashboard.html - The User Dashboard 
+
+            #5. @restriction_output_router.get("/restriction-output/destination={destination}/origin={origin}/user={username}")
+                #Called by function: restriction_output_logged_in()
+
+                # Returns to: 
+                            # restrictions_output_logged_in.html - The restriction output page when a user is logged in
+
+            #6. @restriction_output_router.get("/restriction-output/save/destination={destination}/origin={origin}/user={username}")
+                #Called by function: restriction_output_logged_in_save_trip()
+
+                # Returns to: 
+                            # restrictions_output_logged_in.html - The restriction output page when a user is logged in
+
+            #7. @account_signup_router.post("/account/signup")
+                #Called by function: signup()
+
+                # Returns to: 
+                            # login_from_signup.html - A version of the login page
 # Sample Call:
-#               from empfehler import *
+#               from user_management import *
 
-#               empfehlertest_oracle_picks = Empfehler("mandatory", "closed","owr", "Germany").oracle_picks()
-#               if empfehlertest_oracle_picks == []:
-#                   print("We're sorry, your search criteria returned no matches")
-#               else:
-#                   print(empfehlertest_oracle_picks) 
+#               userman_test_signup = User_man("username", "password","email_address").user_signup()
+#                   print(userman_test_signup) 
 
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
