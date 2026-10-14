@@ -193,4 +193,10 @@ $('delete-account-form').onsubmit = async event => {
   catch (error) { $('data-error').textContent = error.message; button.disabled = false; }
 };
 
-document.querySelectorAll('[data-how-link]').forEach(link => link.addEventListener('click', () => view('explore')));
+function openGuide() {
+  view('explore');
+  $('how-it-works').open = true;
+}
+document.querySelectorAll('[data-how-link]').forEach(link => link.addEventListener('click', openGuide));
+window.addEventListener('hashchange', () => { if (location.hash === '#how-it-works') openGuide(); });
+if (location.hash === '#how-it-works') openGuide();
