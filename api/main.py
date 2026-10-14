@@ -10,7 +10,7 @@ from datetime import date
 from typing import Literal
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from api.travel_data import route_data
@@ -114,6 +114,41 @@ def validate_trip(origin, destination):
 @app.get('/')
 def home():
     return FileResponse(ROOT / 'static/app/index.html')
+
+@app.get('/privacy')
+@app.get('/cookies')
+def privacy_page():
+    return FileResponse(ROOT / 'static/app/privacy.html')
+
+@app.get('/api/privacy')
+def privacy_details():
+    return {'operator': os.getenv('RESTRICTAPP_OPERATOR_NAME', 'Albert Olanipekun'),
+            'contact': os.getenv('RESTRICTAPP_PRIVACY_EMAIL', 'olanipekun_albert@live.com')}
+
+@app.get('/api/account/export')
+def export_account(request: Request):
+    user = current_user(request)
+    with database() as db:
+        profile = db.execute('SELECT data FROM profiles WHERE user_id=?', (user['id'],)).fetchone()
+        saved = [dict(row) for row in db.execute('SELECT id,origin,destination,created,context FROM trips WHERE user_id=?', (user['id'],))]
+        for trip in saved:
+            trip['context'] = json.loads(trip['context'])
+            trip['checklist_progress'] = [dict(row) for row in db.execute('SELECT task_id,done FROM checklist_progress WHERE trip_id=?', (trip['id'],))]
+    return JSONResponse({'account': user, 'profile': json.loads(profile['data']) if profile else None, 'trips': saved},
+        headers={'Content-Disposition': 'attachment; filename="restrictapp-account.json"'})
+
+@app.delete('/api/account')
+def delete_account(data: Credentials, request: Request, response: Response):
+    protect_write(request)
+    user = current_user(request)
+    auth_throttle(database, request, user['email'])
+    with database() as db:
+        row = db.execute('SELECT password FROM users WHERE id=?', (user['id'],)).fetchone()
+        if data.email.strip().lower() != user['email'] or not hmac.compare_digest(password_hash(data.password, row['password'].split(':')[0]), row['password']):
+            raise HTTPException(401, 'Email or password is incorrect.')
+        db.execute('DELETE FROM users WHERE id=?', (user['id'],))
+    response.delete_cookie('restrictapp_session', secure=os.getenv('RESTRICTAPP_SECURE_COOKIES') == '1', httponly=True, samesite='lax')
+    return {'ok': True}
 
 @app.get('/api/health')
 def health():

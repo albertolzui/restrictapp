@@ -23,6 +23,43 @@ class AppTests(unittest.TestCase):
     def signup(self, client, email='test@example.com'):
         return client.post('/api/auth/signup', json={'email': email, 'password': 'test-password-123'}, headers=self.headers)
 
+    def test_account_export_and_deletion(self):
+        self.assertEqual(self.client.get('/api/account/export').status_code, 401)
+        self.signup(self.client)
+        other = TestClient(main.app)
+        self.signup(other, 'other@example.com')
+        self.client.put('/api/profile', json={'nationality':'Nigeria','residence':'Germany'}, headers=self.headers)
+        trip = self.client.post('/api/trips', json={'origin':'Germany','destination':'Japan','nationality':'Nigeria','residence':'Germany'}, headers=self.headers).json()
+        self.client.put(f"/api/trips/{trip['id']}/checklist/passport", json={'done':True}, headers=self.headers)
+        export = self.client.get('/api/account/export')
+        self.assertEqual(export.status_code, 200)
+        self.assertEqual(export.headers['cache-control'], 'no-store')
+        self.assertEqual(export.json()['profile']['nationality'], 'Nigeria')
+        self.assertEqual(len(export.json()['trips']), 1)
+        self.assertEqual(export.json()['trips'][0]['checklist_progress'][0]['done'], 1)
+        self.assertNotIn('password', export.text)
+        self.assertNotIn('token', export.text)
+        self.assertNotIn('other@example.com', export.text)
+        credentials = {'email':'test@example.com','password':'test-password-123'}
+        self.assertEqual(self.client.request('DELETE','/api/account',json=credentials).status_code, 403)
+        self.assertEqual(self.client.request('DELETE','/api/account',json={**credentials,'password':'wrong-password'},headers=self.headers).status_code, 401)
+        self.assertEqual(self.client.get('/api/me').status_code, 200)
+        self.assertEqual(self.client.request('DELETE','/api/account',json=credentials,headers=self.headers).status_code, 200)
+        self.assertEqual(self.client.get('/api/me').status_code, 401)
+        with main.database() as db:
+            for table in ('profiles','trips','checklist_progress'):
+                self.assertEqual(db.execute(f'SELECT COUNT(*) AS count FROM {table}').fetchone()['count'], 0)
+            self.assertEqual(db.execute('SELECT COUNT(*) AS count FROM users').fetchone()['count'], 1)
+            self.assertEqual(db.execute('SELECT COUNT(*) AS count FROM sessions').fetchone()['count'], 1)
+        self.assertEqual(other.get('/api/me').status_code, 200)
+        other.close()
+
+    def test_privacy_pages_and_no_external_fonts(self):
+        for path in ('/privacy','/cookies'):
+            self.assertEqual(self.client.get(path).status_code, 200)
+        self.assertIn('Albert Olanipekun', self.client.get('/privacy').text)
+        self.assertNotIn('fonts.googleapis', self.client.get('/static/app/style.css').text)
+
     def test_search_validation_and_honest_data_state(self):
         self.assertEqual(self.client.get('/').status_code, 200)
         self.assertIn('Germany', self.client.get('/api/countries').json())

@@ -176,3 +176,19 @@ $('download-plan').onclick = () => {
   const url = URL.createObjectURL(new Blob([lines.join('\n')], {type:'text/plain;charset=utf-8'})); const link = document.createElement('a'); link.href = url; link.download = 'restrictapp-preparation-plan.txt'; link.click(); setTimeout(() => URL.revokeObjectURL(url),1000);
 };
 init();
+
+const noticeKey = 'restrictapp_cookie_notice_v1';
+try { $('cookie-notice').hidden = sessionStorage.getItem(noticeKey) === 'closed'; } catch { $('cookie-notice').hidden = false; }
+$('close-cookie').onclick = () => { $('cookie-notice').hidden = true; try { sessionStorage.setItem(noticeKey, 'closed'); } catch {} };
+$('cookie-settings').onclick = () => { $('cookie-notice').hidden = false; $('close-cookie').focus(); };
+$('privacy-account').onclick = () => { if (!user) { openAuth(); toast('Sign in to export or delete your account data.'); return; } $('data-error').textContent = ''; $('delete-account-form').reset(); $('data-dialog').showModal(); };
+$('close-data').onclick = () => $('data-dialog').close();
+$('export-account').onclick = async () => {
+  try { const data = await api('/api/account/export'); const url = URL.createObjectURL(new Blob([JSON.stringify(data,null,2)], {type:'application/json'})); const link = document.createElement('a'); link.href = url; link.download = 'restrictapp-account.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+  catch (error) { $('data-error').textContent = error.message; }
+};
+$('delete-account-form').onsubmit = async event => {
+  event.preventDefault(); const button = event.submitter; button.disabled = true; $('data-error').textContent = '';
+  try { await api('/api/account', {method:'DELETE',body:JSON.stringify({email:user.email,password:$('delete-password').value})}); location.reload(); }
+  catch (error) { $('data-error').textContent = error.message; button.disabled = false; }
+};
