@@ -1,21 +1,21 @@
 (() => {
-  const button = document.getElementById('install-app');
+  const buttons = document.querySelectorAll('[data-install-app]');
   const dialog = document.getElementById('install-dialog');
   const promptButton = document.getElementById('install-confirm');
   const status = document.getElementById('install-status');
   let installPrompt = null;
   const standalone = window.matchMedia('(display-mode: standalone)');
-  const update = () => { button.hidden = standalone.matches || navigator.standalone === true; };
+  const update = () => { buttons.forEach(button => { button.hidden = standalone.matches || navigator.standalone === true; }); };
   update();
   standalone.addEventListener('change', update);
   window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault(); installPrompt = event; promptButton.hidden = false;
   });
   window.addEventListener('appinstalled', () => {
-    installPrompt = null; promptButton.hidden = true; button.hidden = true;
+    installPrompt = null; promptButton.hidden = true; buttons.forEach(button => { button.hidden = true; });
     if (dialog.open) dialog.close();
   });
-  button.onclick = () => { status.textContent = ''; dialog.showModal(); };
+  buttons.forEach(button => { button.onclick = () => { status.textContent = ''; dialog.showModal(); }; });
   document.getElementById('close-install').onclick = () => dialog.close();
   promptButton.onclick = async () => {
     if (!installPrompt) return;

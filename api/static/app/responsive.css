@@ -96,4 +96,14 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
 #install-dialog h3 { margin: 22px 0 4px; font-size: 15px; }
 #install-dialog p { margin-top: 8px; }
 #install-confirm { margin-top: 10px; }
-@media (display-mode: standalone) { #install-app { display: none; } }
+ .mobile-install { display: none; }
+@media (max-width: 900px) {
+  .mobile-install { display: inline-flex; min-height: 44px; padding: 12px 20px; }
+  .top-actions { gap: 10px; }
+}
+@media (max-width: 560px) {
+  .topbar { flex-wrap: wrap; gap: 8px; padding-top: 12px; padding-bottom: 12px; }
+  .breadcrumb { flex-basis: 100%; }
+  .top-actions { width: 100%; justify-content: space-between; }
+}
+@media (display-mode: standalone) { [data-install-app] { display: none; } }
