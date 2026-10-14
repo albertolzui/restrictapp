@@ -3,7 +3,7 @@
 Restrictapp is a Progressive Web App served from the existing Render service. No app-store account, new hosting service or paid package is required.
 
 - iPhone/iPad: open the public HTTPS address in Safari, choose Share → Add to Home Screen. Keep Open as Web App enabled if shown, then Add.
-- Android: open in Chrome and use the app footer's Install app button. If the browser provides an install prompt, choose Install Restrictapp; otherwise use Chrome's menu → Install app / Add to Home screen. Browser wording and install eligibility vary.
+- Android: open in Chrome and tap Install app in the mobile header or footer. It opens the browser's native prompt directly when available; otherwise it shows Android instructions to use Chrome's menu → Install app / Add to Home screen. Browser wording and install eligibility vary.
 - Installed instances open with the manifest's standalone display and the new logo. The Install app footer control is hidden when running standalone. Browser installation prompts occur only after a deliberate button press.
 
 The app requires internet for all planning, guidance, login and account operations. Its service worker caches only the public reconnect page and SVG mark. It never caches API responses, account information, the planner page, or travel advice. Downloaded preparation plans are separate files requested explicitly by the user. The privacy notice describes the public Cache Storage entry. Browser site-data settings can clear it.
