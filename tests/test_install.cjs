@@ -3,7 +3,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 function setup(userAgent, platform='', maxTouchPoints=0, standalone=false) {
   const elements = {}, handlers = {}, buttons = [{},{}];
-  for (const id of ['install-dialog','install-confirm','install-status','install-ios','install-android','close-install']) elements[id] = {hidden:false};
+  for (const id of ['install-dialog','install-confirm','install-status','install-ios','install-android','install-desktop','install-title','install-description','close-install']) elements[id] = {hidden:false};
   elements['install-dialog'].showModal = function () { this.open=true; };
   elements['install-dialog'].close = function () { this.open=false; };
   vm.runInNewContext(fs.readFileSync('api/static/app/install.js','utf8'),{
@@ -30,12 +30,23 @@ function setup(userAgent, platform='', maxTouchPoints=0, standalone=false) {
   assert.ok(fallback.elements['install-dialog'].open);
   assert.ok(fallback.elements['install-ios'].hidden);
   assert.equal(fallback.elements['install-android'].hidden,false);
+  assert.ok(fallback.elements['install-desktop'].hidden);
+  for (const browser of ['Windows Chrome','Windows Edg','Macintosh Safari','Linux Firefox']) {
+    const desktop = setup(browser);
+    await desktop.buttons[0].onclick();
+    assert.ok(desktop.elements['install-dialog'].open);
+    assert.equal(desktop.elements['install-desktop'].hidden,false);
+    assert.ok(desktop.elements['install-ios'].hidden);
+    assert.ok(desktop.elements['install-android'].hidden);
+    assert.match(desktop.elements['install-description'].textContent,/computer/);
+  }
   for (const device of [setup('iPhone Safari'),setup('Macintosh Safari','MacIntel',5)]) {
     device.handlers.beforeinstallprompt({preventDefault(){},prompt:()=>assert.fail('iOS must show Safari steps')});
     await device.buttons[0].onclick();
     assert.ok(device.elements['install-dialog'].open);
     assert.equal(device.elements['install-ios'].hidden,false);
     assert.ok(device.elements['install-android'].hidden);
+    assert.ok(device.elements['install-desktop'].hidden);
   }
   const failed=setup('Android Chrome');
   failed.handlers.beforeinstallprompt({preventDefault(){},prompt:async()=>{throw Error('unsupported');}});

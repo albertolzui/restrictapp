@@ -5,8 +5,14 @@
   const status = document.getElementById('install-status');
   const isAppleMobile = /iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const isAndroid = /Android/i.test(navigator.userAgent);
-  document.getElementById('install-ios').hidden = isAndroid;
-  document.getElementById('install-android').hidden = isAppleMobile;
+  const isDesktop = !isAppleMobile && !isAndroid;
+  document.getElementById('install-ios').hidden = !isAppleMobile;
+  document.getElementById('install-android').hidden = !isAndroid;
+  document.getElementById('install-desktop').hidden = !isDesktop;
+  if (isDesktop) {
+    document.getElementById('install-title').textContent = 'Your travel space. One click away.';
+    document.getElementById('install-description').textContent = 'Install Restrictapp on your computer and open your travel workspace in its own app window.';
+  }
   let installPrompt = null;
   let prompting = false;
   const showHelp = (message = '') => {

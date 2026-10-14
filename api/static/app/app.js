@@ -192,3 +192,5 @@ $('delete-account-form').onsubmit = async event => {
   try { await api('/api/account', {method:'DELETE',body:JSON.stringify({email:user.email,password:$('delete-password').value})}); location.reload(); }
   catch (error) { $('data-error').textContent = error.message; button.disabled = false; }
 };
+
+document.querySelectorAll('[data-how-link]').forEach(link => link.addEventListener('click', () => view('explore')));
