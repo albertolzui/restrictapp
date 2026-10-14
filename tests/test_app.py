@@ -57,7 +57,7 @@ class AppTests(unittest.TestCase):
     def test_privacy_pages_and_no_external_fonts(self):
         for path in ('/privacy','/cookies'):
             self.assertEqual(self.client.get(path).status_code, 200)
-        self.assertIn('Albert Olanipekun', self.client.get('/privacy').text)
+        self.assertIn('Restrictapp Admin', self.client.get('/privacy').text)
         self.assertNotIn('fonts.googleapis', self.client.get('/static/app/style.css').text)
 
     def test_search_validation_and_honest_data_state(self):

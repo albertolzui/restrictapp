@@ -2,7 +2,7 @@
 
 This implementation supports privacy obligations; it is not a certification of GDPR compliance.
 
-Operator: Albert Olanipekun. Privacy contact: olanipekun_albert@live.com.
+Operator: Restrictapp Admin. Privacy contact: olanipekun_albert@live.com.
 Optional Render environment overrides: `RESTRICTAPP_OPERATOR_NAME` and `RESTRICTAPP_PRIVACY_EMAIL`. Keep the HTML fallback notice in sync when changing these.
 
 Before describing the deployment as compliant:

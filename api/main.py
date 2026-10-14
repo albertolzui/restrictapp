@@ -122,7 +122,7 @@ def privacy_page():
 
 @app.get('/api/privacy')
 def privacy_details():
-    return {'operator': os.getenv('RESTRICTAPP_OPERATOR_NAME', 'Albert Olanipekun'),
+    return {'operator': os.getenv('RESTRICTAPP_OPERATOR_NAME', 'Restrictapp Admin'),
             'contact': os.getenv('RESTRICTAPP_PRIVACY_EMAIL', 'olanipekun_albert@live.com')}
 
 @app.get('/api/account/export')
