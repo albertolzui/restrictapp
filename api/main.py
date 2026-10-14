@@ -115,6 +115,14 @@ def validate_trip(origin, destination):
 def home():
     return FileResponse(ROOT / 'static/app/index.html')
 
+@app.get('/manifest.webmanifest')
+def web_manifest():
+    return FileResponse(ROOT / 'static/app/manifest.webmanifest', media_type='application/manifest+json', headers={'Cache-Control': 'no-cache'})
+
+@app.get('/sw.js')
+def service_worker():
+    return FileResponse(ROOT / 'static/app/sw.js', media_type='application/javascript', headers={'Cache-Control': 'no-cache'})
+
 @app.get('/privacy')
 @app.get('/cookies')
 def privacy_page():

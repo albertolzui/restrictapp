@@ -90,3 +90,10 @@ dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior:
   .cookie-notice h2 { margin-top: 0; font-size: 18px; }
   .cookie-notice p { margin: 8px 0; }
 }
+
+.install-icon { border-radius: 20px; display: block; margin: 8px 0 20px; }
+#install-dialog { font-size: 14px; line-height: 1.7; }
+#install-dialog h3 { margin: 22px 0 4px; font-size: 15px; }
+#install-dialog p { margin-top: 8px; }
+#install-confirm { margin-top: 10px; }
+@media (display-mode: standalone) { #install-app { display: none; } }
