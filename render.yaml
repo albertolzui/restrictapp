@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: restrictapp
+    runtime: python
+    plan: free
+    region: frankfurt
+    buildCommand: pip install -r requirements-lock.txt
+    startCommand: python -m uvicorn api.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips='*'
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.12
+      - key: RESTRICTAPP_ENV
+        value: production
+      - key: RESTRICTAPP_SECURE_COOKIES
+        value: '1'
+      - key: RESTRICTAPP_RATE_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
