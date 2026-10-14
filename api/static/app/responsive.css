@@ -1,0 +1,92 @@
+/* Keep content usable without hiding horizontal overflow. */
+.workspace, main, .section-heading > *, .hero-content, .trip-row > * { min-width: 0; }
+.source-link, .guidance-attribution, .guidance-section, .policy, .trip-row h3 { overflow-wrap: anywhere; }
+.trip-actions { flex-wrap: wrap; }
+dialog { max-height: calc(100dvh - 32px); overflow-y: auto; overscroll-behavior: contain; }
+.cookie-notice { max-height: calc(100dvh - 32px); overflow-y: auto; }
+.policy td { overflow-wrap: anywhere; }
+
+@media (max-width: 900px) {
+  .sidebar { position: static; width: auto; padding: 18px 20px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .workspace { margin-left: 0; }
+  .workspace-label, .sidebar-bottom, .sidebar-footer { display: none; }
+  .app-logo { display: block; width: 185px; }
+  .sidebar nav { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 8px; margin-top: 18px; }
+  .sidebar nav a.nav-item { display: none; }
+  .nav-item { font-size: 12px; padding: 12px 10px; gap: 8px; min-height: 48px; }
+  .nav-item > span:first-child { font-size: 17px; }
+  .topbar { height: auto; min-height: 64px; padding: 10px 20px; gap: 12px; }
+  .breadcrumb { font-size: 11px; }
+  .breadcrumb span { padding: 0 8px; }
+  main { padding: 24px 20px; }
+  .hero-content { padding: 28px; }
+  .hero h1 { font-size: 42px; }
+  .hero-content > p { font-size: 13px; }
+  .hero-link { font-size: 13px; }
+  .section-heading { flex-wrap: wrap; gap: 14px; }
+  .primary, .outline, .account-button, .text-button { font-size: 13px; min-height: 44px; }
+  .close { min-width: 44px; min-height: 44px; right: 8px; top: 8px; }
+  .route-input label, .traveler-grid label, #auth-form label { font-size: 13px; }
+  .input-wrap input, .traveler-grid input, .traveler-grid select, #auth-form input, #delete-password { font-size: 16px; }
+  .traveler-grid input, .traveler-grid select { min-height: 48px; }
+  .route-input { padding: 14px; }
+  .swap { width: 44px; height: 44px; }
+  .search-note, .subtle, .result-panel > p, .entry-reference > p, .plan-note, .scope-note { font-size: 13px; }
+  .eyebrow, .muted { font-size: 10px; letter-spacing: 1px; }
+  .checklist-item b, .guidance-section summary { font-size: 14px; }
+  .checklist-item small, .requirements p, .guidance-section p { font-size: 13px; }
+  .checklist-item { min-height: 48px; }
+  .checklist-item input { width: 20px; height: 20px; }
+  .guidance-section a, .guidance-attribution a, .guidance-attribution, .entry-reference .guidance-attribution { font-size: 12px; }
+  .status-chip, .traveler-summary span { font-size: 12px; }
+  footer { justify-content: flex-start; gap: 12px 20px; font-size: 12px; }
+  footer a { min-height: 44px; display: inline-flex; align-items: center; }
+  footer > span { flex-basis: 100%; }
+  .cookie-notice { padding: 20px; font-size: 13px; left: 16px; right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); max-width: 440px; margin-left: auto; }
+  dialog { padding: 28px 24px; }
+  dialog h2 { padding-right: 16px; font-size: 26px; }
+  #delete-account-form { font-size: 14px; }
+}
+
+@media (max-width: 560px) {
+  main { padding: 20px 16px; }
+  .sidebar { padding: 18px 16px 14px; }
+  .app-logo { width: 180px; }
+  .topbar { padding: 10px 16px; }
+  .breadcrumb { font-size: 10px; }
+  .hero { grid-template-columns: minmax(0,1fr); min-height: 0; }
+  .hero-content { padding: 26px 24px; }
+  .hero h1 { font-size: clamp(32px, 9vw, 44px); letter-spacing: -1.6px; margin: 20px 0 14px; }
+  .hero-art { height: 100px; }
+  .sun { top: 15px; left: 62%; width: 56px; height: 56px; }
+  .mountain-back { bottom: -150px; left: -40px; }
+  .mountain-front { bottom: -175px; left: 80px; }
+  .art-caption { top: 15px; left: 20px; right: auto; font-size: 8px; }
+  .art-star { font-size: 30px; right: 20px; bottom: 10px; }
+  .search-panel, .traveler-panel, .result-panel { padding: 20px 18px; }
+  #search-form { grid-template-columns: minmax(0,1fr) 44px; }
+  .traveler-grid { grid-template-columns: minmax(0,1fr); }
+  .destination-grid { grid-template-columns: minmax(0,1fr); gap: 14px; }
+  .destination-card { display: grid; grid-template-columns: 38% minmax(0,1fr); align-items: center; }
+  .landscape { height: 140px; }
+  .card-top { width: 38%; top: 0; font-size: 8px; }
+  .card-bottom { padding: 16px; }
+  .card-bottom h3 { font-size: 21px; }
+  .card-bottom p { font-size: 13px; line-height: 1.6; }
+  .how-steps { flex-direction: column; gap: 0; font-size: 13px; }
+  .how-steps p { display: flex; gap: 12px; align-items: baseline; }
+  .how-steps b { font-size: 12px; }
+  .entry-reference { padding: 18px 14px; }
+  .entry-reference .source-link { display: block; margin-right: 0; }
+  .policy { padding: 20px; margin: 15px auto; font-size: 14px; }
+  .policy h1 { font-size: 30px; }
+  .policy table { table-layout: fixed; font-size: 12px; }
+  .policy td, .policy th { padding: 8px 5px; }
+  .policy code { overflow-wrap: anywhere; }
+}
+
+@media (max-height: 500px) and (max-width: 900px) {
+  .cookie-notice { max-height: calc(100dvh - 24px); bottom: 12px; padding: 14px 20px; }
+  .cookie-notice h2 { margin-top: 0; font-size: 18px; }
+  .cookie-notice p { margin: 8px 0; }
+}
