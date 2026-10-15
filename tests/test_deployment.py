@@ -36,6 +36,8 @@ class DeploymentTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder, patch.object(main,'DB_PATH',Path(folder)/'test.sqlite3'), patch.dict(os.environ,{'DATABASE_URL':'','RESTRICTAPP_SECURE_COOKIES':'1','RESTRICTAPP_ENV':'development'}):
             with TestClient(main.app,base_url='https://restrictapp.example') as client:
                 response = client.post('/api/auth/signup',json={'email':'test@example.com','password':'test-password-123'},headers={'X-Restrictapp':'1','Origin':'https://restrictapp.example'})
+                self.assertEqual(response.status_code,202)
+                response = client.post('/api/auth/login',json={'email':'test@example.com','password':'test-password-123'},headers={'X-Restrictapp':'1','Origin':'https://restrictapp.example'})
                 self.assertEqual(response.status_code,200)
                 self.assertIn('Secure',response.headers['set-cookie'])
                 self.assertEqual(client.get('/api/me').status_code,200)

@@ -21,7 +21,9 @@ class AppTests(unittest.TestCase):
         self.temp.cleanup()
 
     def signup(self, client, email='test@example.com'):
-        return client.post('/api/auth/signup', json={'email': email, 'password': 'test-password-123'}, headers=self.headers)
+        credentials = {'email': email, 'password': 'test-password-123'}
+        self.assertEqual(client.post('/api/auth/signup', json=credentials, headers=self.headers).status_code,202)
+        return client.post('/api/auth/login', json=credentials, headers=self.headers)
 
     def test_account_export_and_deletion(self):
         self.assertEqual(self.client.get('/api/account/export').status_code, 401)
@@ -78,7 +80,7 @@ class AppTests(unittest.TestCase):
             stored = db.execute('SELECT password FROM users').fetchone()['password']
             self.assertNotEqual(stored, 'test-password-123')
             self.assertTrue(main.password_hash('test-password-123', stored.split(':')[0]) == stored)
-        self.assertEqual(self.signup(self.client).status_code, 409)
+        self.assertEqual(self.client.post('/api/auth/signup',json={'email':'test@example.com','password':'test-password-123'},headers=self.headers).status_code,202)
         self.assertEqual(self.client.get('/api/me').status_code, 200)
         self.assertEqual(self.client.post('/api/logout', headers=self.headers).status_code, 200)
         self.assertEqual(self.client.get('/api/me').status_code, 401)

@@ -34,7 +34,8 @@ class PostgresTests(unittest.TestCase):
                 trip=client.get('/api/trips').json()[0]
                 self.assertEqual(trip['id'],88)
                 self.assertTrue(trip['checklist'][0]['done'])
-                self.assertEqual(client.post('/api/auth/signup',json={'email':'next@example.com','password':'test-password-123'},headers=headers).status_code,200)
+                self.assertEqual(client.post('/api/auth/signup',json={'email':'next@example.com','password':'test-password-123'},headers=headers).status_code,202)
+                self.assertEqual(client.post('/api/auth/login',json={'email':'next@example.com','password':'test-password-123'},headers=headers).status_code,200)
                 self.assertEqual(client.get('/api/me').json()['id'],43)
                 self.assertEqual(client.post('/api/trips',json={'origin':'Germany','destination':'Italy'},headers=headers).json()['id'],89)
             with main.database() as db:
@@ -49,8 +50,9 @@ class PostgresTests(unittest.TestCase):
             with TestClient(main.app) as client:
                 headers={'X-Restrictapp':'1'}
                 account={'email':'pg-test@example.com','password':'test-password-123'}
-                self.assertEqual(client.post('/api/auth/signup',json=account,headers=headers).status_code,200)
-                self.assertEqual(client.post('/api/auth/signup',json=account,headers=headers).status_code,409)
+                self.assertEqual(client.post('/api/auth/signup',json=account,headers=headers).status_code,202)
+                self.assertEqual(client.post('/api/auth/login',json=account,headers=headers).status_code,200)
+                self.assertEqual(client.post('/api/auth/signup',json=account,headers=headers).status_code,202)
                 profile={'nationality':'Nigeria','residence':'Germany','passport_expiry':None}
                 self.assertEqual(client.put('/api/profile',json=profile,headers=headers).status_code,200)
                 self.assertEqual(client.get('/api/profile').json(),profile)

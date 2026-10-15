@@ -12,13 +12,14 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, Field
 from api.travel_data import route_data
 from api.planning import checklist, planning_notes, authority_links
 from api.guidance import official_guidance
 from api.entry_reference import lookup
 from api import storage
-from api.security import auth_throttle
+from api.security import auth_throttle, RequestSizeLimit
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 ROOT = Path(__file__).resolve().parent
@@ -31,7 +32,10 @@ async def lifespan(app):
         db.execute('SELECT 1')
     yield
 
-app = FastAPI(title='Restrictapp', version='2.0.0', lifespan=lifespan)
+app = FastAPI(title='Restrictapp', version='2.0.1', lifespan=lifespan,
+    docs_url=None if storage.production() else '/docs', redoc_url=None,
+    openapi_url=None if storage.production() else '/openapi.json')
+app.add_middleware(RequestSizeLimit)
 app.mount('/static', StaticFiles(directory=ROOT / 'static'), name='static')
 allowed_hosts = os.getenv('RESTRICTAPP_ALLOWED_HOSTS') or os.getenv('RENDER_EXTERNAL_HOSTNAME')
 if allowed_hosts:
@@ -46,6 +50,9 @@ async def response_headers(request: Request, call_next):
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'; worker-src 'self'; manifest-src 'self'"
+    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=(), payment=()'
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin'
     if request.url.path.startswith('/api/'):
         response.headers['Cache-Control'] = 'no-store'
     if storage.production():
@@ -56,8 +63,17 @@ def password_hash(password, salt=None):
     salt = salt or secrets.token_hex(16)
     return salt + ':' + hashlib.scrypt(password.encode(), salt=salt.encode(), n=16384, r=8, p=1).hex()
 
+DUMMY_PASSWORD = password_hash(secrets.token_urlsafe(32))
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request, exc):
+    # Pydantic's default response includes input values, including passwords.
+    return JSONResponse({'detail':'Please check your entries and try again.'}, status_code=422)
+
 def current_user(request):
     token = request.cookies.get('restrictapp_session', '')
+    if not token or len(token) > 128:
+        raise HTTPException(401, 'Sign in to manage your trips.')
     with database() as db:
         user = db.execute('SELECT users.id,users.email FROM sessions JOIN users ON users.id=sessions.user_id WHERE token=? AND expires>?', (hashlib.sha256(token.encode()).hexdigest(), time.time())).fetchone()
     if not user:
@@ -65,6 +81,8 @@ def current_user(request):
     return dict(user)
 
 def protect_write(request):
+    if request.headers.get('sec-fetch-site') == 'cross-site':
+        raise HTTPException(403, 'Invalid origin.')
     if request.headers.get('x-restrictapp') != '1':
         raise HTTPException(403, 'Invalid request.')
     origin = request.headers.get('origin')
@@ -219,17 +237,23 @@ def authenticate(action: str, data: Credentials, request: Request, response: Res
     if '@' not in email or '.' not in email.rsplit('@', 1)[-1] or ' ' in email:
         raise HTTPException(422, 'Enter a valid email address.')
     auth_throttle(database, request, email)
+    if action == 'signup':
+        encoded = password_hash(data.password)
+        with database() as db:
+            db.execute('INSERT INTO users(email,password) VALUES (?,?) ON CONFLICT(email) DO NOTHING', (email, encoded))
+        return JSONResponse({'detail':'If this address is new, your account is ready. Sign in to continue.'},status_code=202)
     with database() as db:
-        if action == 'signup':
-            try:
-                db.execute('INSERT INTO users(email,password) VALUES (?,?)', (email, password_hash(data.password)))
-            except storage.INTEGRITY_ERRORS:
-                raise HTTPException(409, 'This email is already registered.')
         user = db.execute('SELECT * FROM users WHERE email=?', (email,)).fetchone()
-        if not user or not hmac.compare_digest(password_hash(data.password, user['password'].split(':')[0]), user['password']):
+        encoded = user['password'] if user else DUMMY_PASSWORD
+        matches = hmac.compare_digest(password_hash(data.password, encoded.split(':')[0]), encoded)
+        if not user or not matches:
             raise HTTPException(401, 'Email or password is incorrect.')
         token = secrets.token_urlsafe(32)
         db.execute('DELETE FROM sessions WHERE expires<=?', (time.time(),))
+        old = request.cookies.get('restrictapp_session', '')
+        db.execute('DELETE FROM sessions WHERE token=?', (hashlib.sha256(old.encode()).hexdigest(),))
+        # Bound active sessions so repeated logins cannot grow the table forever.
+        db.execute('DELETE FROM sessions WHERE user_id=? AND token NOT IN (SELECT token FROM sessions WHERE user_id=? ORDER BY expires DESC LIMIT 19)', (user['id'], user['id']))
         db.execute('INSERT INTO sessions VALUES (?,?,?)', (hashlib.sha256(token.encode()).hexdigest(), user['id'], time.time()+604800))
     response.set_cookie('restrictapp_session', token, httponly=True, samesite='lax', secure=os.getenv('RESTRICTAPP_SECURE_COOKIES') == '1', max_age=604800)
     return {'email': email}

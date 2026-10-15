@@ -353,5 +353,7 @@
   "We don’t show cached travel advice or account information offline.": "Wir zeigen offline keine zwischengespeicherten Reisehinweise oder Kontodaten an.",
   "Try again": "Erneut versuchen",
   "Reconnect — Restrictapp": "Verbindung herstellen — Restrictapp",
-  "Restrictapp — Make room for your next journey": "Restrictapp — Platz für deine nächste Reise"
+  "Restrictapp — Make room for your next journey": "Restrictapp — Platz für deine nächste Reise",
+  "If this address is new, your account is ready. Sign in to continue.": "Wenn diese Adresse neu ist, ist dein Konto bereit. Melde dich an, um fortzufahren.",
+  "Request is too large.": "Die Anfrage ist zu groß."
 }

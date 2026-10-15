@@ -4,6 +4,33 @@ import os
 import secrets
 import time
 from fastapi import HTTPException
+from starlette.responses import JSONResponse
+
+
+class RequestSizeLimit:
+    """Bound streamed bodies before JSON validation (including chunked uploads)."""
+    def __init__(self, app, limit=32_768):
+        self.app, self.limit = app, limit
+
+    async def __call__(self, scope, receive, send):
+        if scope['type'] != 'http':
+            return await self.app(scope, receive, send)
+        messages, size = [], 0
+        while True:
+            message = await receive()
+            if message['type'] == 'http.disconnect':
+                return
+            size += len(message.get('body', b''))
+            if size > self.limit:
+                return await JSONResponse({'detail':'Request is too large.'}, status_code=413)(scope, receive, send)
+            messages.append(message)
+            if not message.get('more_body', False):
+                break
+        async def replay():
+            if messages:
+                return messages.pop(0)
+            return await receive()
+        await self.app(scope, replay, send)
 
 _local_secret = secrets.token_hex(32)
 
