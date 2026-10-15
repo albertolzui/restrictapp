@@ -3,7 +3,7 @@ import json
 import time
 from datetime import datetime, timezone
 from html.parser import HTMLParser
-from threading import Lock
+from threading import Lock, BoundedSemaphore
 from urllib.request import Request, urlopen
 
 SLUGS = {'United-States':'usa', 'United-Arab-Emirates':'united-arab-emirates',
@@ -12,6 +12,7 @@ SLUGS = {'United-States':'usa', 'United-Arab-Emirates':'united-arab-emirates',
     'Cape-Verde':'cape-verde', 'Palestinian-Territories':'the-occupied-palestinian-territories'}
 _cache = {}
 _lock = Lock()
+_fetch_slots = BoundedSemaphore(2)
 
 class PlainText(HTMLParser):
     def __init__(self):
@@ -54,8 +55,11 @@ def official_guidance(destination):
         'url':'https://www.gov.uk/foreign-travel-advice', 'updated_at':None, 'retrieved_at':None, 'sections':[]}
     with _lock:
         cached = _cache.get(slug)
-        if cached and time.monotonic()-cached[0] < (3600 if cached[1]['status']=='available' else 60):
-            return cached[1]
+    if cached and time.monotonic()-cached[0] < (3600 if cached[1]['status']=='available' else 60):
+        return cached[1]
+    if not _fetch_slots.acquire(blocking=False):
+        return fallback
+    try:
         try:
             document = fetch_document(slug)
             if document.get('document_type') != 'travel_advice' or document.get('base_path') != f'/foreign-travel-advice/{slug}':
@@ -74,5 +78,8 @@ def official_guidance(destination):
                 'retrieved_at':datetime.now(timezone.utc).isoformat()}
         except (OSError, ValueError, TypeError, KeyError):
             result = fallback
-        _cache[slug] = (time.monotonic(), result)
+        with _lock:
+            _cache[slug] = (time.monotonic(), result)
         return result
+    finally:
+        _fetch_slots.release()

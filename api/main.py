@@ -9,6 +9,7 @@ import time
 from datetime import date
 from typing import Literal
 from contextlib import asynccontextmanager
+from threading import BoundedSemaphore
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -59,9 +60,16 @@ async def response_headers(request: Request, call_next):
         response.headers['Strict-Transport-Security'] = 'max-age=31536000'
     return response
 
+_password_slots = BoundedSemaphore(4)
+
 def password_hash(password, salt=None):
-    salt = salt or secrets.token_hex(16)
-    return salt + ':' + hashlib.scrypt(password.encode(), salt=salt.encode(), n=16384, r=8, p=1).hex()
+    if not _password_slots.acquire(blocking=False):
+        raise HTTPException(429,'Too many sign-in attempts. Please try again later.',headers={'Retry-After':'2'})
+    try:
+        salt = salt or secrets.token_hex(16)
+        return salt + ':' + hashlib.scrypt(password.encode(), salt=salt.encode(), n=16384, r=8, p=1).hex()
+    finally:
+        _password_slots.release()
 
 DUMMY_PASSWORD = password_hash(secrets.token_urlsafe(32))
 

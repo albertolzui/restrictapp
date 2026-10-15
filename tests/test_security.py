@@ -44,3 +44,18 @@ class SecurityTests(unittest.TestCase):
         self.assertNotIn('set-cookie',first.headers)
         self.assertNotIn('set-cookie',again.headers)
         self.assertEqual(self.client.get('/api/me').status_code,401)
+    def test_password_work_fails_closed_when_memory_budget_is_busy(self):
+        for _ in range(4): main._password_slots.acquire()
+        try:
+            response=self.client.post('/api/auth/login',json={'email':'missing@example.com','password':'test-password-123'},headers={'X-Restrictapp':'1'})
+            self.assertEqual(response.status_code,429)
+            self.assertEqual(response.headers['Retry-After'],'2')
+        finally:
+            for _ in range(4): main._password_slots.release()
+    def test_busy_guidance_returns_links_without_starting_another_fetch(self):
+        from api import guidance
+        guidance._cache.clear()
+        with patch.object(guidance,'_fetch_slots') as slots, patch.object(guidance,'fetch_document') as fetch:
+            slots.acquire.return_value=False
+            self.assertEqual(guidance.official_guidance('France')['status'],'unavailable')
+            fetch.assert_not_called()

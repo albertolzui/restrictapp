@@ -19,6 +19,11 @@ and a public-assets-only service worker. Fetch Metadata now also rejects explici
 cross-site writes. Both auth counters already incremented correctly; no throttle
 short-circuit bug was found.
 
+Follow-up resource protection bounds concurrent password hashes to four and
+external guidance fetches to two per process. Cache reads no longer wait behind
+network requests; busy guidance requests return official links without an extra
+fetch. These limits reduce memory/thread exhaustion on small instances.
+
 Validation: Python regression/security tests, bilingual DOM tests and dependency
 audit. The current lock file had no known advisories at review time. A tracked-file
 scan for private keys, GitHub tokens and credential-bearing MongoDB URLs found no
