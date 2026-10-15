@@ -14,6 +14,10 @@ class PwaTests(unittest.TestCase):
             self.assertEqual(manifest['display'], 'standalone')
             self.assertEqual(manifest['scope'], '/')
             self.assertEqual(manifest['id'], '/')
+            german = client.get('/manifest.webmanifest?lang=de').json()
+            self.assertEqual(german['lang'], 'de')
+            self.assertEqual(german['id'], manifest['id'])
+            self.assertEqual(german['start_url'], manifest['start_url'])
             for icon in manifest['icons']:
                 response = client.get(icon['src'])
                 self.assertEqual(response.status_code, 200)

@@ -7,6 +7,7 @@ function setup(userAgent, platform='', maxTouchPoints=0, standalone=false) {
   elements['install-dialog'].showModal = function () { this.open=true; };
   elements['install-dialog'].close = function () { this.open=false; };
   vm.runInNewContext(fs.readFileSync('api/static/app/install.js','utf8'),{
+    t: value => value,
     document:{querySelectorAll:()=>buttons,getElementById:id=>elements[id]},
     navigator:{userAgent,platform,maxTouchPoints},
     window:{matchMedia:()=>({matches:standalone,addEventListener:()=>{}}),addEventListener:(name,handler)=>handlers[name]=handler}

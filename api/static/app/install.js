@@ -9,14 +9,16 @@
   document.getElementById('install-ios').hidden = !isAppleMobile;
   document.getElementById('install-android').hidden = !isAndroid;
   document.getElementById('install-desktop').hidden = !isDesktop;
-  if (isDesktop) {
-    document.getElementById('install-title').textContent = 'Your travel space. One click away.';
-    document.getElementById('install-description').textContent = 'Install Restrictapp on your computer and open your travel workspace in its own app window.';
-  }
+  const localizeInstall = () => { if (isDesktop) {
+    document.getElementById('install-title').textContent = t("Your travel space. One click away.");
+    document.getElementById('install-description').textContent = t("Install Restrictapp on your computer and open your travel workspace in its own app window.");
+  } };
+  localizeInstall();
+  window.addEventListener('restrictapp:languagechange', localizeInstall);
   let installPrompt = null;
   let prompting = false;
   const showHelp = (message = '') => {
-    status.textContent = message;
+    status.textContent = t(message);
     if (!dialog.open) dialog.showModal();
   };
   const standalone = window.matchMedia('(display-mode: standalone)');
@@ -35,15 +37,15 @@
   const install = async () => {
     if (prompting) return;
     if (isAppleMobile) return showHelp();
-    if (!installPrompt) return showHelp(isAndroid ? 'If the install prompt is unavailable, use Chrome’s menu as described below.' : 'Use your browser’s installation option, or follow the steps below.');
+    if (!installPrompt) return showHelp(isAndroid ? t("If the install prompt is unavailable, use Chrome’s menu as described below.") : t("Use your browser’s installation option, or follow the steps below."));
     const pending = installPrompt; installPrompt = null; promptButton.hidden = true; prompting = true;
     buttons.forEach(button => { button.disabled = true; });
     try {
       // Call during this click's user activation; no extra dialog or async work first.
       await pending.prompt();
       const choice = await pending.userChoice;
-      status.textContent = choice.outcome === 'accepted' ? 'Installation requested. Follow your browser’s instructions to finish.' : 'No problem. You can install later from your browser menu.';
-    } catch { showHelp('Use your browser menu to install Restrictapp, or follow the steps below.'); }
+      status.textContent = t(choice.outcome === 'accepted' ? t("Installation requested. Follow your browser’s instructions to finish.") : t("No problem. You can install later from your browser menu."));
+    } catch { showHelp(t("Use your browser menu to install Restrictapp, or follow the steps below.")); }
     finally { prompting = false; buttons.forEach(button => { button.disabled = false; }); }
   };
   buttons.forEach(button => { button.onclick = install; });

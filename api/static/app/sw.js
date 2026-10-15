@@ -1,8 +1,8 @@
 // Cache only this public reconnect screen and its logo. Never cache accounts,
 // API responses, planner HTML, requirements or destination guidance.
-const CACHE = 'restrictapp-offline-v1';
+const CACHE = 'restrictapp-offline-v2';
 const OFFLINE = '/static/app/offline.html';
-const PUBLIC_ASSETS = [OFFLINE, '/static/images/restrictapp-mark.svg'];
+const PUBLIC_ASSETS = [OFFLINE, '/static/images/restrictapp-mark.svg', '/static/app/locale-data.js', '/static/app/i18n.js'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(PUBLIC_ASSETS)));
 });

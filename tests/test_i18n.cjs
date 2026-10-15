@@ -1,0 +1,83 @@
+// DOM-level regression checks. Install jsdom in api/data/i18n-tools for this test.
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const {JSDOM}=require(process.env.RESTRICTAPP_JSDOM_MODULE || '../api/data/i18n-tools/node_modules/jsdom');
+const root='api/static/app/';
+const countries=JSON.parse(fs.readFileSync('api/countries.json','utf8'));
+const plan=JSON.parse(fs.readFileSync('tests/fixtures/i18n-plan.json','utf8'));
+const tick=()=>new Promise(resolve=>setTimeout(resolve,20));
+function create(page='index.html',lang='en') {
+  const dom=new JSDOM(fs.readFileSync(root+page,'utf8'),{url:'https://restrictapp.example/?lang='+lang,runScripts:'outside-only',pretendToBeVisual:true});
+  const w=dom.window;
+  w.matchMedia=()=>({matches:false,addEventListener(){}});
+  w.HTMLElement.prototype.scrollIntoView=function(){};
+  w.HTMLDialogElement.prototype.showModal=function(){this.open=true;};
+  w.HTMLDialogElement.prototype.close=function(){this.open=false;};
+  w.Blob=Blob;
+  w.URL.createObjectURL=blob=>{w.downloaded=blob;return 'blob:test';};
+  w.URL.revokeObjectURL=()=>{};
+  const anchorClick=w.HTMLAnchorElement.prototype.click;
+  w.HTMLAnchorElement.prototype.click=function(){if(!this.download)anchorClick.call(this);};
+  w.document.addEventListener('click',event=>{if(event.target.download)event.preventDefault();});
+  const calls=[];
+  w.fetch=async(path,options={})=>{
+    calls.push({path,options});
+    if(path==='/api/plan' && JSON.parse(options.body).origin===JSON.parse(options.body).destination) return {ok:false,json:async()=>({detail:'Choose a different destination.'})};
+    const result=path==='/api/countries'?countries:path==='/api/plan'?plan:path==='/api/privacy'?{operator:'Restrictapp Admin',contact:'privacy@example.com'}:{detail:'Sign in to manage your trips.'};
+    return {ok:path!=='/api/me',json:async()=>structuredClone(result)};
+  };
+  for(const file of ['locale-data.js','i18n.js',...(page==='index.html'?['app.js','install.js']:[])])w.eval(fs.readFileSync(root+file,'utf8'));
+  return {dom,w,calls};
+}
+function change(w,lang) {
+  const control=w.document.querySelector('[data-language-select]');
+  control.value=lang;control.dispatchEvent(new w.Event('change'));
+}
+(async()=>{
+  const {w,dom,calls}=create();await tick();
+  assert.equal(w.document.documentElement.lang,'en');
+  for(const [id,value] of Object.entries({origin:'Germany',destination:'Japan',nationality:'Nigeria',residence:'Germany',transit:'United Kingdom'}))w.document.getElementById(id).value=value;
+  change(w,'de');await tick();
+  assert.equal(w.document.documentElement.lang,'de');
+  assert.match(w.document.querySelector('h1').textContent,/Neue Orte/);
+  assert.equal(w.document.getElementById('origin').value,'Deutschland');
+  assert.equal(w.I18n.countryId('Deutschland'),'Germany');
+  assert.equal(w.I18n.countryId('Germany'),'Germany');
+  assert.equal(w.I18n.countryId('Vereinigtes Königreich'),'United-Kingdom');
+  assert.equal(w.localStorage.getItem('restrictapp_language'),'de');
+  w.document.getElementById('search-form').dispatchEvent(new w.Event('submit',{cancelable:true}));await tick();
+  const request=calls.find(call=>call.path==='/api/plan');
+  assert.equal(JSON.parse(request.options.body).origin,'Germany');
+  assert.equal(JSON.parse(request.options.body).transit,'United-Kingdom');
+  assert.match(w.document.getElementById('result-title').textContent,/Deutschland/);
+  assert.match(w.document.getElementById('plan-checklist').textContent,/Prüfe deinen Pass/);
+  assert.match(w.document.getElementById('planning-notes').textContent,/Dein Pass/);
+  const checkbox=w.document.querySelector('#plan-checklist input');checkbox.checked=true;checkbox.dispatchEvent(new w.Event('change'));await tick();
+  change(w,'en');await tick();
+  assert.equal(w.document.getElementById('origin').value,'Germany');
+  assert.match(w.document.getElementById('result-title').textContent,/Germany/);
+  assert.match(w.document.getElementById('plan-checklist').textContent,/Check your passport/);
+  assert.equal(w.document.querySelector('#plan-checklist input').checked,true);
+  change(w,'de');await tick();
+  w.document.getElementById('download-plan').click();
+  const text=await w.downloaded.text();
+  assert.match(text,/VORBEREITUNGSPLAN/);assert.match(text,/Prüfe deinen Pass/);assert.match(text,/Dein Pass/);
+  w.document.getElementById('account-button').click();
+  assert.match(w.document.getElementById('auth-title').textContent,/Willkommen/);
+  w.document.getElementById('password').value='keep-my-input';change(w,'en');await tick();
+  assert.equal(w.document.getElementById('password').value,'keep-my-input');
+  assert.match(w.document.getElementById('auth-title').textContent,/Welcome/);
+  w.document.getElementById('close-auth').click();change(w,'de');await tick();
+  w.document.getElementById('destination').value='Deutschland';
+  w.document.getElementById('search-form').dispatchEvent(new w.Event('submit',{cancelable:true}));await tick();
+  assert.match(w.document.getElementById('search-error').textContent,/Wähle ein anderes Zielland/);
+  change(w,'en');assert.match(w.document.getElementById('search-error').textContent,/Choose a different destination/);
+  assert.equal(w.t('Custom source text'),'Custom source text');
+  dom.window.close();
+  const privacy=create('privacy.html','de');
+  assert.match(privacy.w.document.querySelector('h1').textContent,/Datenschutz/);
+  assert.match(privacy.w.document.body.textContent,/Aufsichtsbehörde/);
+  change(privacy.w,'en');assert.match(privacy.w.document.querySelector('h1').textContent,/Privacy/);privacy.dom.window.close();
+  const offline=create('offline.html','de');assert.match(offline.w.document.querySelector('h1').textContent,/Deine nächste Reise/);offline.dom.window.close();
+  console.log('Bilingual DOM tests passed: country identifiers, language persistence, forms, plans, checklists, downloads, privacy and offline screen.');
+})().catch(error=>{console.error(error);process.exitCode=1;});

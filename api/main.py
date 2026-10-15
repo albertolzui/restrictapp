@@ -116,8 +116,9 @@ def home():
     return FileResponse(ROOT / 'static/app/index.html')
 
 @app.get('/manifest.webmanifest')
-def web_manifest():
-    return FileResponse(ROOT / 'static/app/manifest.webmanifest', media_type='application/manifest+json', headers={'Cache-Control': 'no-cache'})
+def web_manifest(request: Request):
+    filename = 'manifest.de.webmanifest' if request.query_params.get('lang') == 'de' else 'manifest.webmanifest'
+    return FileResponse(ROOT / ('static/app/' + filename), media_type='application/manifest+json', headers={'Cache-Control': 'no-cache'})
 
 @app.get('/sw.js')
 def service_worker():

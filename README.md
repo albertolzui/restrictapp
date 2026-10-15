@@ -85,3 +85,7 @@ Existing MongoDB users and saved trips are not migrated automatically. Migration
 Deployment preparation includes PostgreSQL storage, database health checks, HTTPS cookie configuration, security headers, Host validation, and persistent login/signup rate limiting. Email verification, account recovery, and a personalized requirements provider remain future work. The API exposes no legacy account or trip mutations through GET requests. Migration of the current SQLite data is available; legacy MongoDB users still need a separate password-reset migration.
 
 The frontend uses optional Google Fonts with system fallbacks. All illustrations are CSS and require no third-party image downloads.
+
+## English and German
+
+Use the English/Deutsch selector to change the interface without losing the current route or checklist. German country names are accepted while saved identifiers remain unchanged. The privacy, install and offline pages and downloadable plans are localized too. External source text stays in its published language and is labelled as such. See [localization maintenance and tests](LOCALIZATION.md).
