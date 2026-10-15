@@ -1,0 +1,3 @@
+#!/bin/sh
+# Local guard; CI verifies commits made through other clients as well.
+exec python scripts/check_docs.py --staged

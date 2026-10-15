@@ -1,5 +1,10 @@
 # Restrictapp 2.0
 
+Read the [complete application documentation](DOCUMENTATION.md) for entities,
+relationships, API contracts, workflows and frontend navigation. Contributor/AI
+instructions are in [AGENTS.md](AGENTS.md). Every commit must update both DOCUMENTATION.md and README.md;
+install the local guard with `git config core.hooksPath .githooks`.
+
 A refreshed travel planning workspace built with FastAPI and a responsive HTML/CSS/JavaScript frontend.
 
 For Render + Neon, follow [the deployment guide](DEPLOYMENT.md). Production uses PostgreSQL through `DATABASE_URL`; local development continues to use SQLite. The root `render.yaml` configures one free Render service and accepts a separately created Neon database.
@@ -84,7 +89,7 @@ Existing MongoDB users and saved trips are not migrated automatically. Migration
 
 Deployment preparation includes PostgreSQL storage, database health checks, HTTPS cookie configuration, security headers, Host validation, and persistent login/signup rate limiting. Email verification, account recovery, and a personalized requirements provider remain future work. The API exposes no legacy account or trip mutations through GET requests. Migration of the current SQLite data is available; legacy MongoDB users still need a separate password-reset migration.
 
-The frontend uses optional Google Fonts with system fallbacks. All illustrations are CSS and require no third-party image downloads.
+The frontend uses local/system fonts without external font requests. All illustrations are CSS and require no third-party image downloads.
 
 ## English and German
 
