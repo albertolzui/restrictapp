@@ -1,0 +1,10 @@
+/* Native keyboard/touch selection in a compact, theme-matched control. */
+.language-control{position:relative;display:flex;align-items:center;width:100%;max-width:220px;margin:18px 0 0;isolation:isolate}
+.language-control .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.language-control::before{content:'â—Ž';position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#52735e;font-size:21px;line-height:1;pointer-events:none;z-index:1}
+.language-control::after{content:'';position:absolute;right:17px;top:calc(50% - 4px);width:6px;height:6px;border-right:1.5px solid #52735e;border-bottom:1.5px solid #52735e;transform:rotate(45deg);pointer-events:none}
+.language-control select,.sidebar .language-control select{appearance:none;-webkit-appearance:none;display:block;width:100%;min-height:44px;margin:0;padding:10px 38px 10px 45px;border:1px solid #cedbcf;border-radius:14px;background:#f5f8f1;color:#31594c;font:600 13px/1.4 system-ui,sans-serif;cursor:pointer;box-shadow:0 1px 2px #20382d05;transition:background .18s ease,border-color .18s ease,box-shadow .18s ease}
+.language-control select:hover{background:#eaf1e4;border-color:#9fb49e}
+.language-control select:focus-visible{outline:3px solid #b78a40;outline-offset:3px;background:white}
+@media(max-width:900px){.sidebar .language-control{width:120px;max-width:120px;margin:0}.sidebar .language-control select{width:120px;min-height:44px;padding-left:35px;padding-right:26px;font-size:12px}.sidebar .language-control::before{left:11px;font-size:18px}.sidebar .language-control::after{right:13px}.sidebar .brand{max-width:calc(100% - 132px)}.sidebar .brand .app-logo{max-width:100%;height:auto}}
+@media(prefers-reduced-motion:reduce){.language-control select{transition:none}}
