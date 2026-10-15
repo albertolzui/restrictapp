@@ -38,7 +38,7 @@ erDiagram
 
 | Table/object | Data | Management and relationship |
 | --- | --- | --- |
-| users | id, unique normalized email, salted scrypt password string | Signup creates; login verifies; account deletion removes user. No public staff/admin entity. |
+| users | id, unique normalized email, salted scrypt password string, preferred_language (en/de, default en) | Signup creates; login verifies and restores language; account deletion removes user. No public staff/admin entity. |
 | sessions | SHA-256 token digest, user_id FK, expiry | Raw token only in HttpOnly cookie. Seven-day expiry; login removes expired sessions and bounds active sessions to 20/user. Logout removes current session; user deletion cascades all sessions. |
 | profiles | user_id one-to-one FK, JSON text data | Nationality, residence, optional passport expiry. Explicit save/upsert; user deletion cascades. |
 | trips | id, user_id FK, origin, destination, created text timestamp, JSON text context | Unique user/origin/destination. Saving same route updates context; changing context resets checklist progress. User deletion cascades. |
@@ -167,7 +167,8 @@ TLS PostgreSQL, trusted hosts, HSTS, browser policies, bounded request bodies an
 same-origin writes. The legacy style policy allows inline CSS; script CSP is self-only.
 
 Cookie restrictapp_session lasts up to seven days. restrictapp_language in
-localStorage remembers en/de. The notice uses tab sessionStorage; the reconnect
+localStorage and a one-year host-only SameSite=Lax cookie (Secure on HTTPS) remembers
+en/de. Signed-in accounts additionally store their preferred language. The notice uses tab sessionStorage; the reconnect
 assets use restrictapp-offline-v2 Cache Storage. These are essential/preference
 storage, not advertising consent. Clear through browser site-data controls.
 Hosting/backup logs may retain metadata beyond active-record deletion; operators
@@ -215,7 +216,18 @@ for React/Django/Nginx behavior; that is not this live application's runtime.
 
 ## Revision notes
 
+- 15 October 2026 — Added the shared safe EN/DE error contract, database-outage
+  responses, bounded browser requests and gateway/offline recovery. Added owner-only
+  GET/PUT `/api/preferences`, additive user language storage, login restoration,
+  export/migration support, privacy disclosure and ERROR_HANDLING.md contributor rules.
+  Requests send X-Restrictapp-Language; failures preserve status and include a stable
+  code/request reference. Device choices remain available if account saving fails.
+  Provider-owned Render outage pages remain outside the app's control.
+
 - 15 October 2026 — Added the full version-specific reference, scoped AI contributor
   instructions and per-commit documentation guard; linked README and corrected its
   outdated external-font statement. Documented the existing Nginx use in v3 without
   changing the live v2 deployment topology. No application behavior changed.
+
+The documentation guard reads Git content explicitly as UTF-8 so German text
+and punctuation are checked consistently on Windows and Linux.

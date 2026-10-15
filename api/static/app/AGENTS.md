@@ -7,3 +7,10 @@ Preserve canonical country IDs, state across language switches, focus, keyboard
 controls and mobile layout. Rebuild locale-data.js after catalog changes. Keep
 offline, install, privacy and source limitations accurate. Update root
 DOCUMENTATION.md for changes to navigation, dialogs, storage or workflows.
+# Recovery and account language
+
+Follow ../../../ERROR_HANDLING.md. Centralize requests and handle HTML gateways,
+offline failures and timeouts with reviewed EN/DE copy. Retain entered values;
+never replay mutations automatically. Serialize language preference saves and
+explain failed account saves honestly. Keep printed privacy contacts on fetch
+failure. Rebuild generated locale/error bundles after catalogue edits.

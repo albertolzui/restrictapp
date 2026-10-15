@@ -1,5 +1,10 @@
 # Restrictapp 2 contributor instructions
 
+Follow ERROR_HANDLING.md for every endpoint/browser change. Preserve HTTP statuses,
+stable codes, safe EN/DE messages and request references. Never expose raw exceptions
+or gateway HTML; preserve entered values and never automatically replay mutations.
+Keep language preferences owner-scoped and test restoration after fresh login.
+
 Read README.md, DOCUMENTATION.md and SECURITY_REVIEW.md before editing. This is
 the live FastAPI/vanilla-JavaScript v2 repository, not the separate Django/React
 v3 project. Inspect git status first and preserve unrelated user edits. Do not

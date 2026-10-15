@@ -8,7 +8,7 @@ import re
 import sqlite3
 from api import storage
 
-TABLES = {'users':['id','email','password'], 'trips':['id','user_id','origin','destination','created','context'],
+TABLES = {'users':['id','email','password','preferred_language'], 'trips':['id','user_id','origin','destination','created','context'],
     'profiles':['user_id','data'], 'checklist_progress':['trip_id','task_id','done']}
 
 def read_source(path):
@@ -25,6 +25,7 @@ def read_source(path):
             rows = [dict(r) for r in connection.execute(f'SELECT * FROM {table}')] if table in tables else []
             for row in rows:
                 if table == 'trips': row.setdefault('context','{}')
+                if table == 'users': row.setdefault('preferred_language','en')
                 if any(column not in row for column in columns):
                     raise ValueError('Source schema is unsupported.')
                 if table == 'users' and not re.fullmatch(r'[0-9a-f]{32}:[0-9a-f]{128}',row['password']):
@@ -44,7 +45,7 @@ def copy_to_postgres(rows, database):
                 raise ValueError('Target must be empty; existing records will not be overwritten.')
         for table,columns in TABLES.items():
             for row in rows[table]:
-                db.execute(f"INSERT INTO {table}({','.join(columns)}) VALUES ({','.join('?' for _ in columns)})",tuple(row[c] for c in columns))
+                db.execute(f"INSERT INTO {table}({','.join(columns)}) VALUES ({','.join('?' for _ in columns)})",tuple(row.get(c,'en') if c=='preferred_language' else row[c] for c in columns))
         for table in ('users','trips'):
             db.execute(f"SELECT setval(pg_get_serial_sequence('{table}','id'), COALESCE(MAX(id),1), MAX(id) IS NOT NULL) FROM {table}")
         for table in TABLES:

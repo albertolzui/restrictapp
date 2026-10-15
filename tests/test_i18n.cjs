@@ -22,11 +22,11 @@ function create(page='index.html',lang='en') {
   const calls=[];
   w.fetch=async(path,options={})=>{
     calls.push({path,options});
-    if(path==='/api/plan' && JSON.parse(options.body).origin===JSON.parse(options.body).destination) return {ok:false,json:async()=>({detail:'Choose a different destination.'})};
+    if(path==='/api/plan' && JSON.parse(options.body).origin===JSON.parse(options.body).destination) return {ok:false,status:422,json:async()=>({error:{code:'same_destination'}})};
     const result=path==='/api/countries'?countries:path==='/api/plan'?plan:path==='/api/privacy'?{operator:'Restrictapp Admin',contact:'privacy@example.com'}:{detail:'Sign in to manage your trips.'};
     return {ok:path!=='/api/me',json:async()=>structuredClone(result)};
   };
-  for(const file of ['locale-data.js','i18n.js',...(page==='index.html'?['app.js','install.js']:[])])w.eval(fs.readFileSync(root+file,'utf8'));
+  for(const file of ['locale-data.js','i18n.js',...(page==='index.html'?['error-messages.js','app.js','install.js']:[])])w.eval(fs.readFileSync(root+file,'utf8'));
   return {dom,w,calls};
 }
 function change(w,lang) {

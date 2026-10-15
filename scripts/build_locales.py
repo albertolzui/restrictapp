@@ -5,6 +5,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1] / 'api/static/app'
 
 def build():
+    errors = json.loads((ROOT.parents[2]/'shared/error-messages.json').read_text(encoding='utf-8'))
+    (ROOT/'error-messages.js').write_text('window.RestrictappErrors = '+json.dumps(errors,ensure_ascii=False)+';\n',encoding='utf-8')
     messages = json.loads((ROOT/'de.json').read_text(encoding='utf-8'))
     messages.update(json.loads((ROOT/'privacy-de.json').read_text(encoding='utf-8')))
     codes = json.loads((ROOT/'country-codes.json').read_text(encoding='utf-8'))

@@ -7,6 +7,10 @@ install the local guard with `git config core.hooksPath .githooks`.
 
 A refreshed travel planning workspace built with FastAPI and a responsive HTML/CSS/JavaScript frontend.
 
+English/German preferences now persist to signed-in accounts and restore at login.
+API, network and gateway failures use safe localized messages while preserving
+entered values. Contributors must follow [the error handling guide](ERROR_HANDLING.md).
+
 For Render + Neon, follow [the deployment guide](DEPLOYMENT.md). Production uses PostgreSQL through `DATABASE_URL`; local development continues to use SQLite. The root `render.yaml` configures one free Render service and accepts a separately created Neon database.
 
 ## Run locally

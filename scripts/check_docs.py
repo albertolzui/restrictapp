@@ -7,7 +7,7 @@ DOC = 'DOCUMENTATION.md'
 REQUIRED = (DOC, 'README.md')
 
 def git(*args, check=True):
-    return subprocess.run(['git',*args],check=check,capture_output=True,text=True)
+    return subprocess.run(['git',*args],check=check,capture_output=True,text=True,encoding="utf-8")
 
 def exists(rev):
     return git('cat-file','-e',f'{rev}:{DOC}',check=False).returncode == 0

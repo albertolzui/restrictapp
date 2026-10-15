@@ -52,6 +52,7 @@
     });
   }
   function apply() {
+    try{document.cookie='restrictapp_language='+language+'; Path=/; Max-Age=31536000; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');}catch{}
     document.documentElement.lang=language;
     const manifest=document.querySelector('link[rel="manifest"]');
     if (manifest) manifest.setAttribute('href','/manifest.webmanifest?lang='+language);
@@ -67,7 +68,7 @@
       }
     });
   }
-  function setLanguage(next) {
+  function setLanguage(next, source='user') {
     if (!['en','de'].includes(next) || next === language) return;
     const fields = ['origin','destination','nationality','residence','transit'].map(id => document.getElementById(id)).filter(Boolean).map(node => ({node,id:countryId(node.value)}));
     language=next;
@@ -77,7 +78,7 @@
     document.querySelectorAll('.error,.toast').forEach(node => { node.textContent=translate(englishByGerman.get(node.textContent) || node.textContent); });
     document.querySelectorAll('input').forEach(input => input.setCustomValidity(''));
     for (const field of fields) if (field.id) field.node.value=country(field.id);
-    window.dispatchEvent(new CustomEvent('restrictapp:languagechange'));
+    window.dispatchEvent(new CustomEvent('restrictapp:languagechange',{detail:{source}}));
   }
   function localizeData(value) {
     if (typeof value === 'string') return translate(value);

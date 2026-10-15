@@ -7,13 +7,30 @@ function safeSource(value) {
   catch { return '#'; }
 }
 async function api(path, options = {}) {
-  const response = await fetch(path, {...options, headers: {'Content-Type': 'application/json', 'X-Restrictapp': '1', ...options.headers}});
-  let data;
-  try { data = await response.json(); }
-  catch { throw new Error(t('The service is temporarily unavailable. Please try again shortly.')); }
-  if (!response.ok) throw new Error(typeof data.detail === 'string' ? t(data.detail) : t("Please check your entries and try again."));
-  return data;
+  const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),20000);
+  const fallback={400:'invalid_request',401:'sign_in_required',403:'forbidden',404:'not_found',405:'method_not_allowed',408:'request_timeout',409:'conflict',413:'request_too_large',415:'unsupported_media',422:'validation_failed',429:'rate_limited',500:'internal_error',502:'bad_gateway',503:'service_unavailable',504:'gateway_timeout'};
+  const messages=window.RestrictappErrors || {};
+  const failure=(code,status=0,id='')=>{const error=new Error(messages[code]?.en || 'The service is temporarily unavailable. Please try again shortly.');error.code=code;error.status=status;error.requestId=/^[a-f0-9]{32}$/.test(id)?id:'';return error;};
+  try {
+    const response=await fetch(path,{...options,signal:controller.signal,cache:'no-store',credentials:'same-origin',headers:{'Content-Type':'application/json','X-Restrictapp':'1','X-Restrictapp-Language':I18n.language,...options.headers}});
+    let data;
+    try {data=await response.json();}catch{throw failure(fallback[response.status] || 'service_unavailable',response.status,response.headers?.get('X-Request-ID'));}
+    if(!response.ok){const code=messages[data?.error?.code]?.status===response.status ? data.error.code : fallback[response.status] || 'internal_error';throw failure(code,response.status,response.headers?.get('X-Request-ID'));}
+    return data;
+  }catch(error){if(error.code)throw error;throw failure(controller.signal.aborted?'request_timeout':'network_error');}
+  finally{clearTimeout(timeout);}
 }
+let manualLanguage=null, languageEpoch=0, languageQueue=Promise.resolve();
+function saveLanguagePreference(next){
+  const epoch=languageEpoch;
+  languageQueue=languageQueue.catch(()=>{}).then(()=>epoch===languageEpoch?api('/api/preferences',{method:'PUT',body:JSON.stringify({language:next})}):undefined).catch(()=>{if(epoch===languageEpoch && I18n.language===next)toast(window.RestrictappErrors.language_save_failed.en);});
+}
+function restoreLanguagePreference(){
+  if(!user)return;
+  if(manualLanguage)saveLanguagePreference(manualLanguage);
+  else if(['en','de'].includes(user.preferred_language))I18n.setLanguage(user.preferred_language,'account');
+}
+
 function toast(message) { $('toast').textContent = t(message); $('toast').hidden = false; clearTimeout(toast.timer); toast.timer = setTimeout(() => $('toast').hidden = true, 4500); }
 function accountUI() { $('account-button').textContent = t(user ? t("Sign out ↗") : t("Sign in ↗")); $('account-side').textContent = t(user ? t("View your saved trips ↗") : t("Create your travel account ↗")); }
 function openAuth(mode = 'login') { authMode = mode; $('auth-title').textContent = t(mode === 'login' ? t("Welcome back.") : t("Your next chapter starts here.")); $('auth-submit').textContent = t(mode === 'login' ? t("Sign in ↗") : t("Create account ↗")); $('toggle-auth').textContent = t(mode === 'login' ? t("New here? Create an account") : t("Already have an account? Sign in")); $('password').autocomplete = mode === 'login' ? 'current-password' : 'new-password'; $('auth-error').textContent = t(''); if (!$('auth-dialog').open) $('auth-dialog').showModal(); }
@@ -137,7 +154,7 @@ async function loadTrips() {
       for (const task of trip.checklist) details.append(taskElement(task, task.done, async done => { await api(`/api/trips/${trip.id}/checklist/${task.id}`, {method:'PUT',body:JSON.stringify({done})}); task.done = done; summary.textContent = t(t("Preparation checklist · {0}/{1} completed", [trip.checklist.filter(t => t.done).length, trip.checklist.length])); if (savedTripId === trip.id && currentPlan) { if (done) checkedTasks.add(task.id); else checkedTasks.delete(task.id); renderChecklist(currentPlan.checklist); } }));
       row.append(details); $('trip-list').append(row);
     }
-  } catch (error) { emptyTrips(t("Could not load your trips."), error.message); }
+  } catch (error) { if($('trip-list').querySelector('.trip-row')){toast(error.message);}else{emptyTrips(t("Could not load your trips."),t(error.message));const retry=document.createElement('button');retry.className='outline';retry.textContent=t('Retry connection');retry.onclick=loadTrips;$('trip-list').append(retry);} }
 }
 $('search-form').onsubmit = search;
 function invalidatePlan() { searchVersion++; currentGuidance = null; currentRoute = null; currentPlan = null; savedTripId = null; checkedTasks = new Set(); $('results').hidden = true; }
@@ -147,14 +164,14 @@ $('save-route').onclick = saveRoute;
 $('explore-nav').onclick = () => view('explore');
 $('trips-nav').onclick = () => { view('trips'); loadTrips(); };
 $('new-trip').onclick = () => { view('explore'); $('origin').focus(); };
-$('account-button').onclick = async () => { if (!user) return openAuth(); try { await api('/api/logout', {method:'POST'}); user = null; savedTripId = null; currentRoute = null; currentPlan = null; checkedTasks.clear(); $('results').hidden = true; $('search-form').reset(); accountUI(); await loadTrips(); toast("You are signed out."); } catch (error) { toast(error.message); } };
+$('account-button').onclick = async () => { if (!user) return openAuth(); try { await api('/api/logout', {method:'POST'}); languageEpoch++;manualLanguage=null;user = null; savedTripId = null; currentRoute = null; currentPlan = null; checkedTasks.clear(); $('results').hidden = true; $('search-form').reset(); accountUI(); await loadTrips(); toast("You are signed out."); } catch (error) { toast(error.message); } };
 $('account-side').onclick = () => { if (user) { view('trips'); loadTrips(); } else openAuth('signup'); };
 $('close-auth').onclick = () => { pendingSave = false; $('auth-dialog').close(); };
 $('auth-dialog').addEventListener('cancel', () => pendingSave = false);
 $('toggle-auth').onclick = () => openAuth(authMode === 'login' ? 'signup' : 'login');
-$('auth-form').onsubmit = async event => { event.preventDefault(); $('auth-submit').disabled = true; $('auth-error').textContent = t(''); try { const result = await api(`/api/auth/${authMode}`, {method:'POST', body:JSON.stringify({email:$('email').value, password:$('password').value})}); if (authMode === 'signup') { openAuth('login'); $('password').value = ''; $('auth-error').textContent = t(result.detail); return; } user = result; $('auth-dialog').close(); $('auth-form').reset(); accountUI(); await loadTrips(); await loadProfile(); toast("Welcome to your travel space."); if (pendingSave) { pendingSave = false; await saveRoute(); } } catch (error) { $('auth-error').textContent = t(error.message); } finally { $('auth-submit').disabled = false; } };
+$('auth-form').onsubmit = async event => { event.preventDefault(); $('auth-submit').disabled = true; $('auth-error').textContent = t(''); try { const result = await api(`/api/auth/${authMode}`, {method:'POST', body:JSON.stringify({email:$('email').value, password:$('password').value})}); if (authMode === 'signup') { openAuth('login'); $('password').value = ''; $('auth-error').textContent = t(result.detail); return; } user = result; restoreLanguagePreference(); $('auth-dialog').close(); $('auth-form').reset(); accountUI(); await loadTrips(); await loadProfile(); toast("Welcome to your travel space."); if (pendingSave) { pendingSave = false; await saveRoute(); } } catch (error) { $('auth-error').textContent = t(error.message); } finally { $('auth-submit').disabled = false; } };
 document.querySelectorAll('[data-country]').forEach(card => card.onclick = () => { $('destination').value = display(card.dataset.country); $('search-form').scrollIntoView({behavior:'smooth', block:'center'}); if (!$('origin').value) $('origin').focus(); else search(); });
-async function init() { $('year').textContent = t(new Date().getFullYear()); try { countries = await api('/api/countries'); renderCountryOptions(); } catch (error) { $('search-error').textContent = t("The country list could not load. Refresh to try again."); } try { user = await api('/api/me'); } catch { user = null; } accountUI(); await loadTrips(); await loadProfile(); }
+async function init() { $('year').textContent = t(new Date().getFullYear()); try { countries = await api('/api/countries'); renderCountryOptions(); } catch (error) { $('search-error').textContent = t("The country list could not load. Refresh to try again."); } try { user = await api('/api/me'); restoreLanguagePreference(); } catch { user = null; } accountUI(); await loadTrips(); await loadProfile(); }
 $('save-profile').onclick = async () => {
   if (!user) { openAuth(); toast("Sign in, then save your traveler profile."); return; }
   $('save-profile').disabled = true;
@@ -219,7 +236,8 @@ function renderCountryOptions() {
     const option = document.createElement('option'); option.value=display(country); $('country-options').append(option);
   }
 }
-window.addEventListener('restrictapp:languagechange', () => {
+window.addEventListener('restrictapp:languagechange', event => {
+  if(event.detail?.source !== 'account'){manualLanguage=I18n.language;if(user)saveLanguagePreference(I18n.language);}
   renderCountryOptions(); accountUI(); view($('trips-view').hidden ? 'explore' : 'trips');
   if ($('auth-dialog').open) openAuth(authMode);
   if (currentPlan) { $('result-title').textContent = `${display(currentRoute.origin)} → ${display(currentRoute.destination)}`; renderData(currentPlan); renderPlan(currentPlan); if (currentGuidance) { renderGuidance(currentGuidance); $('load-guidance').textContent=t('Refresh official guidance ↗'); } }

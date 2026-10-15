@@ -9,6 +9,8 @@ from psycopg.rows import dict_row
 from psycopg.conninfo import conninfo_to_dict
 
 INTEGRITY_ERRORS = (sqlite3.IntegrityError, psycopg.IntegrityError)
+class DatabaseUnavailable(RuntimeError):
+    """Connection failure with no public credentials or provider details."""
 _initialized = set()
 _schema_lock = threading.Lock()
 
@@ -51,8 +53,11 @@ def initialize(connection, postgres):
         connection.execute(statement)
     if postgres:
         connection.execute("ALTER TABLE trips ADD COLUMN IF NOT EXISTS context TEXT NOT NULL DEFAULT '{}'")
+        connection.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS preferred_language TEXT NOT NULL DEFAULT 'en'")
     elif 'context' not in {row['name'] for row in connection.execute('PRAGMA table_info(trips)')}:
         connection.execute("ALTER TABLE trips ADD COLUMN context TEXT NOT NULL DEFAULT '{}'")
+    if not postgres and 'preferred_language' not in {row['name'] for row in connection.execute('PRAGMA table_info(users)')}:
+        connection.execute("ALTER TABLE users ADD COLUMN preferred_language TEXT NOT NULL DEFAULT 'en'")
     connection.commit()
 
 class Database:
@@ -70,7 +75,7 @@ def database(path):
         try:
             connection = psycopg.connect(url, row_factory=dict_row, connect_timeout=10)
         except psycopg.Error:
-            raise RuntimeError('PostgreSQL connection failed; check the private connection settings.') from None
+            raise DatabaseUnavailable('PostgreSQL connection failed; check the private connection settings.') from None
         with connection:
             with _schema_lock:
                 if url not in _initialized:

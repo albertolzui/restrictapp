@@ -21,6 +21,7 @@ from api.guidance import official_guidance
 from api.entry_reference import lookup
 from api import storage
 from api.security import auth_throttle, RequestSizeLimit
+from shared.errors import ErrorBoundary, language
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 ROOT = Path(__file__).resolve().parent
@@ -78,12 +79,18 @@ async def validation_error(request, exc):
     # Pydantic's default response includes input values, including passwords.
     return JSONResponse({'detail':'Please check your entries and try again.'}, status_code=422)
 
+async def database_error(request,exc):
+    return JSONResponse({},status_code=503,headers={'Retry-After':'5'})
+
+for _connection_error in (storage.DatabaseUnavailable,storage.psycopg.OperationalError,storage.psycopg.InterfaceError,storage.sqlite3.OperationalError):
+    app.add_exception_handler(_connection_error,database_error)
+
 def current_user(request):
     token = request.cookies.get('restrictapp_session', '')
     if not token or len(token) > 128:
         raise HTTPException(401, 'Sign in to manage your trips.')
     with database() as db:
-        user = db.execute('SELECT users.id,users.email FROM sessions JOIN users ON users.id=sessions.user_id WHERE token=? AND expires>?', (hashlib.sha256(token.encode()).hexdigest(), time.time())).fetchone()
+        user = db.execute('SELECT users.id,users.email,users.preferred_language FROM sessions JOIN users ON users.id=sessions.user_id WHERE token=? AND expires>?', (hashlib.sha256(token.encode()).hexdigest(), time.time())).fetchone()
     if not user:
         raise HTTPException(401, 'Sign in to manage your trips.')
     return dict(user)
@@ -116,6 +123,21 @@ class Trip(Traveler):
 
 class TaskProgress(BaseModel):
     done: bool
+
+class LanguagePreference(BaseModel):
+    language: Literal['en','de']
+
+@app.get('/api/preferences')
+def preferences(request: Request):
+    return {'language':current_user(request)['preferred_language']}
+
+@app.put('/api/preferences')
+def save_preferences(data: LanguagePreference,request: Request):
+    protect_write(request)
+    user=current_user(request)
+    with database() as db:
+        db.execute('UPDATE users SET preferred_language=? WHERE id=?',(data.language,user['id']))
+    return {'language':data.language}
 
 def validate_context(data):
     for field in ('nationality', 'residence', 'transit'):
@@ -248,7 +270,7 @@ def authenticate(action: str, data: Credentials, request: Request, response: Res
     if action == 'signup':
         encoded = password_hash(data.password)
         with database() as db:
-            db.execute('INSERT INTO users(email,password) VALUES (?,?) ON CONFLICT(email) DO NOTHING', (email, encoded))
+            db.execute('INSERT INTO users(email,password,preferred_language) VALUES (?,?,?) ON CONFLICT(email) DO NOTHING', (email, encoded,language({k.lower():v for k,v in request.headers.items()})))
         return JSONResponse({'detail':'If this address is new, your account is ready. Sign in to continue.'},status_code=202)
     with database() as db:
         user = db.execute('SELECT * FROM users WHERE email=?', (email,)).fetchone()
@@ -264,7 +286,7 @@ def authenticate(action: str, data: Credentials, request: Request, response: Res
         db.execute('DELETE FROM sessions WHERE user_id=? AND token NOT IN (SELECT token FROM sessions WHERE user_id=? ORDER BY expires DESC LIMIT 19)', (user['id'], user['id']))
         db.execute('INSERT INTO sessions VALUES (?,?,?)', (hashlib.sha256(token.encode()).hexdigest(), user['id'], time.time()+604800))
     response.set_cookie('restrictapp_session', token, httponly=True, samesite='lax', secure=os.getenv('RESTRICTAPP_SECURE_COOKIES') == '1', max_age=604800)
-    return {'email': email}
+    return {'email': email,'preferred_language':user['preferred_language']}
 
 @app.get('/api/me')
 def me(request: Request):
@@ -327,3 +349,6 @@ def delete_trip(trip_id: int, request: Request):
         if db.execute('DELETE FROM trips WHERE id=? AND user_id=?', (trip_id, user['id'])).rowcount == 0:
             raise HTTPException(404, 'Trip not found.')
     return {'ok': True}
+
+# Normalize errors outside Starlette's own exception middleware as well.
+app = ErrorBoundary(app)
